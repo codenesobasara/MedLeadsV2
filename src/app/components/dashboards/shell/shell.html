@@ -1,0 +1,16 @@
+<mat-sidenav-container class="layout">
+
+  <mat-sidenav mode="side" opened class="sidebar">
+    <ng-container *ngComponentOutlet="sidebar"></ng-container>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <ng-container *ngComponentOutlet="topbar"></ng-container>
+
+    <div class="content">
+      <ng-container *ngComponentOutlet="content"></ng-container>
+
+    </div>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

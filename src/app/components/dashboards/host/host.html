@@ -1,0 +1,15 @@
+@if (hostDashState$ | async as dash) {
+  @switch (dash.hasevents) {
+    @case (null) {
+      <hostaction-cards></hostaction-cards>
+    }
+
+    @case (true) {
+      <hostaction-cards></hostaction-cards>
+    }
+
+    @case (false) {
+      <hostaction-cards></hostaction-cards>
+    }
+  }
+}

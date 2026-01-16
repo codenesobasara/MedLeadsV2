@@ -1,0 +1,16 @@
+.layout {
+  height: 100vh;
+  width: 100%;
+  background: #f6f7fb;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI";
+}
+
+.sidebar {
+  width: 260px;
+  background: #ffffff;
+  border-right: none;
+}
+
+.content {
+  padding: 24px;
+}
