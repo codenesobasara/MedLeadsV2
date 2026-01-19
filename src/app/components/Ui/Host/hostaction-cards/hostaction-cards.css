@@ -1,0 +1,158 @@
+/* ===== Empty State ===== */
+.empty-state{
+  min-height: 320px;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.empty-card{
+  width: min(520px, 100%);
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 28px 24px;
+  box-shadow: 0 18px 40px rgba(16, 24, 40, 0.12);
+  border: 1px solid rgba(231, 233, 242, 0.9);
+  text-align: center;
+}
+
+.empty-title{
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.empty-sub{
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.45;
+  margin-bottom: 18px;
+}
+
+.empty-cta{
+  appearance: none;
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #ffffff;
+  background: #4f46e5;
+  box-shadow: 0 12px 22px rgba(79, 70, 229, 0.25);
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease, filter 150ms ease;
+}
+
+.empty-cta:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 16px 28px rgba(79, 70, 229, 0.30);
+  filter: brightness(1.02);
+}
+
+.empty-cta:active{
+  transform: translateY(0px);
+  box-shadow: 0 12px 22px rgba(79, 70, 229, 0.25);
+}
+
+/* ===== Event Card  ===== */
+.card-Wrapper{
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+
+}
+
+.event-card:nth-child(odd) {
+  background-color: #3b378a;
+}
+
+.event-card:nth-child(even) {
+  background-color: #9a9650;
+}
+
+.event-card:nth-child(odd):hover {
+  background-color: #28264d;
+}
+
+
+.event-card:nth-child(even):hover {
+  background-color: #4e4c29; 
+}
+.event-card{
+  width: 320px;
+  height: auto;
+  background: #4b46a8; 
+  gap: 10px;
+  border-radius: 0; 
+  box-shadow: 0 22px 34px rgba(16, 24, 40, 0.22);
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  overflow: hidden;
+}
+
+.event-date{
+  padding: 18px 16px;
+  background: rgba(255, 255, 255, 0.0);
+}
+
+.event-month{
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.event-day{
+  margin-top: 8px;
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.event-body{
+  padding: 18px 18px 16px 0;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 10px;
+}
+
+.event-title{
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  max-width: 210px;
+}
+
+.event-meta{
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.80);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.event-dot{
+  opacity: 0.8;
+}
+
+.event-arrow{
+  align-self: end;
+  justify-self: end;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  margin-right: 14px;
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.95);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.06);
+}

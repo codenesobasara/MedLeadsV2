@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require("../config/mainConfig");
+const sequelize = require("../mainConfig");
 
 const SalesRepsProfile = sequelize.define('SalesReps', {
   id: {
@@ -17,6 +17,9 @@ const SalesRepsProfile = sequelize.define('SalesReps', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  userId: {
+  type: DataTypes.INTEGER,
+  allowNull: false,},
 
   name: {
     type: DataTypes.STRING,

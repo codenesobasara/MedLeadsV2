@@ -5,7 +5,8 @@ const userService = require("../UserService/UserFunctions")
 const authController = require("../AuthService/AuthController")
 const connection = require("../mainConfig");
 
-router.post("/auth/login", async (req,res)=>{
+router.post("/login", async (req,res)=>{
+     console.log("✅ HIT /auth/login", req.body);
 try{const {email,password} = req.body
 const user = await auth.authCheck(email,password)
 if(!user){return res.status(404).json({message:"user not found"})}
@@ -15,7 +16,7 @@ return res.status(200).json({tokens})
 }catch(err){console.error(err); res.status(500).json({message:err.message, stack:err.stack})}
 })
 
-router.post("/auth/register", async (req,res)=>{
+router.post("/register", async (req,res)=>{
   try{
     const data = req.body
     if(Object,keys(data).length === 3){
@@ -31,3 +32,5 @@ router.post("/auth/register", async (req,res)=>{
 })
 
 router.post("/auth/refresh",authController.refreshToken)
+
+module.exports = router;

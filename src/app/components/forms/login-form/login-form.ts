@@ -9,17 +9,17 @@ import { LoginRequest } from '../../../interfaces/auth';
 import { AuthService } from '../../../services/auth-service';
 import { State } from '../../../services/state';
 @Component({
-  selector: 'app-login',
-  imports: [MatFormFieldModule,
+  selector: 'app-login-form',
+ imports: [MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
     ReactiveFormsModule,],
-  templateUrl: './login.html',
-  styleUrl: './login.css',
+  templateUrl: './login-form.html',
+  styleUrl: './login-form.css',
 })
-export class Login {
-login;
+export class LoginForm {
+  login;
 constructor(private fb:FormBuilder, private auth:AuthService, private router:Router, private state:State){
 
   this.login = this.fb.nonNullable.group({
@@ -31,7 +31,7 @@ constructor(private fb:FormBuilder, private auth:AuthService, private router:Rou
 onLogin(){
   const obj:LoginRequest = this.login.getRawValue()
   this.auth.login(obj).subscribe(result=> {
-  this.auth.storeTokens(result.accessToken,result.refreshToken)
+  this.auth.storeTokens(result.tokens.accessToken, result.tokens.refreshToken);
   const token = this.auth.getDecodedAccessToken()
   if(!token){return}
   this.state.setUser(token)
@@ -39,5 +39,6 @@ onLogin(){
   })
   
 }
+
 
 }

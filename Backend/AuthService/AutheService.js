@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User = require("../models/Users");
+const User = require("../Models/Users");
 const JWT_SECRET = process.env.JWT_SECRET;
 const REFRESH_JWT_SECRET = process.env.refresh_JWT_SECRET;
 
@@ -15,7 +15,7 @@ return user}
 async function authorize(user){
 const payload = {userid:user.id, email:user.email, role:user.role}
 const accessToken = jwt.sign(payload, JWT_SECRET,{expiresIn:"1h"})
-const refreshPayload = user.id
+const refreshPayload = {userid:user.id}
 const refreshToken = jwt.sign(refreshPayload,REFRESH_JWT_SECRET,{expiresIn:"7d"})
 return {accessToken, refreshToken}
 }

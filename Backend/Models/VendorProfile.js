@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require("../config/mainConfig");
+const sequelize = require("../mainConfig");
 
 const VendorProfile = sequelize.define('Vendor', {
   id: {

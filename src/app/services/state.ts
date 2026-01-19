@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable,signal,computed } from '@angular/core';
 import { HostDash, User, } from '../interfaces/userstate';
 import { AccessToken } from '../interfaces/auth';
-import { BehaviorSubject } from 'rxjs';
 
  enum UserRole {
   Host = 'host',
@@ -21,37 +20,26 @@ import { BehaviorSubject } from 'rxjs';
 export class State {
 constructor(){}
 
-private userSubject = new BehaviorSubject<User>({id:0,email:"",role:UserRole.Default})
-user$ = this.userSubject.asObservable()
+ private _user = signal<User>({ id: 0, email: "", role: UserRole.Default });
+ private _hostDashState = signal<HostDash>({ hasevents: null, eventSelected: false, EventId: 0 });
 
-private hostDashboardOptions = new BehaviorSubject<HostDash>({hasevents:null})
-hostDashState$ = this.hostDashboardOptions.asObservable()
+  public readonly user = this._user.asReadonly();
+  public readonly hostDashState = this._hostDashState.asReadonly();
+  public readonly isHost = computed(() => this.user().role === UserRole.Host);
 
-user:User={id:0, email:"", role: UserRole.Default}
-hostDashState:HostDash ={hasevents:null}
-
-setUser(token: AccessToken) {
-  let role = UserRole.Default;
-
-  if (token.role === UserRole.Host) role = UserRole.Host;
-  if (token.role === UserRole.Vendor) role = UserRole.Vendor;
-  if (token.role === UserRole.Attendee) role = UserRole.Attendee;
-  if (token.role === UserRole.SalesRep) role = UserRole.SalesRep;
-  this.user = {
-    id: token.userid,
-    email: token.email,
-    role: role
-  };
-  this.userSubject.next(this.user);
+    setUser(token: AccessToken) {
+    this._user.set({
+      id: token.userid,
+      email: token.email,
+      role: token.role as UserRole 
+    });
 }
-
-changeHostDashState(update: Partial<HostDash>) {
-  this.hostDashState = {
-    ...this.hostDashState,
-    ...update
-  };
-
-  this.hostDashboardOptions.next(this.hostDashState);
-}
+    changeHostDashState(update: Partial<HostDash>) {
+    this._hostDashState.update(state => ({
+      ...state,
+      ...update
+    }));
+  }
+   
 
 }

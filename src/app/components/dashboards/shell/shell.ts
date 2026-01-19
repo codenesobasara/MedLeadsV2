@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,effect,inject } from '@angular/core';
 import { State } from '../../../services/state';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -23,22 +23,23 @@ import { Host } from '../host/host';
   styleUrl: './shell.css',
 })
 export class Shell {
-  constructor(private state:State){}
+  private state = inject(State);
 
-userRole = ""
-sidebar:any
-topbar:any
-content:any
+  sidebar: any;
+  topbar: any;
+  content: any;
 
-ngOnInit(){
-  this.state.user$.subscribe(user =>{
-    this.userRole = user.role
-    if(this.userRole === "host"){
-    this.sidebar = HostSideBar;
-    this.topbar = HostTopBar;
-    this.content = Host;
-    }
-  })
-
-}
+  constructor() {
+    // Correct placement: inside the constructor
+    effect(() => {
+      const user = this.state.user();
+      if (!user || user.role === 'none') return;
+      console.log(`THE USER ROLE IS ${user.role}`);
+      if (user.role === 'host') {
+        this.sidebar = HostSideBar;
+        this.topbar = HostTopBar;
+        this.content = Host;
+      }
+    });
+  }
 }

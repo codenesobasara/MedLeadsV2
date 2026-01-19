@@ -1,15 +1,9 @@
-@if (hostDashState$ | async as dash) {
-  @switch (dash.hasevents) {
-    @case (null) {
-      <hostaction-cards></hostaction-cards>
-    }
-
-    @case (true) {
-      <hostaction-cards></hostaction-cards>
-    }
-
-    @case (false) {
-      <hostaction-cards></hostaction-cards>
-    }
+@switch (state.hostDashState().eventSelected) {
+  @case (true) {
+    <!-- The KPI cards will internally read the analytics signal from the service -->
+    <host-kpi />
   }
-}
+  @case (false) {
+    <hostaction-cards />
+  }
+} 

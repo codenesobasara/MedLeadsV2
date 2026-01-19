@@ -2,7 +2,7 @@ export interface Models {
 }
 
 
-export interface Event {
+export interface DBEvent {
   id: number;
   hostId: number;
 

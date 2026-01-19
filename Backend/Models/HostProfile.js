@@ -1,6 +1,6 @@
 // models/HostProfile.js
 const { DataTypes } = require('sequelize');
-const sequelize = require("../config/mainConfig");
+const sequelize = require("../mainConfig");
 
 const HostProfile = sequelize.define('HostProfile', {
   id: {

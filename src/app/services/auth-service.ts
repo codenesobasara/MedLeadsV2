@@ -24,6 +24,7 @@ export class AuthService {
 
   getDecodedAccessToken(){
     const token = this.cookies.get("accessToken")
+    if (!token) return null;
     const decoded:AccessToken =jwtDecode(token)
     return decoded
   }

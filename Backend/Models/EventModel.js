@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require("../config/mainConfig");
+const sequelize = require("../mainConfig");
 
 const Event = sequelize.define('Event', {
   id: {

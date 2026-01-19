@@ -1,5 +1,4 @@
-const User = require("../models/Users");
-
+const User = require("../Models/Users");
 async function getUserByEmail(email){
     const existingUser = await User.findOne({where:{email:email}})
     if(!existingUser){return null}

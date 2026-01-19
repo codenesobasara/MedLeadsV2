@@ -22,8 +22,8 @@ RepProfile.belongsTo(User, { foreignKey: "userId" });
 HostProfile.hasMany(Event, { foreignKey: "hostId" });
 Event.belongsTo(HostProfile, { foreignKey: "hostId" });
 
-Attendee.hasMany(Scan, { foreignKey: " attendeeId" });
-Scan.belongsTo(Attendee, { foreignKey: " attendeeId" });
+Attendee.hasMany(Scan, { foreignKey: "attendeeId" });
+Scan.belongsTo(Attendee, { foreignKey: "attendeeId" });
 
 Event.hasMany(Attendee, { foreignKey: "eventId" });
 Attendee.belongsTo(Event, { foreignKey: "eventId" });
