@@ -30,7 +30,6 @@ export class Shell {
   content: any;
 
   constructor() {
-    // Correct placement: inside the constructor
     effect(() => {
       const user = this.state.user();
       if (!user || user.role === 'none') return;

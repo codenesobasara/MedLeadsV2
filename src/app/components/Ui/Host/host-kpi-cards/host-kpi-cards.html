@@ -1,133 +1,145 @@
+@if (analytics(); as analytics) {
 
-@if (analytics$ | async; as analytics) {
-<section class="app-dashboard">
+  <section class="app-dashboard">
 
-  <div class="stat-card blue">
-    <div class="stat-title">Doctors checked in</div>
-    <div class="stat-number">{{ analytics.summary.attendingVendorsAmount }}</div>
-    <div class="stat-link">View attendee list</div>
-  </div>
+  
+    <div class="stats">
+      <div class="stat-card blue">
+        <div class="stat-title">Doctors checked in</div>
+        <div class="stat-number">{{ analytics.summary.attendingVendorsAmount }}</div>
+        <div class="stat-link">View attendee list</div>
+      </div>
 
-  <div class="stat-card teal">
-    <div class="stat-title">Total scans</div>
-    <div class="stat-number">{{ analytics.totals.totalScans }}</div>
-    <div class="stat-link">See scan activity</div>
-  </div>
+      <div class="stat-card teal">
+        <div class="stat-title">Total scans</div>
+        <div class="stat-number">{{ analytics.totals.totalScans }}</div>
+        <div class="stat-link">See scan activity</div>
+      </div>
 
-  <div class="stat-card red">
-    <div class="stat-title">Active vendors</div>
-    <div class="stat-number">
-      {{ analytics.summary.activeVendorsAmount }}/{{ analytics.summary.attendingVendorsAmount }}
+      <div class="stat-card red">
+        <div class="stat-title">Active vendors</div>
+        <div class="stat-number">
+          {{ analytics.summary.activeVendorsAmount }}/{{ analytics.summary.attendingVendorsAmount }}
+        </div>
+        <div class="stat-link">Vendor performance</div>
+      </div>
+
+      <div class="stat-card purple">
+        <div class="stat-title">Avg scans per active vendor</div>
+        <div class="stat-number">{{ analytics.summary.avgScansPerActiveVendor }}</div>
+        <div class="stat-link">
+          Peak Scan Day: {{ analytics.summary.peakHour.Day }}
+        </div>
+      </div>
     </div>
-    <div class="stat-link">Vendor performance</div>
-  </div>
 
-  <div class="stat-card purple">
-    <div class="stat-title">Avg scans per active vendor</div>
-    <div class="stat-number">
-      {{ analytics.summary.avgScansPerActiveVendor }}
+    <!-- Row 2 stays the same -->
+    <div class="stats-row2">
+
+      <!-- Panel 1: Chart -->
+      <div class="stat-card large">
+        <div class="header-large">
+          <div>
+            <div class="stat-title large">Check-ins &amp; Scans</div>
+            <div class="stat-sub">Over time</div>
+          </div>
+
+          <div class="panel-actions">
+            <div class="today-count">Today: 34</div>
+
+            <mat-form-field appearance="outline">
+              <mat-select value="today">
+                <mat-option value="today">Today</mat-option>
+                <mat-option value="7">Last 7 days</mat-option>
+                <mat-option value="30">Last 30 days</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="panel-body">
+          <div class="chart-placeholder">Chart goes here</div>
+        </div>
+      </div>
+
+      <!-- Panel 2: Vendor Engagement -->
+      <div class="stat-card large" name="VendorEngagement" #card>
+        <div class="header-large">
+          <div>
+            <div class="stat-title large">Vendor Engagement</div>
+            <div class="stat-sub">Snapshot</div>
+          </div>
+          <div class="panel-link">View breakdown</div>
+        </div>
+
+        <div class="panel-metrics">
+          <div class="metric-row">
+            <span>Active vendors</span>
+            <strong>
+              {{ analytics.summary.activeVendorsAmount }}/{{ analytics.summary.attendingVendorsAmount }}
+            </strong>
+          </div>
+
+          <div class="metric-row">
+            <span>Top vendor</span>
+            <strong>{{ analytics.summary.topVendor }}</strong>
+          </div>
+
+          <div class="metric-row">
+            <span>Inactive vendors</span>
+            <strong>
+              {{ analytics.summary.attendingVendorsAmount - analytics.summary.activeVendorsAmount }}
+            </strong>
+          </div>
+        </div>
+
+        <div class="panel-footer">Tap to view vendor breakdown</div>
+      </div>
+
+      <!-- Panel 3: Doctor Engagement -->
+      <div class="stat-card large">
+        <div class="header-large">
+          <div>
+            <div class="stat-title large">Doctor Engagement</div>
+            <div class="stat-sub">Snapshot</div>
+          </div>
+          <div class="panel-link">View details</div>
+        </div>
+
+        <div class="panel-metrics">
+          <div class="metric-row">
+            <span>Doctors checked in</span>
+            <strong>{{ analytics.summary.attendingVendorsAmount }} / 160</strong>
+          </div>
+
+          <div class="metric-row">
+            <span>Most visited booth</span>
+            <strong>{{ analytics.summary.topVendor }}</strong>
+          </div>
+
+          <div class="metric-row">
+            <span>Avg scans / doctor</span>
+            <strong>{{ analytics.summary.avgScansPerActiveVendor }}</strong>
+          </div>
+        </div>
+
+        <div class="panel-footer">Tap to explore doctor activity</div>
+      </div>
+
     </div>
-    <div class="stat-link">
-      Peak Scan Day: {{ analytics.summary.peakHour.Day }}
-    </div>
-  </div>
+  </section>
 
-  <div class="stats-row2">
+} @else {
 
-    <!-- Panel 1: Chart -->
+  <section class="app-dashboard">
     <div class="stat-card large">
       <div class="header-large">
         <div>
-          <div class="stat-title large">Check-ins &amp; Scans</div>
-          <div class="stat-sub">Over time</div>
+          <div class="stat-title large">Select an event</div>
+          <div class="stat-sub">Choose an event to load analytics</div>
         </div>
-
-        <div class="panel-actions">
-          <div class="today-count">Today: 34</div>
-
-          <mat-form-field appearance="outline">
-            <mat-select value="today">
-              <mat-option value="today">Today</mat-option>
-              <mat-option value="7">Last 7 days</mat-option>
-              <mat-option value="30">Last 30 days</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div class="panel-body">
-        <div class="chart-placeholder">Chart goes here</div>
       </div>
     </div>
+  </section>
 
-    <!-- Panel 2: Vendor Engagement -->
-    <div
-      class="stat-card large"
-      name="VendorEngagement"
-      #card
-     
-    >
-      <div class="header-large">
-        <div>
-          <div class="stat-title large">Vendor Engagement</div>
-          <div class="stat-sub">Snapshot</div>
-        </div>
-        <div class="panel-link">View breakdown</div>
-      </div>
-
-      <div class="panel-metrics">
-        <div class="metric-row">
-          <span>Active vendors</span>
-          <strong>
-            {{ analytics.summary.activeVendorsAmount }}/{{ analytics.summary.attendingVendorsAmount }}
-          </strong>
-        </div>
-
-        <div class="metric-row">
-          <span>Top vendor</span>
-          <strong>{{ analytics.summary.topVendor }}</strong>
-        </div>
-
-        <div class="metric-row">
-          <span>Inactive vendors</span>
-          <strong>
-            {{ analytics.summary.attendingVendorsAmount - analytics.summary.activeVendorsAmount }}
-          </strong>
-        </div>
-      </div>
-
-      <div class="panel-footer">Tap to view vendor breakdown</div>
-    </div>
-
-    <!-- Panel 3: Doctor Engagement -->
-    <div class="stat-card large">
-      <div class="header-large">
-        <div>
-          <div class="stat-title large">Doctor Engagement</div>
-          <div class="stat-sub">Snapshot</div>
-        </div>
-        <div class="panel-link">View details</div>
-      </div>
-
-      <div class="panel-metrics">
-        <div class="metric-row">
-          <span>Doctors checked in</span>
-          <strong>{{ analytics.summary.attendingVendorsAmount }} / 160</strong>
-        </div>
-
-        <div class="metric-row">
-          <span>Most visited booth</span>
-          <strong>{{ analytics.summary.topVendor }}</strong>
-        </div>
-
-        <div class="metric-row">
-          <span>Avg scans / doctor</span>
-          <strong>{{ analytics.summary.avgScansPerActiveVendor }}</strong>
-        </div>
-      </div>
-
-      <div class="panel-footer">Tap to explore doctor activity</div>
-    </div>
-
-  </div>
-</section>}
+}

@@ -1,5 +1,5 @@
 <div>
-  @switch ((hostDashState$ | async)?.hasevents) {
+ @switch (hostDashState().hasevents) {
 
     @case (false) {
       <div class="empty-state">
@@ -17,7 +17,7 @@
 
    @case (true) {
   <div class="card-Wrapper">
-    @for (event of ((events$ | async) ?? []); track event.id) {
+    @for (event of events(); track event.id) {
       <div class="event-card" (click)="selectEvent(event)">
         <div class="event-date">
           <div class="event-month">

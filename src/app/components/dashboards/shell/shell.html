@@ -1,16 +1,15 @@
 <mat-sidenav-container class="layout">
-
-  <mat-sidenav mode="side" opened class="sidebar">
+  <mat-sidenav mode="side" opened class="sidebar app-sidenav">
     <ng-container *ngComponentOutlet="sidebar"></ng-container>
   </mat-sidenav>
 
-  <mat-sidenav-content>
-    <ng-container *ngComponentOutlet="topbar"></ng-container>
+  <mat-sidenav-content class="main">
+    <div class="topbar">
+      <ng-container *ngComponentOutlet="topbar"></ng-container>
+    </div>
 
     <div class="content">
       <ng-container *ngComponentOutlet="content"></ng-container>
-
     </div>
   </mat-sidenav-content>
-
 </mat-sidenav-container>

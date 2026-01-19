@@ -24,7 +24,7 @@ router.get("/events", async (req,res)=>{
 
 router.get("/events/:eventid", async (req,res)=>{
     try{
-        const attendeeAnalytics = await hostAnalytics.attendeeAnalytics(req.params.eventid)
+        const attendeeAnalytics = await hostFunc.getEventAnalytics(req.params.eventid)
         return res.status(200).json(attendeeAnalytics)
     }catch(err){console.error(err); res.status(500).json({message:err.message, stack:err.stack})}
 })
