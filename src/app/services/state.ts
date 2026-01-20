@@ -21,7 +21,7 @@ export class State {
 constructor(){}
 
  private _user = signal<User>({ id: 0, email: "", role: UserRole.Default });
- private _hostDashState = signal<HostDash>({ hasevents: null, eventSelected: false, EventId: 0 });
+ private _hostDashState = signal<HostDash>({ hasevents: null, eventSelected: false, EventId: 0 , cardSelected:""});
 
   public readonly user = this._user.asReadonly();
   public readonly hostDashState = this._hostDashState.asReadonly();

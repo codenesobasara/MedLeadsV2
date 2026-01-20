@@ -1,9 +1,22 @@
 @switch (state.hostDashState().eventSelected) {
   @case (true) {
-  
-    <host-kpi />
+
+    @switch (state.hostDashState().cardSelected) {
+
+      @case ('VendorEngagement') {
+        <vendor-engagement />
+      }
+
+     
+    
+      @default {
+        <host-kpi />
+      }
+
+    }
+
   }
-  @case (false) {
+    @case (false) {
     <hostaction-cards />
   }
-} 
+}

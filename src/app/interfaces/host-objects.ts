@@ -17,7 +17,8 @@ export interface HostEventAnalytics {
 
   eventScans: any[];        
   Attendingvendors: any[];  
-  activeVendors: any[];     
+  activeVendors: any[]; 
+  vendorChartData:any[]    
 
   totals: {
     totalScans: number;

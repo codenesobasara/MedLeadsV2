@@ -16,7 +16,8 @@ export interface User {
 
 export interface HostDash{
   hasevents: boolean | null;
-  eventSelected:boolean,
-  EventId: number | null
+  eventSelected:boolean|null
+   EventId: number | null,
+   cardSelected:string |null
  
 }

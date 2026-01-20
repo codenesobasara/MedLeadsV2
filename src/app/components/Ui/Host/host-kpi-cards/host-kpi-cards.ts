@@ -29,4 +29,8 @@ export class HostKpiCards {
   
   analytics = this.hostService.analytics; 
   isLoading = this.hostService.isLoading;
+
+  onClick(name:string){
+    this.state.changeHostDashState({cardSelected:name,})
+  }
 }

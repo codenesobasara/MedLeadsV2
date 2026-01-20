@@ -24,15 +24,16 @@ const hourMap ={}
 allEventScans.forEach(scan => {
 obj.totals.totalScans++
 const ID = scan.vendorId;
-if(!vendorMap[ID]){vendorMap[ID] ={vendId:ID, name:scan.companyName, count:0}}
-vendorMap[ID].count++
 const date = new Date(scan.scannedAt).toISOString().split('T')[0]; 
 const hour = `${new Date(scan.scannedAt).getHours()}:00`;
-if (!hourMap[date]) hourMap[date] = {};
+if(!vendorMap[ID]){vendorMap[ID] ={vendorId:ID, name:scan.companyName, count:0,dayhour:{[date]:{[hour]:0}}}}
+vendorMap[ID].count++
+if(!vendorMap[ID].dayhour[date]){vendorMap.dayhour[date]={}}
+if(!vendorMap[ID].dayhour[date][time]){vendorMap.dayhour[date][time]=0}
+if (!hourMap[date]) hourMap[date] = {}; 
 hourMap[date][hour] = (hourMap[date][hour] || 0) + 1;
 })
 let peak = { Day: "", hourKey: "", scans: 0 };
-
 for (const day in hourMap) {
     for (const hour in hourMap[day]) {
     const scans = hourMap[day][hour];
@@ -41,17 +42,23 @@ for (const day in hourMap) {
     }
   }
 }
-obj.summary.vendorEngagementRate =Object.values(vendorMap).length / attendingVendors.length
-obj.summary.avgScansPerActiveVendor = allEventScans.length/Object.values(vendorMap).length
-obj.summary.peakHour = peak
-obj.summary.topVendor=  Object.values(vendorMap).sort((a, b) => b.count - a.count)[0].name;
-obj.Attendingvendors = attendingVendors
-obj.activeVendors =Object.values(vendorMap)
+const sortedVendors = Object.values(vendorMap).sort((a, b) => b.count - a.count);
+obj.vendorCharData = Object.values(sortedVendors)
+obj.summary.vendorEngagementRate =Object.values(vendorMap).length / attendingVendors.length;
+obj.summary.avgScansPerActiveVendor = allEventScans.length/Object.values(vendorMap).length;
+obj.eventScans =allEventScans;
+obj.summary.peakHour = peak;
+obj.summary.topVendor=  sortedVendors[0].name;
+obj.Attendingvendors = attendingVendors;
+obj.activeVendors =Object.values(vendorMap);
 obj.totals.byDayHour = hourMap;
 obj.summary.activeVendorsAmount = Object.values(vendorMap).length;
-obj.summary.attendingVendorsAmount = attendingVendors.length 
+obj.summary.attendingVendorsAmount = attendingVendors.length ;
  return obj
 }
+
+
+
 
 
 

@@ -1,1 +1,52 @@
-<p>vendor-engagement works!</p>
+@if (analytics(); as analytics){
+    <div class="stats">
+      <div class="stat-card blue">
+        <div class="stat-title">{{analytics.summary.activeVendorsAmount}}/{{analytics.summary.attendingVendorsAmount}}</div>
+        <div class="stat-number">{{analytics.summary.activeVendorsAmount}} Vendors Engaged</div>
+        <div class="stat-link">View attendee list</div>
+      </div>
+
+      <div class="stat-card teal">
+        <div class="stat-title">Top Vendor</div>
+        <div class="stat-number">{{analytics.summary.topVendor}}</div> 
+        <div class="stat-link">See scan activity</div>
+      </div>
+
+      <div class="stat-card red">
+        <div class="stat-title">Vendor Engagement Rate</div>
+          <div class="stat-number">{{analytics.summary.vendorEngagementRate|percent:'1.1-1'}}</div>
+        <div class="stat-number">
+         
+        </div>
+        <div class="stat-link">Vendor performance</div>
+      </div>
+
+      <div class="stat-card purple">
+        <div class="stat-title">Avg scans per active vendor</div>
+        <div class="stat-number">{{analytics.summary.avgScansPerActiveVendor}}</div>
+        <div class="stat-link">
+          Peak Scan Day: 
+        </div>
+      </div>
+    </div>
+
+<div class="stats-row2">
+
+  <div class="stat-card large">
+    <div class="header-large">
+      <div class="stat-title large">Engagement Distribution</div>
+    </div>
+
+  </div>
+
+  <div class="stat-card large">
+    <div class="header-large">
+      <div class="stat-title large">Engagement Coverage</div>
+    </div>
+  
+  </div>
+
+ 
+
+</div>
+}

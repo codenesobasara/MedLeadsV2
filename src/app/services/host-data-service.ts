@@ -29,6 +29,8 @@ export class HostDataService {
     }
   });
 
+ 
+
   public readonly events = computed(() => this.eventsResource.value() ?? []);
   public readonly analytics = computed(() => this.analyticsResource.value()?? null);
   public readonly isLoading = computed(() => 

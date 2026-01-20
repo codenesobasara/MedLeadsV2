@@ -3,11 +3,11 @@ import { HostDataService } from '../../../services/host-data-service';
 import { State } from '../../../services/state';
 import { HostKpiCards } from '../../Ui/Host/host-kpi-cards/host-kpi-cards'; 
 import { HostactionCards } from '../../Ui/Host/hostaction-cards/hostaction-cards';
-
+import { VendorEngagement } from '../../Ui/Host/vendor-engagement/vendor-engagement';
 @Component({
   selector: 'app-host',
   standalone: true,
-  imports: [HostKpiCards, HostactionCards],
+  imports: [HostKpiCards, HostactionCards,VendorEngagement],
   templateUrl: './host.html',
   styleUrl: './host.css',
 })

@@ -45,10 +45,11 @@ function createEventAnalyticsObject() {
         scans: 0,
       },
     },
+    topFiveVendors:[],
     eventScans:[],  
     Attendingvendors: [],
     activeVendors:[],
-
+    vendorCharData:[],
     totals: {
       totalScans: 0,
       byDayHour: {},
@@ -57,4 +58,14 @@ function createEventAnalyticsObject() {
 }
 
 
-module.exports ={createAttendeeAnalyticsObj,getDayHourKeys,createEventAnalyticsObject}
+function createVendorCharObject(){
+return {
+  vendorId: 0,
+  vendorName: "",
+  totalScans: 0,
+  activeScanHours: 0,
+  scansByHours: []
+}
+}
+
+module.exports ={createAttendeeAnalyticsObj,getDayHourKeys,createEventAnalyticsObject,createVendorCharObject }
