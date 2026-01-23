@@ -61,30 +61,6 @@ function VendorAnalyticsObject(){
   }
 }
 
-class SalesRep {
-  constructor(repId, repName) {
-    this.id = repId;
-    this.name = repName;
-    this.totalScans = 0;
-    this.scans = [];
-    this.scansPerDayHour = {};
-    this.firstScanAt = {};
-    this.lastScanAt = {};
-    this.timeBetweenScans = {};
-    this.avgDailyScans = 0;
-    this.avgScansPerHour = 0;
-  }
-
-  addScan(dayKey, hourKey, scan) {
-    const time = new Date(scan.scannedAt).getTime();
-    this.totalScans++;
-    this.scans.push(scan);
-    this.scansPerDayHour[dayKey] ||= {};
-    this.scansPerDayHour[dayKey][hourKey] = (this.scansPerDayHour[dayKey][hourKey] || 0) + 1;
-    if (!this.firstScanAt[dayKey] || time < this.firstScanAt[dayKey]) this.firstScanAt[dayKey] = time;
-    if (!this.lastScanAt[dayKey] || time > this.lastScanAt[dayKey]) this.lastScanAt[dayKey] = time;
-  }
-}
 
 
 

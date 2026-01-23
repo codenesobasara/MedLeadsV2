@@ -5,48 +5,81 @@ const vendorFunc = require("../VendorServices/VendorFunctions")
 const {VendorAnalyticsObject} = require("../VendorServices/VendorFunctions")
 
 /**
- * @param {{reps:[],scans:[],questions:[],products:[],event:{}}} data 
+ * @param {{reps:[],scans:[],questions:[],products:[],event:{},{ReturnType<typeof VendorAnalyticsObject>}vendorAnalyticsObj }} data 
  * @param {ReturnType<typeof VendorAnalyticsObject>} obj
  */
 
 
 
 class BoothAnalytics{
-  constructor() {
+  constructor(reps) {
       this.totalScans=0;
       this.avgScansPerRep=0;
       this.activeRepCount=0;
       this.peakDay={};
       this.peakDayHour={};
       this.questions=[];
-      this.attendingReps=[];
+      this.attendingReps=reps;
       this.allScans=[];
       this.dayHourScans=[]; 
+      this._activeRepMap = {}
+      this._peakMap={}
   }
 
-addScan({dayKey,hourKey,reps=[]}){
+addScan(dayKey,hourKey,s){
    this.totalScans ++;
+   this.allScans.push(s)
   let obj = this.dayHourScans.find(i => i.dayKey === dayKey);
   if (!obj) {obj = { dayKey, hours: {} };
   this.dayHourScans.push(obj);}
   obj.hours[hourKey] = (obj.hours[hourKey] ?? 0) + 1;
-
+  this._activeRepMap[s.salesRepId] ||= { active: false, count: 0 };
+  this._activeRepMap[s.salesRepId].count++;
+  this._activeRepMap[s.salesRepId].active = true;
 
 }
 addQuestions(questions){
 this.questions = questions
 }
 sort() {
-const byDay = Object.entries(this.scansByDay)
-    .map(([day, count]) => ({ day, count }))
-    .sort((a, b) => b.count - a.count);
-const byDayHour = Object.entries(this.scansByDayHour)
-    .flatMap(([day, hoursObj]) =>
-      Object.entries(hoursObj).map(([hour, count]) => ({ day, hour, count }))
-    )
-    .sort((a, b) => b.count - a.count);
+  const { byDay, byDayHour } = (() => {
+    const scansByDay = this.dayHourScans.reduce((acc, obj) => {
+      const dayTotal = Object.values(obj.hours).reduce((sum, n) => sum + n, 0);
+      acc[obj.dayKey] = (acc[obj.dayKey] ?? 0) + dayTotal;
+      return acc;
+    }, {});
+
+    const scansByDayHour = this.dayHourScans.reduce((acc, obj) => {
+      acc[obj.dayKey] = obj.hours ?? {};
+      return acc;
+    }, {});
+
+    const byDay = Object.entries(scansByDay)
+      .map(([day, count]) => ({ day, count }))
+      .sort((a, b) => b.count - a.count);
+
+    const byDayHour = Object.entries(scansByDayHour)
+      .flatMap(([day, hoursObj]) =>
+        Object.entries(hoursObj).map(([hour, count]) => ({ day, hour, count }))
+      )
+      .sort((a, b) => b.count - a.count);
+
+    return { byDay, byDayHour };
+  })();
+  this.peakDay = byDay[0];         
+  this.peakDayHour = byDayHour[0];
   return { byDay, byDayHour };
 }
+
+finalize(){
+  const activeRepsAmount = Object.keys(this._activeRepMap).length;
+  this.activeRepCount = activeRepsAmount;
+  this.avgScansPerRep = this.totalScans / this.activeRepCount;
+  
+
+}
+
+
 }
 
 
@@ -80,12 +113,10 @@ class RepAnalytics{
 
     finalize(){
       const hourlyTotals ={}
-      const peak={}
       this.scansPerDayHour.forEach(obj =>{
        Object.entries(obj.hours).forEach(([hourKey,scancount])=>{
         hourlyTotals[hourKey]||=[]
         hourlyTotals[hourKey].push(scancount)
-       console.log("This is the full hourly totals:", hourlyTotals)
       
        })
       });
@@ -112,11 +143,31 @@ this.scansPerDayHour.forEach(obj => {
     }
   
   }
-    
+
+  function buildVendorAnalytics(data){
+  const vendorAnalyticsObj = data.analyticsObject
+  vendorAnalyticsObj.booth = new BoothAnalytics()
+  const repMap = {}
+  data.eventScans.forEach(s => {
+  const{dayKey,hourKey} = func.getDayHourKeys(s.scannedAt,data.event.timeZone)
+  vendorAnalyticsObj.booth.addScan(dayKey,hourKey,s)
+  const repId =s.salesRepId;
+  if(!repId) return;
+  repMap[repId]||= new RepAnalytics()
+  repMap[repId].addScan(data.reps,s,dayKey,hourKey)
+  })
+  vendorAnalyticsObj.booth.sort()
+  vendorAnalyticsObj.booth.finalize()
+   vendorAnalyticsObj.booth.addQuestions(data.questions);
+  vendorAnalyticsObj.reps = Object.values(repMap)
+  vendorAnalyticsObj.reps.forEach(r => r.finalize())
+  return vendorAnalyticsObj
+
+  }  
 
  
 
 
 
 
-module.exports={BoothAnalytics,RepAnalytics,}
+module.exports={BoothAnalytics,RepAnalytics,buildVendorAnalytics}

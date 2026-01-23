@@ -15,22 +15,9 @@ router.get("/events", async (req,res)=>{
 router.get("/events/:eventId/analytics", async (req, res) => {
   try {const
       data = await vendorFunc.VendorAnalyticsFrameWork(1,req.params.eventId)
-      const booth = new VendorAnalytics.BoothAnalytics()
-      const repMap = {};
-      data.eventScans.forEach(s =>{
-       const {dayKey,hourKey} = func.getDayHourKeys(s.scannedAt,data.event.timeZone)
-       booth.addScan(dayKey,hourKey)
-       const repId = s.salesRepId; if (!repId) return;
-       if (!repMap[repId]) repMap[repId] = new VendorAnalytics.RepAnalytics();
-       repMap[repId].addScan(data.reps, s, dayKey, hourKey);
-      })
-      
-      data.analyticsObject.reps = Object.values(repMap);
-      data.analyticsObject.booth =booth
-      data.analyticsObject.reps.forEach(r=>r.finalize())
+      const vendorAnalyticsObj = VendorAnalytics.buildVendorAnalytics(data) 
 
-
-     return res.status(200).json(data.analyticsObject)
+     return res.status(200).json(vendorAnalyticsObj)
 
           
      }catch(err){console.error(err); res.status(500).json({message:err.message, stack:err.stack})}
