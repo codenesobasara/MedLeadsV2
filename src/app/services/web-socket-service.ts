@@ -18,10 +18,9 @@ export class WebSocketService {
 onMessage(handler: (msg: any) => void) {
   if (!this.ws) return;
   this.ws.onmessage = (event) => {
-    try {
-      handler(JSON.parse(event.data));
+    try { handler(JSON.parse(event.data));
     } catch {
-      console.log('Non-JSON WS message:', event.data);
+      console.log('message:', event.data);
     }
   };
 }

@@ -1,1 +1,22 @@
-<p>vendor works!</p>
+@switch (state.vendorDashState().eventSelected) {
+  @case (true) {
+    <app-vendor-kpi-cards></app-vendor-kpi-cards>
+    @switch (state.vendorDashState().cardSelected) {
+
+      @case ('VendorEngagement') {
+    
+      }
+
+     
+    
+      @default {
+       
+      }
+
+    }
+
+  }
+    @case (false) {
+    <app-vendor-action-card></app-vendor-action-card>
+  }
+}

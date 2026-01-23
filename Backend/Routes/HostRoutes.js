@@ -1,11 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const auth = require("../AuthService/AutheService");
-const userService = require("../UserService/UserFunctions")
-const authController = require("../AuthService/AuthController")
 const hostFunc = require("../HostService/HostFunctions")
 const broadcast = require("../RealTime/broadcast")
-const hostAnalytics = require("../HostService/HostAnalytics")
 
 
 router.post("/events", async(req,res)=>{

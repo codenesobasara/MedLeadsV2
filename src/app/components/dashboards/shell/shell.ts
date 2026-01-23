@@ -8,6 +8,9 @@ import { MatDividerModule } from '@angular/material/divider';
 import { HostSideBar } from '../../Ui/Host/host-side-bar/host-side-bar';
 import { HostTopBar } from '../../Ui/Host/host-top-bar/host-top-bar';
 import { Host } from '../host/host';
+import { VendorTopBar } from '../../Ui/vendor/vendor-top-bar/vendor-top-bar';
+import { VendorSideBar } from '../../Ui/vendor/vendor-side-bar/vendor-side-bar';
+import { Vendor } from '../vendor/vendor';
 
 
 @Component({
@@ -38,6 +41,11 @@ export class Shell {
         this.sidebar = HostSideBar;
         this.topbar = HostTopBar;
         this.content = Host;
+      }
+      if(user.role === 'vendor'){
+        this.sidebar =VendorSideBar;
+        this.topbar = VendorTopBar;
+        this.content = Vendor;
       }
     });
   }

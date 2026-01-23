@@ -49,9 +49,8 @@ VendorQuestion.belongsTo(VendorProfile, { foreignKey: "vendorId" });
 Event.hasMany(VendorQuestion, { foreignKey: "eventId" });
 VendorQuestion.belongsTo(Event, { foreignKey: "eventId" });
 
-// Attendee (was Doctor)
-Attendee.hasMany(Scan, { foreignKey: " attendeeId" });
-Scan.belongsTo(Attendee, { foreignKey: " attendeeId" });
+Attendee.hasMany(Scan, { foreignKey: "attendeeId" });
+Scan.belongsTo(Attendee, { foreignKey: "attendeeId" });
 
 VendorProfile.hasMany(Scan, { foreignKey: "vendorId" });
 Scan.belongsTo(VendorProfile, { foreignKey: "vendorId" });
@@ -74,7 +73,7 @@ module.exports = {
   VendorProfile,
   RepProfile,
   Event,
-  Attendee, 
+  Attendee,
   Scan,
   ScanAnswer,
   VendorProduct,

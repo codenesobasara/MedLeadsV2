@@ -5,8 +5,9 @@ const cors = require("cors");
 const WebSocket = require("ws");
 const authroutes = require("./Routes/authRoutes");
 const hostroutes = require("./Routes/HostRoutes");
+const vendorRoutes = require("./Routes/VendorRoutes")
 const sequelize = require("./mainConfig");
-const { authMiddleWare, requireHost } = require("./AuthService/AuthMiddleWare");
+const { authMiddleWare, requireHost, requireVendor } = require("./AuthService/AuthMiddleWare");
 require("./Models/associations");
 
 
@@ -17,6 +18,7 @@ app.use(cors());
 
 app.use("/auth", authroutes);
 app.use("/api/host", authMiddleWare, requireHost, hostroutes);
+app.use("/api/vendor", vendorRoutes); 
 
 sequelize
   .sync()

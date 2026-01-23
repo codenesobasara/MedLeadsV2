@@ -1,0 +1,80 @@
+<div>
+  @switch (vendorDashState().hasevents) {
+
+    @case (false) {
+      <div class="empty-state">
+        <div class="empty-card">
+          <div class="empty-title">No events yet</div>
+          <div class="empty-sub">
+            Register for an event to access your dashboard and start scanning attendees.
+          </div>
+          <button class="empty-cta" type="button">
+            Register for an event
+          </button>
+        </div>
+      </div>
+    }
+
+    @case (true) {
+      <div class="card-Wrapper">
+        @for (event of events(); track event.id) {
+          <div class="event-card" (click)="selectEvent(event)">
+            <div class="event-date">
+              <div class="event-month">
+                {{ event.startDate | date:'MMM' | uppercase }}
+              </div>
+              <div class="event-day">
+                {{ event.startDate | date:'d' }}
+              </div>
+            </div>
+
+            <div class="event-body">
+              <div class="event-title">
+                {{ event.name }}
+              </div>
+
+              <div class="event-meta">
+                <span class="event-time">
+                  {{ event.startDate | date:'HH:mm' }} - {{ event.endDate | date:'HH:mm' }}
+                </span>
+                <span class="event-dot">•</span>
+                <span class="event-timezone">{{ event.timezone }}</span>
+                <span class="event-dot">•</span>
+                <span class="event-format">{{ event.format }}</span>
+                <span class="event-dot">•</span>
+                <span class="event-location">
+                  {{ event.format === 'virtual'
+                    ? 'Online'
+                    : event.venue + ', ' + event.city + ', ' + event.region }}
+                </span>
+              </div>
+
+              <div class="event-submeta">
+                <span class="event-type">{{ event.eventType }}</span>
+                <span class="event-dot">•</span>
+                @if (event.estimatedAttendees !== null) {
+                  <span class="event-attendees">Est. {{ event.estimatedAttendees }}</span>
+                }
+              </div>
+
+              @if (event.description) {
+                <div class="event-desc">{{ event.description }}</div>
+              }
+
+              @if (event.attendeeGroups?.length) {
+                <div class="event-groups">
+                  @for (group of event.attendeeGroups; track group) {
+                    <span class="group-chip">{{ group }}</span>
+                  }
+                </div>
+              }
+
+              <div class="event-arrow" aria-hidden="true">→</div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+  }
+</div>

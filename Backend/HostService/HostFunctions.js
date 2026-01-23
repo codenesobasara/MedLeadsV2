@@ -16,8 +16,14 @@ return newHost
 }
 
 async function getHostEvents(id){
-    const events = await Events.findAll({where:{hostId:id}})
-    return events
+  const events = await Events.findAll({ where: { hostId: id } })
+  return events.map(e => {
+    const obj = e.toJSON();
+    obj.attendeeGroups = obj.attendeeGroups
+      ? JSON.parse(obj.attendeeGroups)
+      : [];
+    return obj;
+  });
 }
 
 async function getSingleEvent(id) {

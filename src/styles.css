@@ -1,7 +1,5 @@
-/* =========================
-   SHELL
-   ========================= */
-html, body { height: 100%; margin: 0; }
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+ body { height: 100%; margin: 0; }
 
 .layout{
   height: 100vh;
@@ -16,7 +14,7 @@ html, body { height: 100%; margin: 0; }
   background: transparent;
 }
 
-/* Topbar frame only (your topbar component lives inside) */
+
 .topbar{
   flex: 0 0 72px;
   display: flex;
@@ -28,7 +26,7 @@ html, body { height: 100%; margin: 0; }
   border-bottom: 1px solid #e9edf5;
 }
 
-/* Content frame only (don’t style cards here) */
+
 .content{
   flex: 1 1 auto;
   overflow: auto;
@@ -36,9 +34,7 @@ html, body { height: 100%; margin: 0; }
   box-sizing: border-box;
 }
 
-/* =========================
-   TOPBAR (your exact markup)
-   ========================= */
+
 .topbar .user-wrapper{
   display: flex;
   align-items: center;
@@ -58,34 +54,27 @@ html, body { height: 100%; margin: 0; }
   color: #2b3442;
 }
 
-/* =========================
-   SIDENAV (IMPORTANT: you have app-sidenav on BOTH)
-   mat-sidenav has class="... app-sidenav"
-   and inner <aside class="app-sidenav"> too.
-   So we scope explicitly.
-   ========================= */
 
-/* The Material drawer itself */
 mat-sidenav.app-sidenav{
   width: 260px !important;
   background: #fff !important;
   border-right: 1px solid #e9edf5 !important;
 }
 
-/* Add padding inside the drawer scroll container */
+
 mat-sidenav.app-sidenav .mat-drawer-inner-container{
   padding: 18px 14px !important;
   box-sizing: border-box;
 }
 
-/* The INNER aside content */
+
 mat-sidenav.app-sidenav aside.app-sidenav{
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-/* Logo */
+
 mat-sidenav.app-sidenav aside.app-sidenav .logo{
   height: 56px;
   display: flex;
@@ -102,13 +91,13 @@ mat-sidenav.app-sidenav aside.app-sidenav .logo-text{
   color: #4f64ff;
 }
 
-/* Dividers */
+
 mat-sidenav.app-sidenav aside.app-sidenav .mat-divider{
   margin: 14px 10px !important;
   border-top-color: #eef2f8 !important;
 }
 
-/* Material list item shape + hover */
+
 mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-nav-list .mat-mdc-list-item{
   margin: 4px 6px !important;
   border-radius: 12px !important;
@@ -118,7 +107,7 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover{
   background: #f5f7ff !important;
 }
 
-/* Align icon + text */
+
 mat-sidenav.app-sidenav aside.app-sidenav
 .mat-mdc-list-item .mdc-list-item__primary-text{
   display: flex;
@@ -140,17 +129,13 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item mat-icon{
 mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   color: #4f64ff !important;
 }
-/* =========================
-   DASHBOARD WRAPPER
-   ========================= */
+
 .app-dashboard{
   width: 100%;
-  min-width: 0; /* prevents grid overflow inside flex shells */
+  min-width: 0; 
 }
 
-/* =========================
-   KPI ROW (TOP 4 CARDS)
-   ========================= */
+
 .stats{
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -201,9 +186,9 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
 .stat-card.red{ background: #f5365c; }
 .stat-card.purple{ background: #8965e0; }
 
-/* =========================
-   ROW 2 PANELS
-   ========================= */
+
+ 
+ 
 .stats-row2{
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
@@ -212,7 +197,7 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   min-width: 0;
 }
 
-/* Base panel */
+
 .stat-card.large{
   background: #f5f7fb;
   border-radius: 12px;
@@ -220,10 +205,10 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   box-shadow: 0 6px 14px rgba(50, 50, 93, 0.12);
   display: flex;
   flex-direction: column;
-  color: inherit; /* override white text from .stat-card */
+  color: inherit; 
 }
 
-/* Header */
+
 .header-large{
   display: flex;
   justify-content: space-between;
@@ -246,7 +231,7 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   margin-top: 4px;
 }
 
-/* Header actions */
+
 .panel-actions{
   display: flex;
   align-items: center;
@@ -272,7 +257,7 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   text-decoration: underline;
 }
 
-/* Body */
+
 .panel-body{
   flex: 1;
   min-width: 0;
@@ -289,7 +274,7 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   font-size: 13px;
 }
 
-/* Metrics list */
+
 .panel-metrics{
   display: grid;
   gap: 12px;
@@ -310,7 +295,7 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   color: #111827;
 }
 
-/* Footer */
+
 .panel-footer{
   margin-top: 16px;
   font-size: 13px;
@@ -318,24 +303,18 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   opacity: 0.85;
 }
 
-/* =========================
-   MATERIAL (only what exists in your HTML)
-   Make the select compact in the header area
-   ========================= */
+
 .header-large mat-form-field{
   width: 170px;
 }
 
-/* reduce Material field height a bit */
 .header-large .mat-mdc-form-field-infix{
   min-height: 36px !important;
   padding-top: 8px !important;
   padding-bottom: 8px !important;
 }
 
-/* =========================
-   RESPONSIVE (keeps your design, just stacks)
-   ========================= */
+
 @media (max-width: 1200px){
   .stats{ grid-template-columns: repeat(2, 1fr); }
   .stats-row2{ grid-template-columns: 1fr; }
@@ -343,4 +322,183 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
 
 @media (max-width: 640px){
   .stats{ grid-template-columns: 1fr; }
+}
+
+
+/*Action Cards*/
+
+.card-Wrapper{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 22px;
+  align-items: stretch;
+}
+
+
+.event-card{
+  cursor: pointer;
+  min-height: 170px;
+  width: 100%;
+  box-shadow: 0 22px 34px rgba(16, 24, 40, 0.22);
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  overflow: hidden;
+  border-radius: 0;
+  position: relative;
+}
+
+
+.event-card:nth-child(odd) { background-color: #3b378a; }
+.event-card:nth-child(even){ background-color: #9a9650; }
+
+.event-card:nth-child(odd):hover { background-color: #28264d; }
+.event-card:nth-child(even):hover{ background-color: #4e4c29; }
+
+
+.event-date{
+  padding: 18px 16px;
+  background: transparent;
+}
+
+.event-month{
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.event-day{
+  margin-top: 8px;
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1;
+  color: #ffffff;
+}
+
+
+.event-body{
+  padding: 18px 18px 18px 0;
+  display: grid;
+  grid-auto-rows: max-content;
+  gap: 10px;
+  min-width: 0;
+}
+
+.event-title{
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  max-width: 100%;
+}
+
+.event-meta{
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.80);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.event-submeta{
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.event-dot{ opacity: 0.8; }
+
+.event-desc{
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.event-groups{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.group-chip{
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.92);
+  border: 1px solid rgba(255,255,255,0.26);
+  background: rgba(255,255,255,0.06);
+  border-radius: 999px;
+  padding: 6px 10px;
+}
+
+
+.event-arrow{
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.95);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+
+
+.add-event-tile{
+  width: 320px;
+  min-height: 170px;
+  border-radius: 0;
+  display: grid;
+  place-content: center;
+  gap: 10px;
+  text-align: center;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #f5f7ff, #eef2ff);
+  box-shadow: 0 18px 30px rgba(16, 24, 40, 0.12);
+
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.add-event-tile:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 24px 38px rgba(16, 24, 40, 0.18);
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+}
+
+.add-event-btn{
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  background: #7c5cff; /* matches your reference vibe */
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(156, 150, 179, 0.35);
+}
+
+.add-event-btn:hover{
+  filter: brightness(1.05);
+}
+
+.add-event-sub{
+  font-size: 12px;
+  color: #6b7280;
 }

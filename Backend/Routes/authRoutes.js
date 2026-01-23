@@ -6,7 +6,6 @@ const authController = require("../AuthService/AuthController")
 const connection = require("../mainConfig");
 
 router.post("/login", async (req,res)=>{
-     console.log("✅ HIT /auth/login", req.body);
 try{const {email,password} = req.body
 const user = await auth.authCheck(email,password)
 if(!user){return res.status(404).json({message:"user not found"})}

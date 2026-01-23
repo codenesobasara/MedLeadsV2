@@ -21,3 +21,11 @@ export interface HostDash{
    cardSelected:string |null
  
 }
+
+export interface VendorDash{
+  hasevents: boolean | null;
+  eventSelected:boolean|null
+   EventId: number | null,
+   cardSelected:string |null
+ 
+}

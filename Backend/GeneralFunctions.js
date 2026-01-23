@@ -30,6 +30,8 @@ function getDayHourKeys(date, tz) {
     hourLabel: dt.toFormat('ha') 
   };
 }
+
+
 function createEventAnalyticsObject() {
   return {
     summary: {
@@ -49,7 +51,7 @@ function createEventAnalyticsObject() {
     eventScans:[],  
     Attendingvendors: [],
     activeVendors:[],
-    vendorCharData:[],
+    vendorChartData:[],
     totals: {
       totalScans: 0,
       byDayHour: {},
@@ -58,7 +60,65 @@ function createEventAnalyticsObject() {
 }
 
 
-function createVendorCharObject(){
+function SalesRepAnalyticsObj(){
+  return{
+   summary:{
+    repsAttending:0,
+    totalScans:0,
+    ActiveReps:0,
+    avgScansPerRep:0,
+
+     peakHours:{
+      day:"",
+      hourKey: "",
+      scans:0,
+     },
+      totals: {
+      totalScans: 0,
+      byDayHour: {},
+    },
+   
+
+   },
+
+   salesReps:[],
+   boothScans:[],
+   lineChartData:{},
+   questions:[],
+   products:[]
+
+   
+
+  }
+}
+
+function salesRepObj(){
+  return{
+    repId:0,
+    repName:"",
+    vendorId:0
+
+  }
+}
+
+
+function salesRepObj(){
+ return {repId:0,
+         repName:"",
+         isActive:false,
+         scans:[],
+         scanInsights:{
+          scanPercent:0,
+          totalAvrg:0,
+          totalScans:0
+         },
+      dayHour:[]
+}
+
+}
+
+
+function createEngagementCharObject(){
 return {
   vendorId: 0,
   vendorName: "",
@@ -68,4 +128,4 @@ return {
 }
 }
 
-module.exports ={createAttendeeAnalyticsObj,getDayHourKeys,createEventAnalyticsObject,createVendorCharObject }
+module.exports ={createAttendeeAnalyticsObj,getDayHourKeys,createEventAnalyticsObject,createEngagementCharObject, SalesRepAnalyticsObj }
