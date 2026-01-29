@@ -1,0 +1,45 @@
+<div class="add-container">
+  <div class="status-container">
+
+    <div class="header-large">
+      <div>
+        <div class="stat-title large">Add Sales Representative</div>
+        <div class="stat-sub">Rep Information</div>
+      </div>
+
+      <div class="today-count">Step {{ stepNumber() }} of {{ totalSteps }}</div>
+    </div>
+
+    <div class="progress-bar">
+      <mat-progress-bar
+        mode="determinate"
+        [value]="progressValue()">
+      </mat-progress-bar>
+    </div>
+  </div>
+
+  <div class="header-block">
+    <div class="stat-title large">Add New Sales Representative</div>
+    
+  </div>
+@switch (step()) {
+  @case (0) {
+    <app-rep-info-step
+      (next)="next()"
+      (cancel)="back()">
+    </app-rep-info-step>
+  }
+
+  @case (1) {
+    <app-rep-territory-step
+      (next)="next()"
+      (back)="back()">
+    </app-rep-territory-step>
+  }
+  @case(2){
+    <app-final-step
+    (back)="back()"
+    ></app-final-step>
+  }
+}
+</div>

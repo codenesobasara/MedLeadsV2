@@ -18,7 +18,7 @@ app.use(cors());
 
 app.use("/auth", authroutes);
 app.use("/api/host", authMiddleWare, requireHost, hostroutes);
-app.use("/api/vendor", vendorRoutes); 
+app.use("/api/vendor",authMiddleWare,requireVendor, vendorRoutes); 
 
 sequelize
   .sync()

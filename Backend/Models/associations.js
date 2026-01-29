@@ -2,13 +2,18 @@ const User = require("./Users");
 const HostProfile = require("./HostProfile");
 const VendorProfile = require("./VendorProfile");
 const RepProfile = require("./SalesRepProfile");
+const SalesRepTerritory = require("./salesRepTerretories"); 
 
 const Event = require("./EventModel");
-const Attendee = require("./Attendee"); 
+const Attendee = require("./Attendee");
 const Scan = require("./ScanModel");
 const ScanAnswer = require("./ScanAnswers");
 const VendorProduct = require("./VendorProductsModel");
 const VendorQuestion = require("./VendorQuestions");
+const ScanProduct = require("./ScanProducts");
+
+Scan.belongsToMany(VendorProduct, { through: ScanProduct, foreignKey: 'scanId' });
+VendorProduct.belongsToMany(Scan, { through: ScanProduct, foreignKey: 'productId' });
 
 User.hasOne(HostProfile, { foreignKey: "userId" });
 HostProfile.belongsTo(User, { foreignKey: "userId" });
@@ -49,9 +54,6 @@ VendorQuestion.belongsTo(VendorProfile, { foreignKey: "vendorId" });
 Event.hasMany(VendorQuestion, { foreignKey: "eventId" });
 VendorQuestion.belongsTo(Event, { foreignKey: "eventId" });
 
-Attendee.hasMany(Scan, { foreignKey: "attendeeId" });
-Scan.belongsTo(Attendee, { foreignKey: "attendeeId" });
-
 VendorProfile.hasMany(Scan, { foreignKey: "vendorId" });
 Scan.belongsTo(VendorProfile, { foreignKey: "vendorId" });
 
@@ -67,11 +69,15 @@ ScanAnswer.belongsTo(Scan, { foreignKey: "scanId" });
 VendorQuestion.hasMany(ScanAnswer, { foreignKey: "vendorQuestionId" });
 ScanAnswer.belongsTo(VendorQuestion, { foreignKey: "vendorQuestionId" });
 
+RepProfile.hasMany(SalesRepTerritory, { foreignKey: "salesRepId", as: "territories" });
+SalesRepTerritory.belongsTo(RepProfile, { foreignKey: "salesRepId" });
+
 module.exports = {
   User,
   HostProfile,
   VendorProfile,
   RepProfile,
+  SalesRepTerritory, 
   Event,
   Attendee,
   Scan,

@@ -1,42 +1,42 @@
-@if (analytics; as analytics) {
+@if (analytics(); as analytics) {
 
   <section class="app-dashboard">
 
-  
     <div class="stats">
       <div class="stat-card blue">
         <div class="stat-title">Sales Reps At Event</div>
-        <div class="stat-number"></div>
+        <div class="stat-number">{{ analytics.reps.length }}</div>
         <div class="stat-link">View Reps</div>
       </div>
 
       <div class="stat-card teal">
         <div class="stat-title">Total scans</div>
-        <div class="stat-number"></div>
+        <div class="stat-number">{{ analytics.booth.totalScans }}</div>
         <div class="stat-link">See scan activity</div>
       </div>
 
       <div class="stat-card red">
         <div class="stat-title">Active Reps</div>
         <div class="stat-number">
-          
+          {{ analytics.booth.activeRepCount }}
         </div>
         <div class="stat-link">Rep Performance</div>
       </div>
 
       <div class="stat-card purple">
-        <div class="stat-title">Avg scans per  Rep</div>
-        <div class="stat-number"></div>
+        <div class="stat-title">Avg scans per Rep</div>
+        <div class="stat-number">
+          {{ analytics.booth.avgScansPerRep | number:'1.0-2' }}
+        </div>
         <div class="stat-link">
-          Peak Scan Day: 
+          Peak Scan Day:
+          {{ analytics.booth.peakDay?.day }}
         </div>
       </div>
     </div>
 
-    <!-- Row 2 -->
     <div class="stats-row2">
 
-      <!-- Card1 : Chart -->
       <div class="stat-card large">
         <div class="header-large">
           <div>
@@ -51,19 +51,18 @@
               <mat-select value="today">
                 <mat-option value="today">Today</mat-option>
                 <mat-option value="7">Last 7 days</mat-option>
-                <mat-option value="30">Last 30 days</mat-option>
+                <mat-select value="30">Last 30 days</mat-select>
               </mat-select>
             </mat-form-field>
           </div>
         </div>
 
         <div class="panel-body">
-          <div class="chart-placeholder">Chart </div>
+          <div class="chart-placeholder">Chart</div>
         </div>
       </div>
 
-      <!-- Card 2 -->
-      <div class="stat-card large" name="VendorEngagement"  >
+      <div class="stat-card large" name="VendorEngagement">
         <div class="header-large">
           <div>
             <div class="stat-title large">Rep Engagement</div>
@@ -75,20 +74,18 @@
         <div class="panel-metrics">
           <div class="metric-row">
             <span>Active Reps</span>
-            <strong>
-             
-            </strong>
+            <strong>{{ analytics.booth.activeRepCount }}</strong>
           </div>
 
           <div class="metric-row">
             <span>Top Rep</span>
-            <strong></strong>
+            <strong>{{ analytics.reps[0]?.name }}</strong>
           </div>
 
           <div class="metric-row">
             <span>Inactive Reps</span>
             <strong>
-             
+              {{ analytics.reps.length - analytics.booth.activeRepCount }}
             </strong>
           </div>
         </div>
@@ -96,7 +93,6 @@
         <div class="panel-footer">Tap to view vendor breakdown</div>
       </div>
 
-      <!-- Card 3 Attendee Engagement -->
       <div class="stat-card large">
         <div class="header-large">
           <div>
@@ -108,22 +104,161 @@
 
         <div class="panel-metrics">
           <div class="metric-row">
-            <span> Attendees Scanned</span>
-            <strong> / 160</strong>
+            <span>Attendees Scanned</span>
+            <strong>{{ analytics.booth.totalScans }}</strong>
           </div>
 
           <div class="metric-row">
             <span>Top Rep</span>
-            <strong></strong>
+            <strong>{{ analytics.reps[0]?.name }}</strong>
           </div>
 
           <div class="metric-row">
             <span>Avg scans / Rep</span>
-            <strong></strong>
+            <strong>
+              {{ analytics.booth.avgScansPerRep | number:'1.0-2' }}
+            </strong>
           </div>
         </div>
 
         <div class="panel-footer">Tap to explore Rep activity</div>
+      </div>
+
+      <div class="stat-card large" name="VendorEngagement">
+        <div class="header-large">
+          <div>
+            <div class="stat-title large">Sales Reps</div>
+          </div>
+          <div class="panel-link">{{ analytics.booth.activeRepCount }}</div>
+        </div>
+
+        <div class="panel-metrics">
+          <div class="metric-row">
+            <span>Top Five Reps</span>
+            <strong></strong>
+          </div>
+
+          <div class="list-container">
+            @for (rep of analytics.reps; track rep.id; let i = $index) {
+              @if (i < 5) {
+                <div class="list-item">
+                  <div class="metric-row-strong">{{ rep.name }}</div>
+                  <div class="metric-row">{{ rep.totalScans }} scans</div>
+                </div>
+              }
+            }
+          </div>
+
+          <div class="rep-btn-container">
+            <button
+              mat-flat-button
+              color="primary"
+              class="primary-btn"
+              type="submit"
+              name="Register"
+              (click)="addRep()"
+            >
+              Add Rep
+            </button>
+          </div>
+        </div>
+
+        <div class="panel-footer">Tap to view vendor breakdown</div>
+      </div>
+
+      <div class="stat-card large" name="VendorEngagement">
+        <div class="header-large">
+          <div>
+            <div class="stat-title large">Attendees</div>
+          </div>
+          <div class="panel-link">
+            {{ analytics.booth.BoothAttendees.length }}
+          </div>
+        </div>
+
+        <div class="panel-metrics">
+          <div class="metric-row">
+            <span>Top Five Attendees</span>
+            <strong></strong>
+          </div>
+
+          <div class="list-container">
+            @for (attendee of analytics.booth.BoothAttendees; track $index; let i = $index) {
+              @if (i < 5) {
+                <div class="list-item">
+                  <div class="metric-row-strong">
+                    {{ attendee.FirstName }}
+                  </div>
+                  <div class="metric-row">
+                    {{ attendee.visits }} scans
+                  </div>
+                </div>
+              }
+            }
+          </div>
+
+          <div class="rep-btn-container">
+            <button
+              mat-flat-button
+              color="primary"
+              class="primary-btn"
+              type="submit"
+              name="Register"
+            >
+              View Attendee Insights
+            </button>
+          </div>
+        </div>
+
+        <div class="panel-footer">Tap to view Attendee breakdown</div>
+      </div>
+
+      
+      <div class="stat-card large" name="Questions">
+        <div class="header-large">
+          <div>
+            <div class="stat-title large">Questions</div>
+          </div>
+          <div class="panel-link">
+            {{ analytics.booth.questions.length }}
+          </div>
+        </div>
+
+        <div class="panel-metrics">
+          <div class="metric-row">
+            <span>Current Questions</span>
+            <strong></strong>
+          </div>
+
+          <div class="list-container">
+            @for (question of analytics.booth.questions; track $index; let i = $index) {
+              @if (i < 5) {
+                <div class="list-item">
+                  <div class="metric-row-strong">
+                    {{question}}
+                  </div>
+                  <div class="metric-row">
+                   
+                  </div>
+                </div>
+              }
+            }
+          </div>
+
+          <div class="rep-btn-container">
+            <button
+              mat-flat-button
+              color="primary"
+              class="primary-btn"
+              type="submit"
+              name="Register"
+            >
+              Add Question
+            </button>
+          </div>
+        </div>
+
+        <div class="panel-footer">Tap to view all</div>
       </div>
 
     </div>

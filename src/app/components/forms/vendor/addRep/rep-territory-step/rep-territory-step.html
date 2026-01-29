@@ -1,0 +1,72 @@
+<div class="form-wrapper">
+  <form [formGroup]="form" class="form">
+
+    <div class="title-block">
+      <div class="h1">Does this representative have a designated territory?</div>
+      <div class="sub">
+        Territories allow you to track performance by geographic region<br />
+        and assign leads automatically.
+      </div>
+    </div>
+
+    <mat-radio-group formControlName="hasTerritory" class="choice-list">
+     
+      <label class="choice-card" [class.active]="form.controls.hasTerritory.value === true">
+        <div class="left">
+          <mat-radio-button [value]="true"></mat-radio-button>
+          <div class="text">
+            <div class="choice-title">Yes</div>
+            <div class="choice-sub">Assign specific geographic regions for this representative</div>
+          </div>
+        </div>
+        <div class="icon">🌐</div>
+      </label>
+    
+
+      <label class="choice-card" [class.active]="form.controls.hasTerritory.value === false">
+        <div class="left">
+          <mat-radio-button [value]="false"></mat-radio-button>
+          <div class="text">
+            <div class="choice-title">No</div>
+            <div class="choice-sub">General representative without specific regional boundaries</div>
+          </div>
+        </div>
+        <div class="icon muted">🌐</div>
+      </label>
+    </mat-radio-group>
+
+    <div class="divider"></div>
+  @if(form.controls.hasTerritory.value === true){
+    <div class="section">
+      <div class="section-title">Select Territory Level</div>
+      <div class="hint">is this reps territory a state/province, city or postal code ?</div>
+
+   <mat-form-field appearance="outline" class="field full">
+  <mat-select formControlName="countryLevel" placeholder="Select Country">
+    <mat-option value="Canada">Canada</mat-option>
+    <mat-option value="UnitedStates">United States</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-form-field appearance="outline" class="field full">
+  <mat-select formControlName="territoryLevel" placeholder="Choose a level">
+    <mat-option value="province">Province/State</mat-option>
+    <mat-option value="city">City</mat-option>
+    <mat-option value="postal">Postal/ZIP</mat-option>
+  </mat-select>
+</mat-form-field>
+
+      
+    </div>}
+    <div class="divider"></div>
+
+    <div class="footer">
+      <button mat-button type="button" class="back" (click)="back.emit()">Back</button>
+
+      <button mat-raised-button type="button" class="continue"  (click)="onNext()">
+        Continue
+      </button>
+    </div>
+
+  </form>
+</div>

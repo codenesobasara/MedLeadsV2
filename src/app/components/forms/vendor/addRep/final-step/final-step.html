@@ -1,0 +1,76 @@
+<div class="form-wrapper">
+  <form class="form" [formGroup]="form">
+
+    <div class="header-large">
+      <div class="stat-title large">
+        Assign Territory for {{ form.controls.firstName.value }}
+      </div>
+      <div class="stat-sub">Select the regions this representative will manage.</div>
+
+      <div class="rep-summary">
+        <div class="rep-name">
+          {{ form.controls.firstName.value }} {{ form.controls.lastName.value }}
+        </div>
+        <div class="rep-meta">
+          <div>{{ form.controls.email.value }}</div>
+          <div>{{ form.controls.phone.value }}</div>
+        </div>
+      </div>
+
+      @switch (form.controls.countryLevel.value) {
+        @case ('Canada') {
+          @if (form.controls.territoryLevel.value === 'province') {
+            <div class="province-box">
+              <div class="stat-title">Provinces</div>
+              <div class="divider"></div>
+              <div class="province-grid">
+                @for (p of provinces; track p) {
+                  <mat-checkbox>{{ p }}</mat-checkbox>
+                }
+              </div>
+            </div>
+          }
+
+          @if (form.controls.territoryLevel.value === 'city') {
+            <div class="province-box">
+              <div class="stat-title">Add Cities</div>
+              <div class="divider"></div>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Search</mat-label>
+
+                <input matInput type="search" formControlName="cityQuery" />
+
+                <button
+                  matSuffix
+                  mat-icon-button
+                  aria-label="Clear"
+                  type="button"
+                  (click)="form.controls.cityQuery.setValue('')"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+
+                <mat-icon matPrefix>search</mat-icon>
+              </mat-form-field>
+
+              <div class="city-results">
+                @for (city of vendorForm.cityResource.value(); track city.placeId) {
+                  <div class="city-row">
+                    {{ city.name }}
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        }
+      }
+    </div>
+
+    <div class="footer">
+      <button mat-button type="button" class="back" (click)="back.emit()">Back</button>
+      <button mat-raised-button type="button" class="continue">Submit</button>
+    </div>
+
+  </form>
+</div>

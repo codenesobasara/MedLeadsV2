@@ -1,4 +1,4 @@
-// models/HostProfile.js
+
 const { DataTypes } = require('sequelize');
 const sequelize = require("../mainConfig");
 

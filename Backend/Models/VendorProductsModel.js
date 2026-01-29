@@ -46,12 +46,12 @@ const VendorProduct = sequelize.define('VendorProduct', {
 
   fdaApprovalNumber: {
     type: DataTypes.STRING,
-    allowNull: true,  // only filled if isFdaApproved = true
+    allowNull: true,  
   },
 
   fdaClass: {
     type: DataTypes.STRING,
-    allowNull: true,  // e.g. "Class I / II / III"
+    allowNull: true,  
   },
 });
 

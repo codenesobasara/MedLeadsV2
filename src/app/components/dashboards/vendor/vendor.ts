@@ -9,6 +9,7 @@ import { VendorKpiCards } from '../../Ui/vendor/vendor-kpi-cards/vendor-kpi-card
   imports: [VendorActionCard, VendorKpiCards],
   templateUrl: './vendor.html',
   styleUrl: './vendor.css',
+  standalone:true
 })
 export class Vendor {
 public vendorData = inject(VendorDataService)  
@@ -18,8 +19,6 @@ constructor(){
   effect(()=>{
    const events = this.vendorData.vendorEvents()
    if( events.length > 0 && !this.state.vendorDashState().hasevents){this.state.changVendorDashState({hasevents:true})}
-    console.log(events.length);
-    console.log(this.state.vendorDashState().hasevents);
     
   })
 }

@@ -489,7 +489,7 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   font-size: 14px;
   font-weight: 700;
   color: #ffffff;
-  background: #7c5cff; /* matches your reference vibe */
+  background: #7c5cff;
   cursor: pointer;
   box-shadow: 0 10px 20px rgba(156, 150, 179, 0.35);
 }
@@ -501,4 +501,35 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
 .add-event-sub{
   font-size: 12px;
   color: #6b7280;
+}
+
+.list-container{
+  display:flex ;
+  flex-direction: column;
+  margin-top: 2px;
+  width:100%;
+  gap: 5px;
+
+}
+
+.list-item{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width:85%;
+  margin: 2px;
+  padding: 18px;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(16, 24, 40, 0.12);
+  cursor: pointer;
+  background: linear-gradient(135deg, #f5f7ff, #eef2ff);
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+  pointer-events: auto !important;
+}
+
+
+.list-item:hover{
+  transform: translateY(-2px) !important;
+  box-shadow: 0 24px 38px rgba(16, 24, 40, 0.18) !important;
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff) !important;
 }

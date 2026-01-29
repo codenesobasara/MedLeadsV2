@@ -4,6 +4,7 @@ const salesReps = require("../Models/SalesRepProfile")
 const VendorQuestion =require("../Models/VendorQuestions")
 const VendorProduct = require("../Models/VendorProductsModel")
 const scan = require("../Models/ScanModel")
+const Attendee =require ("../Models/Attendee")
 const func = require("../GeneralFunctions")
 const { where } = require("sequelize")
 
@@ -16,7 +17,7 @@ const attendingEvents = await VendorEvents.findAll({
 })
 const eventIds =attendingEvents.map(e => e.eventId)
 if(eventIds.length === 0){return []}
- const events = await event.findAll({ where: { id: eventIds } })
+ const events = await EventModel.findAll({ where: { id: eventIds } })
   return events.map(e => {
     const obj = e.toJSON();
     obj.attendeeGroups = obj.attendeeGroups
@@ -30,17 +31,21 @@ if(eventIds.length === 0){return []}
 
 
 async function VendorAnalyticsFrameWork(vendorId,eventId){
- const reps = await salesReps.findAll({where:{vendorId}}) 
- const eventScans = await scan.findAll({vendorId,eventId})
- const products = await VendorProduct.findAll({vendorId})
- const questions = await VendorQuestion.findAll({vendorId})
+ const reps = await salesReps.findAll({ where: { vendorId, eventId } })
+const eventScans = await scan.findAll({ where: { vendorId, eventId, type: "scan" } })
+ const products = await VendorProduct.findAll({ where: { vendorId:vendorId } })
+const questions = await VendorQuestion.findAll({ where: { vendorId } })
  const event = await EventModel.findByPk(eventId)
+ const eventAttendees = await Attendee.findAll({
+  include: [{model: scan, required: true,attributes: [],
+    where: { vendorId, eventId, type: "scan" }
+  }]
+});
+ const scannedProducts = await VendorProduct.findAll({include: [{ model: scan,required: true,where: { vendorId, eventId },through: { attributes: [] },}],});
  const analyticsObject = VendorAnalyticsObject()
  
-return {reps,eventScans,products,questions,event, analyticsObject}
+return {reps,eventScans,products,questions,event, analyticsObject,eventAttendees,scannedProducts}
 }
-
-
 
 
 function VendorAnalyticsObject(){
