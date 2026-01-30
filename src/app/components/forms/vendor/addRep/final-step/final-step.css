@@ -19,6 +19,7 @@
   flex-direction: column;
   gap: 8px;
 }
+
 .rep-summary{
   margin-top: 10px;
   padding: 10px 12px;
@@ -40,12 +41,12 @@
   font-size: 13px;
   opacity: 0.75;
 }
+
 .divider{
   margin: 12px 0;
   height: 1px;
   background: rgba(16,24,40,0.10);
 }
-
 
 .province-box{
   margin-top: 12px;
@@ -55,7 +56,6 @@
   box-sizing: border-box;
   width: 100%;
 }
-
 
 .province-grid{
   display: grid;
@@ -80,6 +80,7 @@
   padding: 10px 18px;
   font-weight: 800;
 }
+
 .province-box mat-form-field{
   width: 100%;
 }
@@ -98,4 +99,69 @@
 
 .city-row:hover{
   background: rgba(16,24,40,0.04);
+}
+
+.list-container{
+  gap: 12px;
+}
+
+
+.list-container .list-item:hover{
+  transform: none !important;
+  box-shadow: 0 5px 20px rgba(16, 24, 40, 0.12) !important;
+  background: linear-gradient(135deg, #f5f7ff, #eef2ff) !important;
+}
+.country-city-row{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.country-city-row{
+  display: flex;
+  gap: 12px;
+}
+
+.country-select,
+.city-search{
+  flex: 1 1 0;
+  width: 100%;
+}
+
+.list-container{
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.selected-chips{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.chip{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  line-height: 1.4;
+  border-radius: 999px;
+  background: rgba(16,24,40,0.06);
+  border: 1px solid rgba(16,24,40,0.12);
+  white-space: nowrap;
+}
+
+.chip-remove{
+  all: unset;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  opacity: 0.6;
+}
+
+.chip-remove:hover{
+  opacity: 1;
 }

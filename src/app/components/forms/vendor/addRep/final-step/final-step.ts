@@ -45,4 +45,17 @@ provinces = [
   'Nunavut'
 ];
 
+selectCity(city:{name:string; placeId:string}){
+  const currentSelection = this.vendorForm.citySelection()?? []
+  this.form.controls.citySelections.setValue([...currentSelection,city])
+   this.form.controls.cityQuery.setValue('')
+}
+
+removeCity(placeId: string) {
+  const control = this.form.controls.citySelections;
+  control.setValue(control.value.filter(c => c.placeId !== placeId));
+}
+
+
+
 }
