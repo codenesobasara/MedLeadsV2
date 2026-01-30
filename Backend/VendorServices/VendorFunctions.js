@@ -6,15 +6,13 @@ const VendorProduct = require("../Models/VendorProductsModel")
 const scan = require("../Models/ScanModel")
 const Attendee =require ("../Models/Attendee")
 const func = require("../GeneralFunctions")
-const { where } = require("sequelize")
 
 
 async function getVendorEvents(id){
 const attendingEvents = await VendorEvents.findAll({
     where:{id},
     attributes:['eventId'],
-    raw:true
-})
+    raw:true})
 const eventIds =attendingEvents.map(e => e.eventId)
 if(eventIds.length === 0){return []}
  const events = await EventModel.findAll({ where: { id: eventIds } })
@@ -26,8 +24,6 @@ if(eventIds.length === 0){return []}
     return obj;
   });
 }
-
-
 
 
 async function VendorAnalyticsFrameWork(vendorId,eventId){

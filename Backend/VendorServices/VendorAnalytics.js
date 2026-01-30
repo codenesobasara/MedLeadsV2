@@ -1,13 +1,8 @@
-const { scan, count } = require("rxjs")
-const {SalesRepAnalyticsObj} = require("../GeneralFunctions")
+
 const func = require("../GeneralFunctions")
 const vendorFunc = require("../VendorServices/VendorFunctions")
 const {VendorAnalyticsObject} = require("../VendorServices/VendorFunctions")
 
-/**
- * @param {{reps:[],scans:[],questions:[],products:[],event:{},{ReturnType<typeof VendorAnalyticsObject>}vendorAnalyticsObj }} data 
- * @param {ReturnType<typeof VendorAnalyticsObject>} obj
- */
 
 
 
@@ -25,9 +20,7 @@ class BoothAnalytics{
       this.dayHourScans=[]; 
       this._activeRepMap = {}
       this._peakMap={}
-      this._attendeeMap ={}
-      
-      
+      this._attendeeMap ={}          
   }
 
 addScan(dayKey,hourKey,s,eventAttendees,scannedProducts,products){
@@ -106,11 +99,9 @@ class RepAnalytics{
     constructor() {
     this.id = 0;
     this.name = ""
-
     this.totalScans = 0;
     this.totAvgScansPerHour = 0;
     this.avgScansPerDay = 0;
-
     this.scans = [];
     this.attendees = [];             
     this.scansPerDayHour = [];     
@@ -143,7 +134,6 @@ class RepAnalytics{
        Object.entries(obj.hours).forEach(([hourKey,scancount])=>{
         hourlyTotals[hourKey]||=[]
         hourlyTotals[hourKey].push(scancount)
-      
        })
       });
     this.avgScansPerDayHour = Object.entries(hourlyTotals).map(([hourKey, scans]) => {

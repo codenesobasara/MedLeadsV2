@@ -19,7 +19,7 @@ export class VendorFormControl {
     phone:this.fb.control("",[Validators.required]),
    hasTerritory: this.fb.control<boolean | null>(null, [Validators.required]),
    countryLevel:this.fb.control<'Canada'|'UnitedStates'| null>(null,[Validators.required]),
-   territoryLevel: this.fb.control<'province' | 'city' | 'postal' | null>(null),
+   territoryLevel: this.fb.control<'state'|'province' | 'city' | 'postal' | null>(null),
    provinceStateSelections: this.fb.control<string[]>([], { nonNullable: true }),
    citySelections: this.fb.control<{ name: string; placeId: string; bbox?: [number, number, number, number] }[]>([], { nonNullable: true }),
    postalMode: this.fb.nonNullable.control<'manual' | 'upload'>('manual'),
@@ -28,12 +28,14 @@ export class VendorFormControl {
    cityQuery: this.fb.nonNullable.control(""),
    regionQuery: this.fb.nonNullable.control(""),
    areaSelection: this.fb.control<{ name: string; placeId: string }[]>([], { nonNullable: true }),
+   postalQuery: this.fb.nonNullable.control(""),
   })
 private cityQuery = toSignal(this.addRepForm.controls.cityQuery.valueChanges)
 private regionQuery = toSignal(this.addRepForm.controls.regionQuery.valueChanges)
 private countrySignal = toSignal(this.addRepForm.controls.countryLevel.valueChanges)
 public citySelection = toSignal(this.addRepForm.controls.citySelections.valueChanges)
-
+private postalQuery = toSignal(this.addRepForm.controls.postalQuery.valueChanges);
+private areaSelection = toSignal(this.addRepForm.controls.areaSelection.valueChanges);
 
 regionsResource = rxResource({
   params:()=>({
@@ -101,6 +103,8 @@ cityResource = rxResource({
     );
   },
 });
+
+
 
 public readonly city = computed(()=> this.cityResource.value())
 public readonly regions = computed(()=> this.regionsResource.value()) 
