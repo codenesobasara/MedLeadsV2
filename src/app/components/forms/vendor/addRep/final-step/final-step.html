@@ -200,47 +200,43 @@
                 placeholder="Search Area"
                 formControlName="regionQuery"
                 [matAutocomplete]="regionAuto"
+                
               />
 
               <mat-autocomplete #regionAuto="matAutocomplete">
                 @for (region of vendorForm.regions(); track region.placeId) {
-                  <mat-option [value]="region.name">
+                  <mat-option [value]="region.name"  (click)="selectArea(region)">
                     {{ region.displayName }}
                   </mat-option>
                 }
               </mat-autocomplete>
             </mat-form-field>
 
-            <mat-form-field
-              appearance="outline"
-              class="postal-bar"
-            >
-              <mat-label>Search Postal Code</mat-label>
+<mat-form-field appearance="outline" class="postal-bar">
+  <mat-label>Search Postal Code</mat-label>
 
-              <input
-                matInput
-                type="text"
-                placeholder="Type a prefix (e.g., N2)"
-              />
+  <input
+    matInput
+    type="text"
+    placeholder="Type a prefix (e.g., N2)"
+    formControlName="postalQuery"
+    [matAutocomplete]="postalAuto"
+  />
 
-              <button
-                matSuffix
-                mat-icon-button
-                aria-label="Clear"
-                type="button"
-              >
-                <mat-icon>close</mat-icon>
-              </button>
+  <button matSuffix mat-icon-button aria-label="Clear" type="button">
+    <mat-icon>close</mat-icon>
+  </button>
 
-              <mat-icon matPrefix>search</mat-icon>
+  <mat-icon matPrefix>search</mat-icon>
 
-              <mat-autocomplete>
-                <mat-option>N2L</mat-option>
-                <mat-option>N2M</mat-option>
-                <mat-option>N2A</mat-option>
-                <mat-option>N2H</mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
+  <mat-autocomplete #postalAuto="matAutocomplete">
+   @for (p of vendorForm.postalCodeReource.value(); track p.name) {
+      <mat-option [value]="p.name">
+        {{ p.name }} — {{ p.city }}
+      </mat-option>
+    }
+  </mat-autocomplete>
+</mat-form-field>
           </div>
 
           <div class="selected-chips">

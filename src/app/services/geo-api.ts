@@ -17,12 +17,70 @@ export class GeoApi {
   .set('apiKey',this.apiKey)
   return this.http.get<any>(this.base,{params})
  }
+autocompletePostal(query:string = "", cities:any [], country:'ca'|'us', area:any [] ): Observable<any> {
+  console.log('POSTAL FIRED', { query, cities: cities.length, area: area.length });
+  let searchQuery = query && query.trim() ? query : "";
+  const params = new HttpParams()
+    .set('text', searchQuery)
+    .set('limit','100')
+    .set('apiKey',this.apiKey)
+    .set('type', "postcode")
+    .set('filter',`countrycode:${country}`);
 
+  if (area.length) {
+    const requests = area
+      .filter((a:any) => a.bbox)
+      .map((a:any) => {
+        
+        const bbox = a.bbox as [number, number, number, number];
+        return this.http.get<any>(this.base, { params }).pipe(
+          map((response: any) => {
+            let results = response.features || [];
+            results = results.filter((f: any) => {
+              const lat = f.geometry?.coordinates?.[1];
+              const lon = f.geometry?.coordinates?.[0];
+              if (lat == null || lon == null) return false;
+              return lat >= bbox[1] && lat <= bbox[3] && lon >= bbox[0] && lon <= bbox[2];
+            });
+            return results;
+          })
+        );
+      });
 
+    if (!requests.length) return of([]);
+    return forkJoin(requests).pipe(map((all:any[]) => all.flat()));
+  }
 
+  if (cities.length) {
+    const requests = cities
+      .filter((c:any) => c.bbox)
+      .map((c:any) => {
+        const bbox = c.bbox as [number, number, number, number];
+        return this.http.get<any>(this.base, { params }).pipe(
+          map((response: any) => {
+            let results = response.features || [];
+            results = results.filter((f: any) => {
+              const lat = f.geometry?.coordinates?.[1];
+              const lon = f.geometry?.coordinates?.[0];
+              if (lat == null || lon == null) return false;
+              return lat >= bbox[1] && lat <= bbox[3] && lon >= bbox[0] && lon <= bbox[2];
+            });
+            return results;
+          })
+        );
+      });
+
+    if (!requests.length) return of([]);
+    return forkJoin(requests).pipe(map((all:any[]) => all.flat()));
+  }
+
+  return this.http.get<any>(this.base, { params }).pipe(
+    map((response:any) => response.features || [])
+  );
+}
  
 autocompleteRegions(cities: any[], searchText: string = ''): Observable<any[]> {
-  const requests = cities
+    const requests = cities
     .filter(city => city.bbox) 
     .map(city => {
       const bbox = city.bbox as [number, number, number, number];

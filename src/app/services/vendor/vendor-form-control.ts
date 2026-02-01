@@ -27,15 +27,15 @@ export class VendorFormControl {
    postalFile: this.fb.control<File | null>(null),
    cityQuery: this.fb.nonNullable.control(""),
    regionQuery: this.fb.nonNullable.control(""),
-   areaSelection: this.fb.control<{ name: string; placeId: string }[]>([], { nonNullable: true }),
+   areaSelection: this.fb.control<{ name: string; placeId: string; displayName?: string; type?: string; bbox?: number[]; geometry?: { type: string; coordinates: any } }[]>([], { nonNullable: true }),
    postalQuery: this.fb.nonNullable.control(""),
   })
 private cityQuery = toSignal(this.addRepForm.controls.cityQuery.valueChanges)
 private regionQuery = toSignal(this.addRepForm.controls.regionQuery.valueChanges)
 private countrySignal = toSignal(this.addRepForm.controls.countryLevel.valueChanges)
 public citySelection = toSignal(this.addRepForm.controls.citySelections.valueChanges)
-private postalQuery = toSignal(this.addRepForm.controls.postalQuery.valueChanges);
-private areaSelection = toSignal(this.addRepForm.controls.areaSelection.valueChanges);
+public postalQuery = toSignal(this.addRepForm.controls.postalQuery.valueChanges);
+public areaSelection = toSignal(this.addRepForm.controls.areaSelection.valueChanges);
 
 regionsResource = rxResource({
   params:()=>({
@@ -56,11 +56,12 @@ regionsResource = rxResource({
             name: f.properties?.address_line1 || f.properties?.formatted || '',
             displayName: f.properties?.formatted || f.properties?.address_line1 || '',
             placeId: String(f.properties?.place_id ?? ''),
-            type: f.properties?.result_type ?? ''
+            type: f.properties?.result_type ?? '', bbox: f.bbox?? [],
+            geometry: f.geometry?? {}
           }))
           .filter(region => {
             if (seen.has(region.placeId)) return false;
-            seen.add(region.placeId);
+            seen.add(region.placeId);              
             return true;
           });
         console.log('Final mapped regions for display:', results);
@@ -71,11 +72,6 @@ regionsResource = rxResource({
   },
 });
    
-  
-
-
-
-
 cityResource = rxResource({
   params: () => ({
     term: this.cityQuery(),
@@ -83,10 +79,7 @@ cityResource = rxResource({
   }),
   stream: (context) => {
     const query = (context.params.term ?? '').trim();
-    const country =
-      context.params.code === 'Canada' ? 'ca'
-      : context.params.code === 'UnitedStates' ? 'us'
-      : null;
+    const country = context.params.code === 'Canada' ? 'ca':'us'
     if (!country) return of([]);          
     if (query.length < 2) return of([]);  
 
@@ -104,9 +97,42 @@ cityResource = rxResource({
   },
 });
 
+postalCodeReource = rxResource({
+  params: () => ({
+    query: this.postalQuery(),
+  }),
+
+  stream: (context) => {
+    const query = (context.params.query ?? '').trim();
+    const cities = this.citySelection() ?? [];
+    const country = this.countrySignal() === 'Canada' ? 'ca' : 'us';
+    const area = this.areaSelection() ?? [];
+
+    if (query.length < 2) return of([]);
+
+    return this.geo.autocompletePostal(query, cities, country, area).pipe(
+      map((res: any) => {
+        console.log('RAW postal response:', res);
+        const mapped = (res ?? []).map((p: any) => ({
+          name: p.properties?.postcode ?? '',
+          city: p.properties?.city ?? '',
+        }));
+
+        console.log('MAPPED postal results:', mapped);
+        return mapped;
+      }),
+      catchError((err) => {
+        console.error('POSTAL ERROR', err);
+        return of([]);
+      })
+    );
+  },
+});
+
 
 
 public readonly city = computed(()=> this.cityResource.value())
 public readonly regions = computed(()=> this.regionsResource.value()) 
+public readonly postal = computed(()=>this.postalCodeReource.value())
 }
 

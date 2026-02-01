@@ -45,7 +45,7 @@ export class VendorKpiCards {
 
   addRep(): void {
     this.dialog.open(AddRepDialog, {
-      width: '950px',
+      width: '1050px',
       height:"900px"
     });
   }

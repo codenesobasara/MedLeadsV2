@@ -2,13 +2,13 @@ import { Component, signal,computed,inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { VendorFormControl } from '../../../../services/vendor/vendor-form-control';
-import { RepInfoStep } from '../../../forms/vendor/addRep/rep-info-step/rep-info-step';
+import { StepOne } from '../../../forms/vendor/addRep/step-one/step-one';
 import { RepTerritoryStep } from '../../../forms/vendor/addRep/rep-territory-step/rep-territory-step';
 import { FinalStep } from '../../../forms/vendor/addRep/final-step/final-step';
 @Component({
   selector: 'app-add-rep-dialog',
   standalone:true,
-  imports: [MatProgressBarModule,RepInfoStep,RepTerritoryStep,CommonModule,FinalStep],
+  imports: [MatProgressBarModule,StepOne,RepTerritoryStep,CommonModule,FinalStep],
   templateUrl: './add-rep-dialog.html',
   styleUrl: './add-rep-dialog.css',
 })

@@ -109,6 +109,10 @@ removeCity(placeId: string) {
   control.setValue(control.value.filter(c => c.placeId !== placeId));
 }
 
-
+selectArea(area:{name:string,placeId:string}){
+  const areaSelection = this.vendorForm.areaSelection()?? []
+  this.form.controls.areaSelection.setValue([...areaSelection,area])
+  this.form.controls.regionQuery.setValue("")
+}
 
 }
