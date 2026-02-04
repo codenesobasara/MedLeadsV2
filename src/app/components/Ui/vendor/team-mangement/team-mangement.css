@@ -1,0 +1,466 @@
+/* team-manager.page.css */
+/* Uses your universal CSS classes where possible (.stats, .stat-card, .stats-row2, .header-large, etc.)
+   Everything below is ONLY page-specific layout/styling. */
+
+.team-manager-page{
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  gap: 18px;
+}
+
+/* Header */
+.page-header{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.page-title-wrap{
+  min-width: 0;
+}
+
+.page-title{
+  font-size: 22px;
+  font-weight: 800;
+  color: #111827;
+  letter-spacing: -0.01em;
+}
+
+.page-sub{
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+/* Primary action */
+.primary-action{
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  background: #111827;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 10px 20px rgba(17, 24, 39, 0.12);
+  white-space: nowrap;
+}
+
+.primary-action mat-icon{
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #ffffff;
+}
+
+/* Middle row: force 2 columns for staffing + hub */
+.team-row2{
+  grid-template-columns: 1fr 2fr; /* staffing smaller, hub wider */
+}
+
+/* Tabs / pills (reused in multiple spots) */
+.pill-tabs{
+  display: inline-flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pill{
+  border: 1px solid #e9edf5;
+  background: #ffffff;
+  color: #374151;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 7px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.pill.active{
+  background: #111827;
+  color: #ffffff;
+  border-color: #111827;
+}
+
+/* Staffing hours pills */
+.staffing-hours{
+  display: grid;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.hour-pill{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid #eef2f8;
+  background: #f9fafb;
+}
+
+.hour-time{
+  font-size: 12px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.hour-rep{
+  font-size: 12px;
+  font-weight: 800;
+  color: #374151;
+}
+
+/* Hub placeholder */
+.hub-placeholder{
+  height: 240px;
+}
+
+/* Rep table */
+.table-actions{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-box{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid #e9edf5;
+  border-radius: 12px;
+  background: #ffffff;
+  min-width: 280px;
+}
+
+.search-ico{
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #6b7280;
+}
+
+.search-box input{
+  border: 0;
+  outline: none;
+  width: 100%;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+  background: transparent;
+}
+
+.filter-btn{
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid #e9edf5;
+  background: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #374151;
+  white-space: nowrap;
+}
+
+.filter-btn mat-icon{
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #6b7280;
+}
+
+/* Table grid */
+.rep-table{
+  margin-top: 10px;
+  border: 1px solid #eef2f8;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.rep-table-head,
+.rep-table-row{
+  display: grid;
+  grid-template-columns: 2.2fr 1.2fr 0.9fr 0.9fr 1.2fr 0.8fr;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+}
+
+.rep-table-head{
+  background: #f9fafb;
+  border-bottom: 1px solid #eef2f8;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+}
+
+.rep-table-row{
+  border-bottom: 1px solid #eef2f8;
+}
+
+.rep-table-row:last-child{
+  border-bottom: 0;
+}
+
+.rep-cell{
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+  min-width: 0;
+}
+
+.rep-identity{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rep-badge{
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 900;
+  color: #111827;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  flex: 0 0 auto;
+}
+
+.rep-text{
+  min-width: 0;
+}
+
+.rep-name{
+  font-size: 13px;
+  font-weight: 900;
+  color: #111827;
+  line-height: 1.1;
+}
+
+.rep-sub{
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7280;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Status pills */
+.status-pill{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 900;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.status-pill.onsite{
+  background: #ecfdf5;
+  color: #047857;
+  border-color: #a7f3d0;
+}
+
+.status-pill.remote{
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
+
+/* Scans cell */
+.scan-stack{
+  display: grid;
+  gap: 2px;
+}
+
+.scan-num{
+  font-size: 14px;
+  font-weight: 900;
+  color: #111827;
+}
+
+.scan-sub{
+  font-size: 11px;
+  font-weight: 800;
+  color: #6b7280;
+}
+
+/* % of scans */
+.percent-wrap{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.percent-bar{
+  height: 8px;
+  border-radius: 999px;
+  background: #111827;
+  width: 18%; /* default demo */
+}
+
+.percent-bar.w-14{ width: 14%; }
+.percent-bar.w-11{ width: 11%; }
+
+.percent-label{
+  font-size: 12px;
+  font-weight: 900;
+  color: #374151;
+  white-space: nowrap;
+}
+
+/* Actions */
+.rep-actions{
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.icon-btn{
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid #e9edf5;
+  background: #ffffff;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.icon-btn mat-icon{
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #6b7280;
+}
+
+.icon-btn.danger mat-icon{
+  color: #b91c1c;
+}
+
+
+.rep-table-footer{
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.footer-left{
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7280;
+}
+
+.footer-right{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.add-rep-row{
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  background: #111827;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.add-rep-row mat-icon{
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #ffffff;
+}
+
+.pager{
+  display: inline-flex;
+  gap: 8px;
+}
+
+.pager-btn{
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid #e9edf5;
+  background: #ffffff;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.pager-btn mat-icon{
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: #6b7280;
+}
+
+
+@media (max-width: 1200px){
+  .team-row2{
+    grid-template-columns: 1fr; 
+  }
+
+  .table-actions{
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box{
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 900px){
+  .rep-table-head{
+    display: none;
+  }
+
+  .rep-table-row{
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .rep-actions{
+    justify-content: flex-start;
+  }
+
+  .rep-table-row{
+    padding: 14px;
+  }
+}

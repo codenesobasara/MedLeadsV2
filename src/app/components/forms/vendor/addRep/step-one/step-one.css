@@ -211,3 +211,130 @@
   width: 18px;
   height: 18px;
 }
+
+.schedule-cta{
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  background: #fff;
+  border: 1px solid #e9edf5;
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 10px 22px rgba(16, 24, 40, 0.08);
+}
+
+.schedule-btn{
+  appearance: none;
+  border: 1px solid #e9edf5;
+  background: #f5f7ff;
+  color: #4f64ff;
+  font-weight: 800;
+  font-size: 13px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.schedule-btn:hover{
+  filter: brightness(0.98);
+}
+
+.trash-btn{
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  border-radius: 10px;
+}
+
+.trash-btn:hover{
+  background: rgba(17, 24, 39, 0.06);
+}
+
+
+.schedule-row-material{
+  grid-template-columns: 180px 1fr auto 1fr auto;
+}
+
+.date-field{
+  min-width: 180px;
+}
+
+.schedule-row-material .mat-mdc-form-field{
+  width: 100%;
+}
+
+.trash-btn{
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  border-radius: 10px;
+  opacity: 0.75;
+}
+
+.trash-btn:hover{
+  background: rgba(17, 24, 39, 0.06);
+  opacity: 1;
+}
+
+.add-shift-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  height: 42px;
+  padding: 0 14px;
+
+  border-radius: 12px;
+  border: 1px solid #e9edf5;
+  background: #f5f7ff;
+
+  font-size: 13px;
+  font-weight: 800;
+  color: #4f64ff;
+
+  cursor: pointer;
+  white-space: nowrap;
+
+  box-shadow: 0 6px 14px rgba(16, 24, 40, 0.08);
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    background 150ms ease;
+}
+
+.add-shift-btn mat-icon{
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.add-shift-btn:hover{
+  background: #eef2ff;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 18px rgba(16, 24, 40, 0.12);
+}
+
+.add-shift-btn:active{
+  transform: translateY(0);
+  box-shadow: 0 6px 14px rgba(16, 24, 40, 0.08);
+}
+.footer-actions{
+  margin-top: 18px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.next{
+  border-radius: 12px;
+  font-weight: 700;
+}

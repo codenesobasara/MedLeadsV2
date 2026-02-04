@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RepTerritoryStep } from './rep-territory-step';
+import { StepTwo } from './step-two';
 
-describe('RepTerritoryStep', () => {
-  let component: RepTerritoryStep;
-  let fixture: ComponentFixture<RepTerritoryStep>;
+describe('StepTwo', () => {
+  let component: StepTwo;
+  let fixture: ComponentFixture<StepTwo>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RepTerritoryStep]
+      imports: [StepTwo]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RepTerritoryStep);
+    fixture = TestBed.createComponent(StepTwo);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

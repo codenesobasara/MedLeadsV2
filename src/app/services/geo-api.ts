@@ -17,6 +17,8 @@ export class GeoApi {
   .set('apiKey',this.apiKey)
   return this.http.get<any>(this.base,{params})
  }
+
+ 
 autocompletePostal(query:string = "", cities:any [], country:'ca'|'us', area:any [] ): Observable<any> {
   console.log('POSTAL FIRED', { query, cities: cities.length, area: area.length });
   let searchQuery = query && query.trim() ? query : "";

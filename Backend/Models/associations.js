@@ -3,7 +3,7 @@ const HostProfile = require("./HostProfile");
 const VendorProfile = require("./VendorProfile");
 const RepProfile = require("./SalesRepProfile");
 const SalesRepTerritory = require("./salesRepTerretories"); 
-
+const SalesRepShifts = require("./ShiftsModel")
 const Event = require("./EventModel");
 const Attendee = require("./Attendee");
 const Scan = require("./ScanModel");
@@ -71,6 +71,9 @@ ScanAnswer.belongsTo(VendorQuestion, { foreignKey: "vendorQuestionId" });
 
 RepProfile.hasMany(SalesRepTerritory, { foreignKey: "salesRepId", as: "territories" });
 SalesRepTerritory.belongsTo(RepProfile, { foreignKey: "salesRepId" });
+
+RepProfile.hasMany(SalesRepShifts, { foreignKey: 'salesRepId' });
+SalesRepShifts.belongsTo(RepProfile, { foreignKey: 'salesRepId' });
 
 module.exports = {
   User,

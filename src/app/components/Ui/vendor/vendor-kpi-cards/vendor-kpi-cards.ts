@@ -49,4 +49,9 @@ export class VendorKpiCards {
       height:"900px"
     });
   }
+
+   onClick(name:string){
+    console.log("click fired");
+    this.state.changVendorDashState({cardSelected:name,})
+  }
 }

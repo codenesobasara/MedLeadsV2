@@ -46,10 +46,33 @@ const SalesRepsProfile = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    passwordHash: {
+  type: DataTypes.STRING,
+  allowNull: true, 
+},
+
+tempPassCode: {
+  type: DataTypes.STRING,
+  allowNull: true,
+},
+
+tempPassExpiresAt: {
+  type: DataTypes.DATE,
+  allowNull: true,
+},
+
+isFirstLogin: {
+  type: DataTypes.BOOLEAN,
+  defaultValue: true,
+},
+
   },
   {
     timestamps: true,
   }
+
+
+  
 );
 
 module.exports = SalesRepsProfile;

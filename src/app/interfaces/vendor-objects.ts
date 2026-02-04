@@ -63,3 +63,9 @@ export interface VendorAnalyticsObject {
     isActive: boolean;
   }[];
 }
+
+export interface RepShift {
+  date: Date;
+  start: string;
+  end: string;
+}

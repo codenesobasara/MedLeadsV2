@@ -1,4 +1,4 @@
-<div class="form-wrapper"[formGroup]="form">
+<div class="form-wrapper" [formGroup]="form">
   <form>
     <div class="stat-card large">
       <div class="info-wrapper">
@@ -7,207 +7,203 @@
           <div class="header-large">
             <div>
               <div class="stat-title large">Basic Information</div>
-              <div class="stat-sub">
-                Enter the representative’s contact details.
-              </div>
+              <div class="stat-sub">Enter the representative’s contact details.</div>
             </div>
           </div>
 
           <div class="fields">
             <mat-form-field appearance="outline" class="field">
               <mat-label>First Name</mat-label>
-              <input
-                matInput
-                formControlName="firstName"
-                placeholder="e.g., John"
-              />
-              <mat-error
-                *ngIf="form.controls.firstName.touched && form.controls.firstName.invalid"
-              >
+              <input matInput formControlName="firstName" placeholder="e.g., John" />
+              <mat-error *ngIf="form.controls.firstName.touched && form.controls.firstName.invalid">
                 First name is required
               </mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="field">
               <mat-label>Last Name</mat-label>
-              <input
-                matInput
-                formControlName="lastName"
-                placeholder="e.g., Doe"
-              />
-              <mat-error
-                *ngIf="form.controls.lastName.touched && form.controls.lastName.invalid"
-              >
+              <input matInput formControlName="lastName" placeholder="e.g., Doe" />
+              <mat-error *ngIf="form.controls.lastName.touched && form.controls.lastName.invalid">
                 Last name is required
               </mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="field">
               <mat-label>Email Address</mat-label>
-              <input
-                matInput
-                formControlName="email"
-                placeholder="e.g., john@company.com"
-              />
-              <mat-error
-                *ngIf="form.controls.email.touched && form.controls.email.invalid"
-              >
+              <input matInput formControlName="email" placeholder="e.g., john@company.com" />
+              <mat-error *ngIf="form.controls.email.touched && form.controls.email.invalid">
                 Enter a valid email
               </mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="field">
               <mat-label>Phone Number</mat-label>
-              <input
-                matInput
-                formControlName="phone"
-                placeholder="+1 (555) 000-0000"
-              />
+              <input matInput formControlName="phone" placeholder="+1 (555) 000-0000" />
             </mat-form-field>
           </div>
-        <div class="rep-presence">
-  <div class="stat-title large">Booth Participation</div>
-  <div class="stat-sub">Choose how this rep will support your booth.</div>
 
-  <div class="presence-grid">
+          @if (form.controls.activeStaff.value === null) {
+            <div class="rep-presence">
+              <div class="stat-title large">Booth Participation</div>
+              <div class="stat-sub">Choose how this rep will support your booth.</div>
 
-    <div
-      class="presence-card"
-  
-    >
-      <div class="presence-icon">
-        <mat-icon>event_available</mat-icon>
-      </div>
-
-      <div class="presence-check">
-        <mat-icon>check_circle</mat-icon>
-      </div>
-
-      <div class="presence-title">Active Booth Staff</div>
-      <div class="presence-desc">
-        Assign shifts and track real-time scan analytics during the event.
-      </div>
-    </div>
-
-    <div
-      class="presence-card"
-    
-    >
-      <div class="presence-icon">
-        <mat-icon>public</mat-icon>
-      </div>
-
-      <div class="presence-check">
-        <mat-icon>check_circle</mat-icon>
-      </div>
-
-      <div class="presence-title">Remote Sales Support</div>
-      <div class="presence-desc">
-        Assign leads based on territory without scheduling physical booth hours.
-      </div>
-    </div>
-
-  </div>
-</div>
-<div class="schedule-section">
-
-  <div class="stat-title large">Schedule Assignment</div>
-  <div class="stat-sub">
-    Select the days and hours this representative will be at the booth.
-  </div>
-
-  <div class="schedule-list">
-
-   
-    <div class="schedule-row">
-      <div class="day-label">Monday</div>
-
-      <mat-form-field appearance="outline" class="time-field">
-        <mat-select value="09:00">
-          <mat-option value="09:00">09:00 AM</mat-option>
-          <mat-option value="10:00">10:00 AM</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <span class="to">to</span>
-
-      <mat-form-field appearance="outline" class="time-field">
-        <mat-select value="17:00">
-          <mat-option value="17:00">05:00 PM</mat-option>
-          <mat-option value="18:00">06:00 PM</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <button mat-icon-button type="button">
-        <mat-icon>delete_outline</mat-icon>
-      </button>
-    </div>
-
-    
-    <div class="schedule-row">
-      <div class="day-label">Tuesday</div>
-
-      <mat-form-field appearance="outline" class="time-field">
-        <mat-select value="09:00">
-          <mat-option value="09:00">09:00 AM</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <span class="to">to</span>
-
-      <mat-form-field appearance="outline" class="time-field">
-        <mat-select value="17:00">
-          <mat-option value="17:00">05:00 PM</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <button mat-icon-button type="button">
-        <mat-icon>delete_outline</mat-icon>
-      </button>
-    </div>
-
-  </div>
-
-  <div class="add-day">
-    <mat-icon>add_circle</mat-icon>
-    <span>Add another day</span>
-  </div>
-
-</div>
-        </div>
-        @if(form.controls.firstName.value && form.controls.lastName.value){
-        <div class="profile-preview">
-          <div class="stat-card">
-            <div class="stat-title large">Profile Preview</div>
-
-            <div class="preview-row">
-              <div class="initials">
-                <div class="avatar">
-                  {{ getInitials() }}
-                </div>
-
-                <div class="person">
-                  <div class="name">
-                    {{ form.controls.firstName.value }}
-                    {{ form.controls.lastName.value }}
+              <div class="presence-grid">
+                <div class="presence-card" (click)="activeStaff(true)">
+                  <div class="presence-icon">
+                    <mat-icon>event_available</mat-icon>
                   </div>
 
-                  <div class="contact-info">
-                    <div>
-                      {{ form.controls.email.value || '' }}
+                  <div class="presence-check">
+                    <mat-icon>check_circle</mat-icon>
+                  </div>
+
+                  <div class="presence-title">Active Booth Staff</div>
+                  <div class="presence-desc">
+                    Assign shifts and track real-time scan analytics during the event.
+                  </div>
+                </div>
+
+                <div class="presence-card" (click)="activeStaff(false)">
+                  <div class="presence-icon">
+                    <mat-icon>public</mat-icon>
+                  </div>
+
+                  <div class="presence-check">
+                    <mat-icon>check_circle</mat-icon>
+                  </div>
+
+                  <div class="presence-title">Remote Sales Support</div>
+                  <div class="presence-desc">
+                    Assign leads based on territory without scheduling physical booth hours.
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+
+          @if (form.controls.activeStaff.value === true) {
+            <div class="schedule-section">
+              <div class="stat-title large">Scheduled Booth Shifts</div>
+              <div class="stat-sub">
+                Choose a date and time range for when this rep will be at the booth.
+              </div>
+
+         
+              <div class="schedule-list">
+                <div class="schedule-row schedule-row-material">
+                
+            <mat-form-field appearance="outline" class="date-field">
+  <mat-label>Date</mat-label>
+
+  <input
+    matInput
+    [matDatepicker]="shiftDatePicker"
+    formControlName="shiftDate"
+    placeholder="Select date"
+  />
+
+  <mat-datepicker-toggle matSuffix [for]="shiftDatePicker"></mat-datepicker-toggle>
+</mat-form-field>
+
+            
+                <mat-form-field appearance="outline" class="time-field">
+  <mat-label>Start</mat-label>
+  <mat-select formControlName="shiftStartTime">
+    @for (t of timeOptions; track t) {
+      <mat-option [value]="t">{{ t }}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+
+                  <div class="to">to</div>
+
+            
+               <mat-form-field appearance="outline" class="time-field">
+  <mat-label>End</mat-label>
+  <mat-select formControlName="shiftEndTime">
+    @for (t of timeOptions; track t) {
+      <mat-option [value]="t">{{ t }}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+
+            <button
+  type="button"
+  class="add-shift-btn"
+  (click)="addShift(
+    form.controls.shiftDate.value!,
+    form.controls.shiftStartTime.value!,
+    form.controls.shiftEndTime.value!
+  )"
+>
+  <mat-icon>add</mat-icon>
+  Add
+</button>
+                </div>
+
+             
+                <div class="schedule-added" *ngIf="form.controls.shifts.value?.length">
+  <div class="stat-title">Added Shifts</div>
+  <div class="divider"></div>
+@for (shift of form.controls.shifts.value ?? []; track $index) {
+  <div class="added-shift-row">
+    <div class="added-shift-text">
+      {{ shift.date | date:'MMM d, y' }} •
+      {{ shift.start }} to {{ shift.end }}
+    </div>
+
+    <button
+      type="button"
+      class="trash-btn"
+      aria-label="Remove shift"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+}
+</div>
+              </div>
+
+              <mat-datepicker #shiftDatePicker></mat-datepicker>
+            </div>
+          }
+        </div>
+
+        @if (form.controls.firstName.value && form.controls.lastName.value) {
+          <div class="profile-preview">
+            <div class="stat-card">
+              <div class="stat-title large">Profile Preview</div>
+
+              <div class="preview-row">
+                <div class="initials">
+                  <div class="avatar">
+                    {{ getInitials() }}
+                  </div>
+
+                  <div class="person">
+                    <div class="name">
+                      {{ form.controls.firstName.value }}
+                      {{ form.controls.lastName.value }}
                     </div>
-                    <div>
-                      {{ form.controls.phone.value || '' }}
+
+                    <div class="contact-info">
+                      <div>{{ form.controls.email.value || '' }}</div>
+                      <div>{{ form.controls.phone.value || '' }}</div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
-        </div>}
-
+        }
       </div>
+   <div class="footer-actions">
+  <button mat-raised-button type="button" class="next" (click)="onNext()">
+    Next <span class="arrow">→</span>
+  </button>
+</div>
     </div>
+    
   </form>
+  
 </div>

@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { GeoApi } from '../geo-api';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { RepShift } from '../../interfaces/vendor-objects';
 
 @Injectable({
   providedIn: 'root',
@@ -12,14 +13,34 @@ export class VendorFormControl {
   fb = inject(FormBuilder)
   geo = inject(GeoApi)
 
-  addRepForm = this.fb.group({
+
+
+
+repBasicInfo = this.fb.group({
+      email:this.fb.nonNullable.control("",[Validators.required, Validators.email]),
+    firstName:this.fb.nonNullable.control("",[Validators.required]),
+    lastName:this.fb.nonNullable.control("",[Validators.required]), 
+    phone:this.fb.control("",[Validators.required]),
+    activeStaff:this.fb.control<boolean |null>(null,[Validators.required]),
+    shiftDate: this.fb.control<Date | null>(null, [Validators.required]),
+   shiftStartTime: this.fb.control<string | null>(null, [Validators.required]),
+   shiftEndTime: this.fb.control<string | null>(null, [Validators.required]),
+  shifts: this.fb.control<RepShift[]>([]),
+
+
+
+})
+
+  
+
+    territory = this.fb.group({
     email:this.fb.nonNullable.control("",[Validators.required, Validators.email]),
     firstName:this.fb.nonNullable.control("",[Validators.required]),
     lastName:this.fb.nonNullable.control("",[Validators.required]), 
     phone:this.fb.control("",[Validators.required]),
-   hasTerritory: this.fb.control<boolean | null>(null, [Validators.required]),
-   countryLevel:this.fb.control<'Canada'|'UnitedStates'| null>(null,[Validators.required]),
-   territoryLevel: this.fb.control<'state'|'province' | 'city' | 'postal' | null>(null),
+    activeStaff:this.fb.control<boolean |null>(null,[Validators.required]),
+   countryLevel:this.fb.control<'ca'|'us'| null>(null,[Validators.required]),
+   territoryLevel: this.fb.control<'state'|'province' | 'city' | 'postal' |'neighbourhood' | null>(null),
    provinceStateSelections: this.fb.control<string[]>([], { nonNullable: true }),
    citySelections: this.fb.control<{ name: string; placeId: string; bbox?: [number, number, number, number] }[]>([], { nonNullable: true }),
    postalMode: this.fb.nonNullable.control<'manual' | 'upload'>('manual'),
@@ -29,23 +50,29 @@ export class VendorFormControl {
    regionQuery: this.fb.nonNullable.control(""),
    areaSelection: this.fb.control<{ name: string; placeId: string; displayName?: string; type?: string; bbox?: number[]; geometry?: { type: string; coordinates: any } }[]>([], { nonNullable: true }),
    postalQuery: this.fb.nonNullable.control(""),
+   shiftDate: this.fb.control<Date | null>(null, [Validators.required]),
+   shiftStartTime: this.fb.control<string | null>(null, [Validators.required]),
+   shiftEndTime: this.fb.control<string | null>(null, [Validators.required]),
+  shifts: this.fb.control<RepShift[]>([])
   })
-private cityQuery = toSignal(this.addRepForm.controls.cityQuery.valueChanges)
-private regionQuery = toSignal(this.addRepForm.controls.regionQuery.valueChanges)
-private countrySignal = toSignal(this.addRepForm.controls.countryLevel.valueChanges)
-public citySelection = toSignal(this.addRepForm.controls.citySelections.valueChanges)
-public postalQuery = toSignal(this.addRepForm.controls.postalQuery.valueChanges);
-public areaSelection = toSignal(this.addRepForm.controls.areaSelection.valueChanges);
+
+
+private cityQuery = toSignal(this.territory.controls.cityQuery.valueChanges)
+private regionQuery = toSignal(this.territory.controls.regionQuery.valueChanges)
+private countrySignal = toSignal(this.territory.controls.countryLevel.valueChanges)
+public citySelection = toSignal(this.territory.controls.citySelections.valueChanges)
+public postalQuery = toSignal(this.territory.controls.postalQuery.valueChanges);
+public areaSelection = toSignal(this.territory.controls.areaSelection.valueChanges);
+public shifts = toSignal(this.territory.controls.shifts.valueChanges)
 
 regionsResource = rxResource({
   params:()=>({
-    cities:this.citySelection(),
     query: this.regionQuery()
   }),
 
   stream:(context) =>{
     const query = (context.params.query?? "").trim()
-    const cities = (context.params.cities ?? [])
+    const cities = this.citySelection()?? []
     if(!cities.length) return of([]);
     return this.geo.autocompleteRegions(cities, query).pipe(
       map((response:any[])=>{
@@ -71,15 +98,17 @@ regionsResource = rxResource({
     );
   },
 });
+
    
 cityResource = rxResource({
   params: () => ({
     term: this.cityQuery(),
-    code: this.countrySignal(),
   }),
   stream: (context) => {
+    console.log("city resource fired");
+    
     const query = (context.params.term ?? '').trim();
-    const country = context.params.code === 'Canada' ? 'ca':'us'
+    const country = (this.countrySignal())
     if (!country) return of([]);          
     if (query.length < 2) return of([]);  
 
@@ -105,7 +134,7 @@ postalCodeReource = rxResource({
   stream: (context) => {
     const query = (context.params.query ?? '').trim();
     const cities = this.citySelection() ?? [];
-    const country = this.countrySignal() === 'Canada' ? 'ca' : 'us';
+    const country = this.countrySignal() ?? 'ca';
     const area = this.areaSelection() ?? [];
 
     if (query.length < 2) return of([]);
@@ -130,9 +159,37 @@ postalCodeReource = rxResource({
 });
 
 
+newShift(){
+  const shiftForm = this.fb.group({
+    shiftDate:this.fb.control
+
+  })
+
+}
+
+
+
+
 
 public readonly city = computed(()=> this.cityResource.value())
 public readonly regions = computed(()=> this.regionsResource.value()) 
 public readonly postal = computed(()=>this.postalCodeReource.value())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 

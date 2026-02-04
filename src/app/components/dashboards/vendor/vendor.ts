@@ -3,10 +3,10 @@ import { VendorDataService } from '../../../services/vendor/vendor-data-service'
 import { State } from '../../../services/state';
 import { VendorActionCard } from '../../Ui/vendor/vendor-action-card/vendor-action-card';
 import { VendorKpiCards } from '../../Ui/vendor/vendor-kpi-cards/vendor-kpi-cards';
-
+import { TeamMangement } from '../../Ui/vendor/team-mangement/team-mangement';
 @Component({
   selector: 'app-vendor',
-  imports: [VendorActionCard, VendorKpiCards],
+  imports: [VendorActionCard, VendorKpiCards,TeamMangement],
   templateUrl: './vendor.html',
   styleUrl: './vendor.css',
   standalone:true

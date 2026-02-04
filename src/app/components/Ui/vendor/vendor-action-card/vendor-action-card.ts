@@ -37,6 +37,7 @@ public vendorDashState = this.state.vendorDashState
 
   selectEvent(event:DBEvent){
   this.state.changVendorDashState({ eventSelected: true, EventId: event.id })
+  this.vendorData.selectedEventId.set(event.id)
 }
 
 

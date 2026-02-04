@@ -1,4 +1,25 @@
 @import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+:root{
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --text-strong: #111827;
+  --text: #374151;
+  --text-muted: #6b7280;
+
+  --border: #e9edf5;
+  --surface: #ffffff;
+
+  --primary: #4f64ff;
+  --primary-soft: rgba(79, 100, 255, 0.10);
+}
+body{
+  font-family: var(--font-sans);
+  color: var(--text);
+  font-weight: 400;
+}
+
+
  body { height: 100%; margin: 0; }
 
 .layout{
@@ -534,3 +555,124 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   background: linear-gradient(135deg, #eef2ff, #e0e7ff) !important;
 }
 
+.ui-btn{
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 10px 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.ui-btn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(16, 24, 40, 0.10);
+}
+
+.ui-btn.primary{
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(79, 100, 255, 0.22);
+}
+
+.ui-btn.primary:hover{
+  background: var(--primary-hover);
+}
+
+.ui-btn.secondary{
+  background: #fff;
+  color: var(--primary);
+}
+
+.ui-btn.secondary:hover{
+  border-color: rgba(79, 100, 255, 0.35);
+  background: rgba(79, 100, 255, 0.06);
+}
+
+/* Icon-only button */
+.ui-icon-btn{
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #fff;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.ui-icon-btn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(16, 24, 40, 0.10);
+  border-color: rgba(79, 100, 255, 0.35);
+  background: rgba(79, 100, 255, 0.06);
+}
+
+.ui-icon-btn mat-icon{
+  color: var(--muted);
+}
+
+.ui-icon-btn.danger:hover{
+  border-color: rgba(245, 54, 92, 0.35);
+  background: rgba(245, 54, 92, 0.08);
+}
+
+.ui-icon-btn.danger:hover mat-icon{
+  color: #f5365c;
+}
+
+.pill-tabs{
+  display: inline-flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pill{
+  border: 1px solid var(--border);
+  background: #ffffff;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.pill.active{
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-color: transparent;
+}
+
+.list-pill{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid #eef2f8;
+  background: #ffffff;
+  box-shadow: 0 6px 14px rgba(50, 50, 93, 0.08);
+}
+
+.list-pill:hover{
+  background: var(--row-bg);
+}
+
+.list-pill-title{
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-strong);
+}

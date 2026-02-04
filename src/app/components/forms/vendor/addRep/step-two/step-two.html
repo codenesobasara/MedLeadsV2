@@ -1,0 +1,718 @@
+<div class="territory-layout" [formGroup]="form">
+  <div class="left-panel">
+    <div class="stat-card large">
+      <div class="stat-title">SELECTED REPRESENTATIVE</div>
+
+      <div class="rep-card">
+        <div class="rep-avatar">NU</div>
+
+        <div class="rep-info">
+          <div class="rep-name">
+            {{ basicInfo.controls.firstName.value }} {{ basicInfo.controls.lastName.value }}
+          </div>
+          <div class="rep-meta">{{ basicInfo.controls.email.value }}</div>
+          <div class="rep-meta">{{ basicInfo.controls.phone.value }}</div>
+        </div>
+      </div>
+
+      <div class="rep-message">
+        <div class="info-dot">
+          <mat-icon>info</mat-icon>
+        </div>
+
+        <div class="info-text">
+          Leads from these regions will be automatically assigned to this rep for personal follow-up emails and
+          notifications.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <div class="stat-card large">
+      <div class="header-large">
+        <div>
+          <div class="stat-title large">Assign Territory & Lead Matching</div>
+          <div class="stat-sub">Define which regions this representative will manage for automatic routing.</div>
+        </div>
+      </div>
+
+      <div class="stat-title">Select Territory Type</div>
+
+      <div class="type-row">
+        <button type="button" class="type-btn" (click)="selectTerritoryLevel('province')">Province</button>
+        <button type="button" class="type-btn" (click)="selectTerritoryLevel('state')">State</button>
+        <button type="button" class="type-btn" (click)="selectTerritoryLevel('city')">City</button>
+        <button type="button" class="type-btn" (click)="selectTerritoryLevel('neighbourhood')">Neighborhood</button>
+        <button type="button" class="type-btn" (click)="selectTerritoryLevel('postal')">Zip Code</button>
+      </div>
+
+      <div class="section">
+        <div class="stat-title">Add Locations</div>
+
+        @if (form.controls.territoryLevel.value === 'province') {
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-icon matPrefix class="search-ico">search</mat-icon>
+            <mat-label>Country</mat-label>
+            <input matInput value="Canada" disabled />
+          </mat-form-field>
+        }
+
+        @if (form.controls.territoryLevel.value === 'state') {
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-icon matPrefix class="search-ico">search</mat-icon>
+            <mat-label>Country</mat-label>
+            <input matInput value="UnitedStates" disabled />
+          </mat-form-field>
+        }
+      </div>
+
+      @switch (form.controls.territoryLevel.value) {
+
+        @case ("province") {
+          <div class="province-picker">
+            <div class="stat-title">Select Provinces</div>
+
+            <div class="chip-row">
+              @for (p of provinces; track p) {
+                <button
+                  type="button"
+                  class="chip"
+                  [class.active]="form.controls.provinceStateSelections.value.includes(p)"
+                  (click)="toggleProvince(p)"
+                >
+                  {{ p }}
+                  <mat-icon class="chip-icon">
+                    {{ form.controls.provinceStateSelections.value.includes(p) ? 'close' : 'add' }}
+                  </mat-icon>
+                </button>
+              }
+            </div>
+          </div>
+        }
+
+        @case ("state") {
+          <div class="province-picker">
+            <div class="stat-title">Select Provinces</div>
+
+            <div class="chip-row">
+              @for (s of states; track s) {
+                <button type="button" class="chip" (click)="toggleProvince(s)">
+                  {{ s }}
+                  <mat-icon class="chip-icon">
+                    {{ form.controls.provinceStateSelections.value.includes(s) ? 'close' : 'add' }}
+                  </mat-icon>
+                </button>
+              }
+            </div>
+          </div>
+        }
+
+        @case ("city") {
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-icon matPrefix class="search-ico">search</mat-icon>
+            <mat-label>Select Country...</mat-label>
+
+            <mat-select formControlName="countryLevel">
+              <mat-option value="ca">Canada</mat-option>
+              <mat-option value="us">United States</mat-option>
+            </mat-select>
+
+            <button
+              matSuffix
+              mat-icon-button
+              type="button"
+              class="clear-btn"
+              *ngIf="form.controls.countryLevel.value"
+              (click)="form.controls.countryLevel.setValue(null)"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+
+          @if (form.controls.countryLevel.value === 'ca') {
+            <mat-form-field appearance="outline" class="search-field">
+              <mat-icon matPrefix class="search-ico">search</mat-icon>
+              <mat-label>Select Province...</mat-label>
+
+              <mat-select formControlName="provinceStateSelections">
+                @for (p of provinces; track p) {
+                  <mat-option [value]="p">{{ p }}</mat-option>
+                }
+              </mat-select>
+
+              <button
+                matSuffix
+                mat-icon-button
+                type="button"
+                class="clear-btn"
+                *ngIf="(form.controls.provinceStateSelections.value?.length ?? 0) > 0"
+                (click)="removeLastProvinceState()"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
+            @if (form.controls.provinceStateSelections.value) {
+              <mat-form-field appearance="outline" class="search-field">
+                <mat-icon matPrefix class="search-ico">search</mat-icon>
+                <mat-label>Search City...</mat-label>
+
+                <input
+                  matInput
+                  formControlName="cityQuery"
+                  [matAutocomplete]="cityAuto"
+                  placeholder="Type a city name"
+                />
+
+                <button
+                  matSuffix
+                  mat-icon-button
+                  type="button"
+                  class="clear-btn"
+                  *ngIf="form.controls.cityQuery.value"
+                  (click)="form.controls.cityQuery.setValue('')"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+
+                <mat-autocomplete #cityAuto="matAutocomplete">
+                  @for (c of (vendorForm.city() ?? []); track c.placeId) {
+                    <mat-option [value]="c" (click)="selectCity(c)">{{ c.name }}</mat-option>
+                  }
+                </mat-autocomplete>
+              </mat-form-field>
+            }
+          }
+
+          @if (form.controls.countryLevel.value === 'us') {
+            <mat-form-field appearance="outline" class="search-field">
+              <mat-icon matPrefix class="search-ico">search</mat-icon>
+              <mat-label>Select State...</mat-label>
+
+              
+              <mat-select formControlName="provinceStateSelections">
+                @for (s of states; track s) {
+                  <mat-option [value]="s">{{ s }}</mat-option>
+                }
+              </mat-select>
+
+              <button
+                matSuffix
+                mat-icon-button
+                type="button"
+                class="clear-btn"
+                *ngIf="(form.controls.provinceStateSelections.value?.length ?? 0) > 0"
+                (click)="removeLastProvinceState()"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
+            @if (form.controls.provinceStateSelections.value) {
+              <mat-form-field appearance="outline" class="search-field">
+                <mat-icon matPrefix class="search-ico">search</mat-icon>
+                <mat-label>Search City...</mat-label>
+
+                <input
+                  matInput
+                  formControlName="cityQuery"
+                  [matAutocomplete]="cityAuto"
+                  placeholder="Type a city name"
+                />
+
+                <button
+                  matSuffix
+                  mat-icon-button
+                  type="button"
+                  class="clear-btn"
+                  *ngIf="form.controls.cityQuery.value"
+                  (click)="form.controls.cityQuery.setValue('')"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+
+                <mat-autocomplete #cityAuto="matAutocomplete">
+                  @for (c of (vendorForm.city() ?? []); track c.placeId) {
+                    <mat-option [value]="c" (click)="selectCity(c)">{{ c.name }}</mat-option>
+                  }
+                </mat-autocomplete>
+              </mat-form-field>
+            }
+          }
+        }
+
+        @case ("neighbourhood") {
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-icon matPrefix class="search-ico">search</mat-icon>
+            <mat-label>Select Country...</mat-label>
+
+            <mat-select formControlName="countryLevel">
+              <mat-option value="ca">Canada</mat-option>
+              <mat-option value="us">United States</mat-option>
+            </mat-select>
+
+            <button
+              matSuffix
+              mat-icon-button
+              type="button"
+              class="clear-btn"
+              *ngIf="form.controls.countryLevel.value"
+              (click)="form.controls.countryLevel.setValue(null)"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+
+          @if (form.controls.countryLevel.value === 'ca') {
+            <mat-form-field appearance="outline" class="search-field">
+              <mat-icon matPrefix class="search-ico">search</mat-icon>
+              <mat-label>Select Province...</mat-label>
+
+              <mat-select formControlName="provinceStateSelections">
+                @for (p of provinces; track p) {
+                  <mat-option [value]="p">{{ p }}</mat-option>
+                }
+              </mat-select>
+
+              <button
+                matSuffix
+                mat-icon-button
+                type="button"
+                class="clear-btn"
+                *ngIf="(form.controls.provinceStateSelections.value?.length ?? 0) > 0"
+                (click)="removeLastProvinceState()"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
+            @if (form.controls.provinceStateSelections.value) {
+              <mat-form-field appearance="outline" class="search-field">
+                <mat-icon matPrefix class="search-ico">search</mat-icon>
+                <mat-label>Search City...</mat-label>
+
+                <input
+                  matInput
+                  formControlName="cityQuery"
+                  [matAutocomplete]="cityAuto"
+                  placeholder="Type a city name"
+                />
+
+                <button
+                  matSuffix
+                  mat-icon-button
+                  type="button"
+                  class="clear-btn"
+                  *ngIf="form.controls.cityQuery.value"
+                  (click)="form.controls.cityQuery.setValue('')"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+
+                <mat-autocomplete #cityAuto="matAutocomplete">
+                  @for (c of (vendorForm.city() ?? []); track c.placeId) {
+                    <mat-option [value]="c" (click)="selectCity(c)">{{ c.name }}</mat-option>
+                  }
+                </mat-autocomplete>
+              </mat-form-field>
+            @if ((form.controls.citySelections.value?.length ?? 0) > 0) {
+  <div class="chip-row" style="margin-top: 8px;">
+    @for (c of form.controls.citySelections.value; track c.placeId) {
+      <div class="chip">
+        {{ c.name }}
+        <button type="button" class="chip-x" (click)="removeCity(c.placeId)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    }
+  </div>
+}
+            }
+          }
+
+          @if (form.controls.countryLevel.value === 'us') {
+            <mat-form-field appearance="outline" class="search-field">
+              <mat-icon matPrefix class="search-ico">search</mat-icon>
+              <mat-label>Select State...</mat-label>
+
+              
+              <mat-select formControlName="provinceStateSelections">
+                @for (s of states; track s) {
+                  <mat-option [value]="s">{{ s }}</mat-option>
+                }
+              </mat-select>
+
+              <button
+                matSuffix
+                mat-icon-button
+                type="button"
+                class="clear-btn"
+                *ngIf="(form.controls.provinceStateSelections.value?.length ?? 0) > 0"
+                (click)="removeLastProvinceState()"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
+            @if (form.controls.provinceStateSelections.value) {
+              <mat-form-field appearance="outline" class="search-field">
+                <mat-icon matPrefix class="search-ico">search</mat-icon>
+                <mat-label>Search City...</mat-label>
+
+                <input
+                  matInput
+                  formControlName="cityQuery"
+                  [matAutocomplete]="cityAuto"
+                  placeholder="Type a city name"
+                />
+
+                <button
+                  matSuffix
+                  mat-icon-button
+                  type="button"
+                  class="clear-btn"
+                  *ngIf="form.controls.cityQuery.value"
+                  (click)="form.controls.cityQuery.setValue('')"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+
+                <mat-autocomplete #cityAuto="matAutocomplete">
+                  @for (c of (vendorForm.city() ?? []); track c.placeId) {
+                    <mat-option [value]="c" (click)="selectCity(c)">{{ c.name }}</mat-option>
+                  }
+                </mat-autocomplete>
+              </mat-form-field>
+            }
+          }
+
+          @if (form.controls.countryLevel.value && (form.controls.citySelections.value?.length ?? 0) > 0) {
+            <mat-form-field appearance="outline" class="search-field">
+              <mat-icon matPrefix class="search-ico">search</mat-icon>
+              <mat-label>Search Neighborhood...</mat-label>
+
+              <input
+                matInput
+                formControlName="regionQuery"
+                [matAutocomplete]="regionAuto"
+                placeholder="Search for a Neighborhood"
+              />
+
+              <button
+                matSuffix
+                mat-icon-button
+                type="button"
+                class="clear-btn"
+                *ngIf="form.controls.regionQuery.value"
+                (click)="form.controls.regionQuery.setValue('')"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+
+              <mat-autocomplete #regionAuto="matAutocomplete">
+                @for (r of (vendorForm.regions() ?? []); track r.placeId) {
+                  <mat-option [value]="r" (click)="selectArea(r)">{{ r.displayName }}</mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+          }
+        }
+
+        @case('postal'){
+
+               <mat-form-field appearance="outline" class="search-field">
+            <mat-icon matPrefix class="search-ico">search</mat-icon>
+            <mat-label>Select Country...</mat-label>
+
+            <mat-select formControlName="countryLevel">
+              <mat-option value="ca">Canada</mat-option>
+              <mat-option value="us">United States</mat-option>
+            </mat-select>
+
+            <button
+              matSuffix
+              mat-icon-button
+              type="button"
+              class="clear-btn"
+              *ngIf="form.controls.countryLevel.value"
+              (click)="form.controls.countryLevel.setValue(null)"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+
+          @if (form.controls.countryLevel.value === 'ca') {
+            <mat-form-field appearance="outline" class="search-field">
+              <mat-icon matPrefix class="search-ico">search</mat-icon>
+              <mat-label>Select Province...</mat-label>
+
+              <mat-select formControlName="provinceStateSelections">
+                @for (p of provinces; track p) {
+                  <mat-option [value]="p">{{ p }}</mat-option>
+                }
+              </mat-select>
+
+              <button
+                matSuffix
+                mat-icon-button
+                type="button"
+                class="clear-btn"
+                *ngIf="(form.controls.provinceStateSelections.value?.length ?? 0) > 0"
+                (click)="removeLastProvinceState()"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
+            @if (form.controls.provinceStateSelections.value) {
+              <mat-form-field appearance="outline" class="search-field">
+                <mat-icon matPrefix class="search-ico">search</mat-icon>
+                <mat-label>Search City...</mat-label>
+
+                <input
+                  matInput
+                  formControlName="cityQuery"
+                  [matAutocomplete]="cityAuto"
+                  placeholder="Type a city name"
+                />
+
+                <button
+                  matSuffix
+                  mat-icon-button
+                  type="button"
+                  class="clear-btn"
+                  *ngIf="form.controls.cityQuery.value"
+                  (click)="form.controls.cityQuery.setValue('')"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+
+                <mat-autocomplete #cityAuto="matAutocomplete">
+                  @for (c of (vendorForm.city() ?? []); track c.placeId) {
+                    <mat-option [value]="c" (click)="selectCity(c)">{{ c.name }}</mat-option>
+                  }
+                </mat-autocomplete>
+              </mat-form-field>
+            @if ((form.controls.citySelections.value?.length ?? 0) > 0) {
+  <div class="chip-row" style="margin-top: 8px;">
+    @for (c of form.controls.citySelections.value; track c.placeId) {
+      <div class="chip">
+        {{ c.name }}
+        <button type="button" class="chip-x" (click)="removeCity(c.placeId)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    }
+  </div>
+}
+            }
+          }
+
+          @if (form.controls.countryLevel.value === 'us') {
+            <mat-form-field appearance="outline" class="search-field">
+              <mat-icon matPrefix class="search-ico">search</mat-icon>
+              <mat-label>Select State...</mat-label>
+
+              
+              <mat-select formControlName="provinceStateSelections">
+                @for (s of states; track s) {
+                  <mat-option [value]="s">{{ s }}</mat-option>
+                }
+              </mat-select>
+
+              <button
+                matSuffix
+                mat-icon-button
+                type="button"
+                class="clear-btn"
+                *ngIf="(form.controls.provinceStateSelections.value?.length ?? 0) > 0"
+                (click)="removeLastProvinceState()"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
+            @if (form.controls.provinceStateSelections.value) {
+              <mat-form-field appearance="outline" class="search-field">
+                <mat-icon matPrefix class="search-ico">search</mat-icon>
+                <mat-label>Search City...</mat-label>
+
+                <input
+                  matInput
+                  formControlName="cityQuery"
+                  [matAutocomplete]="cityAuto"
+                  placeholder="Type a city name"
+                />
+
+                <button
+                  matSuffix
+                  mat-icon-button
+                  type="button"
+                  class="clear-btn"
+                  *ngIf="form.controls.cityQuery.value"
+                  (click)="form.controls.cityQuery.setValue('')"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+
+                <mat-autocomplete #cityAuto="matAutocomplete">
+                  @for (c of (vendorForm.city() ?? []); track c.placeId) {
+                    <mat-option [value]="c" (click)="selectCity(c)">{{ c.name }}</mat-option>
+                  }
+                </mat-autocomplete>
+              </mat-form-field>
+            }
+          }
+
+          @if (form.controls.countryLevel.value && (form.controls.citySelections.value?.length ?? 0) > 0) {
+            <mat-form-field appearance="outline" class="search-field">
+              <mat-icon matPrefix class="search-ico">search</mat-icon>
+              <mat-label>Search Neighborhood...</mat-label>
+
+              <input
+                matInput
+                formControlName="regionQuery"
+                [matAutocomplete]="regionAuto"
+                placeholder="Search for a Neighborhood"
+              />
+
+              <button
+                matSuffix
+                mat-icon-button
+                type="button"
+                class="clear-btn"
+                *ngIf="form.controls.regionQuery.value"
+                (click)="form.controls.regionQuery.setValue('')"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+
+              <mat-autocomplete #regionAuto="matAutocomplete">
+                @for (r of (vendorForm.regions() ?? []); track r.placeId) {
+                  <mat-option [value]="r" (click)="selectArea(r)">{{ r.displayName }}</mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+
+                      <mat-form-field appearance="outline" class="search-field">
+              <mat-icon matPrefix class="search-ico">search</mat-icon>
+              <mat-label>Search Postal Codes...</mat-label>
+
+              <input
+                matInput
+                formControlName="postalQuery"
+                [matAutocomplete]="postalAuto"
+                placeholder="Search for a Neighborhood"
+              />
+
+              <button
+                matSuffix
+                mat-icon-button
+                type="button"
+                class="clear-btn"
+                *ngIf="form.controls.postalQuery.value"
+                (click)="form.controls.postalQuery.setValue('')"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+
+              <mat-autocomplete #postalAuto="matAutocomplete">
+                @for (p of (vendorForm.postal() ?? []); track p.name) {
+                  <mat-option [value]="p.name" (click)="addPostal(p.name)">{{ p.name }}</mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+          }
+        }
+
+
+        
+
+      }
+
+      <div class="section">
+        <div class="stat-title">Selected Territories</div>
+
+        <div class="chip-row">
+          @switch (form.controls.territoryLevel.value) {
+
+            @case ("neighbourhood") {
+              @for (r of form.controls.areaSelection.value; track r.placeId) {
+                <div class="chip">
+                  {{ r.displayName }}
+                  <button type="button" class="chip-x" (click)="removeArea(r.placeId)">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              }
+            }
+
+            @case ("province") {
+              @for (p of form.controls.provinceStateSelections.value; track p) {
+                <div class="chip">
+                  {{ p }}
+                  <button type="button" class="chip-x" (click)="removeProvinceState(p)">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              }
+            }
+
+            @case ("state") {
+              @for (s of form.controls.provinceStateSelections.value; track s) {
+                <div class="chip">
+                  {{ s }}
+                  <button type="button" class="chip-x" (click)="removeProvinceState(s)">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              }
+            }
+
+            @case ("city") {
+              @for (c of form.controls.citySelections.value; track c.placeId) {
+                <div class="chip">
+                  {{ c.name }}
+                  <button type="button" class="chip-x" (click)="removeCity(c.placeId)">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              }
+            }
+
+           @case ("postal") {
+  @for (p of form.controls.postalCodes.value; track p) {
+    <div class="chip">
+      {{ p }}
+      <button type="button" class="chip-x" (click)="removePostal(p)">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  }
+}
+
+          }
+        </div>
+      </div>
+
+      @if (
+        (form.controls.provinceStateSelections.value?.length ?? 0) > 0 ||
+        (form.controls.citySelections.value?.length ?? 0) > 0 ||
+        (form.controls.postalCodes.value?.length ?? 0) > 0
+      ) {
+        <div class="footer-actions">
+          <button mat-raised-button type="button" class="skip"(click)="onNext()">
+            Next <span class="arrow">→</span>
+          </button>
+        </div>
+      } @else {
+        <div class="footer-actions">
+          <button mat-raised-button type="button" class="skip"(click)="onNext()">
+            Skip <span class="arrow">→</span>
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</div>

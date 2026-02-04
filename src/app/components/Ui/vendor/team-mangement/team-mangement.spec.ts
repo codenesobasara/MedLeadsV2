@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RepInfoStep } from './rep-info-step';
+import { TeamMangement } from './team-mangement';
 
-describe('RepInfoStep', () => {
-  let component: RepInfoStep;
-  let fixture: ComponentFixture<RepInfoStep>;
+describe('TeamMangement', () => {
+  let component: TeamMangement;
+  let fixture: ComponentFixture<TeamMangement>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RepInfoStep]
+      imports: [TeamMangement]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RepInfoStep);
+    fixture = TestBed.createComponent(TeamMangement);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

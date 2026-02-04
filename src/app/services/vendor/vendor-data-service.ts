@@ -29,7 +29,7 @@ export class VendorDataService {
 
 
       public readonly vendorAnalytics=computed(()=>this.analyticsResource.value())
-      public readonly vendorEvents = computed(()=>this.eventsResource.value()?? [])
+      public readonly vendorEvents = computed<DBEvent[]>(() => this.eventsResource.value() ?? []);
      
   
 }

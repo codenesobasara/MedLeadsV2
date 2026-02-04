@@ -7,19 +7,24 @@ import { VendorFormControl } from '../../../../../services/vendor/vendor-form-co
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { provideNativeDateAdapter } from '@angular/material/core';
+
 
 @Component({
   selector: 'app-step-one',
-  imports:[MatSelectModule,ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule,CommonModule, MatButtonModule,MatIconModule],
-  templateUrl: './step-one.html',
+  imports:[MatSelectModule,ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule,CommonModule, MatButtonModule,MatIconModule, MatDatepickerModule,MatNativeDateModule],
+  templateUrl:'./step-one.html',
   styleUrl: './step-one.css',
+    providers: [provideNativeDateAdapter()],
 })
 export class StepOne {
 
    vendorForm = inject(VendorFormControl)
     @Output() next = new EventEmitter<void>();
     @Output() cancel = new EventEmitter<void>();
-    form = this.vendorForm.addRepForm;
+    form = this.vendorForm.repBasicInfo;
 
      onNext() {
       const {firstName,lastName,email,phone} = this.form.controls
@@ -37,11 +42,30 @@ export class StepOne {
   getInitials(): string {
   const first = (this.form.controls.firstName.value || '').trim();
   const last  = (this.form.controls.lastName.value || '').trim();
-
   const a = first ? first[0].toUpperCase() : '';
   const b = last ? last[0].toUpperCase() : '';
-
   return (a + b) || 'N';
+}
+activeStaff(isActive:boolean){
+  this.vendorForm.repBasicInfo.controls.activeStaff.setValue(isActive)
+}
+
+  timeOptions: string[] = [  '08:00 AM',
+  '08:30 AM',
+  '09:00 AM',
+  '09:30 AM',];
+
+  
+
+addShift(date: Date | null, start: string | null, end: string | null) {
+  if (!date || !start || !end) return;
+
+  const current = this.form.controls.shifts.value ?? [];
+
+  this.form.controls.shifts.setValue([
+    ...current,
+    { date, start, end }
+  ]);
 }
 
 }

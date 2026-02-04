@@ -1,0 +1,220 @@
+<!-- rep-summary-page.component.html (or your Final Summary step template) -->
+
+<div class="rep-summary-page">
+
+
+  <div class="stat-card large">
+    <div class="header-large">
+      <div>
+        <div class="stat-title large">Representative Profile</div>
+      </div>
+
+      <button type="button" class="edit-link">
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
+    </div>
+
+    <div class="profile-row">
+      <div class="avatar-circle">
+        {{ (basicInfo.controls.firstName.value?.[0] || '') + (basicInfo.controls.lastName.value?.[0] || '') }}
+      </div>
+
+      <div class="profile-info">
+        <div class="profile-name">
+          {{ basicInfo.controls.firstName.value }} {{ basicInfo.controls.lastName.value }}
+        </div>
+
+        <div class="profile-meta">
+          <div class="meta-item">
+            <mat-icon class="meta-ico">mail</mat-icon>
+            <span>{{ basicInfo.controls.email.value }}</span>
+          </div>
+
+          <div class="meta-item">
+            <mat-icon class="meta-ico">call</mat-icon>
+            <span>{{ basicInfo.controls.phone.value }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="rep-summary-grid">
+
+
+    <div class="stat-card large">
+      <div class="header-large">
+        <div>
+          <div class="stat-title large">Schedule &amp; Shifts</div>
+        </div>
+
+        <button type="button" class="icon-edit">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+
+      @if ((basicInfo.controls.shifts.value?.length ?? 0) > 0) {
+
+        <div class="info-rows">
+          @for (shift of (basicInfo.controls.shifts.value ?? []); track $index) {
+            <div class="info-row">
+              <div class="info-badge">
+                <mat-icon>schedule</mat-icon>
+              </div>
+
+              <div class="info-text">
+                <div class="info-main">
+                  {{ shift.date | date:'MMM d, y' }}
+                </div>
+                <div class="info-sub">
+                  {{ shift.start }} - {{ shift.end }}
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+      } @else {
+        <div class="empty-state">
+          <div class="stat-sub">No shifts added yet.</div>
+        </div>
+      }
+    </div>
+
+    <div class="stat-card large">
+      <div class="header-large">
+        <div>
+          <div class="stat-title large">Event Info</div>
+          <div class="stat-sub">This rep will receive routing + notifications for this event.</div>
+        </div>
+
+        <button type="button" class="icon-edit" disabled>
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+
+      <div class="info-rows">
+        <div class="info-row">
+          <div class="info-badge">
+            <mat-icon>event</mat-icon>
+          </div>
+          <div class="info-text">
+            <div class="info-main">{{ selectedEvent()?.name }}</div>
+
+           
+            <div class="info-sub">
+              {{ selectedEvent()?.startDate }} - {{ selectedEvent()?.endDate }}
+            </div>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-badge">
+            <mat-icon>place</mat-icon>
+          </div>
+          <div class="info-text">
+            <div class="info-main">{{ selectedEvent()?.description }}</div>
+            <div class="info-sub">Kitchener, ON</div>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-badge">
+            <mat-icon>public</mat-icon>
+          </div>
+          <div class="info-text">
+            <div class="info-main">Timezone</div>
+            <div class="info-sub">America/Toronto</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="stat-card large full-width">
+    <div class="header-large">
+      <div>
+        <div class="stat-title large">Territory &amp; Lead Routing</div>
+      </div>
+
+      <button type="button" class="icon-edit">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </div>
+
+    <div class="soft-divider"></div>
+
+    <div class="stat-title">Selected Territories</div>
+
+    <div class="chip-row" style="margin-top: 10px;">
+      @switch (form.controls.territoryLevel.value) {
+
+        @case ('province') {
+          @for (p of form.controls.provinceStateSelections.value; track p) {
+            <div class="chip">{{ p }}</div>
+          }
+        }
+
+        @case ('state') {
+          @for (s of form.controls.provinceStateSelections.value; track s) {
+            <div class="chip">{{ s }}</div>
+          }
+        }
+
+        @case ('city') {
+          @for (c of form.controls.citySelections.value; track c.placeId) {
+            <div class="chip">{{ c.name }}</div>
+          }
+        }
+
+        @case ('neighbourhood') {
+          @for (a of form.controls.areaSelection.value; track a.placeId) {
+            <div class="chip">{{ a.displayName || a.name }}</div>
+          }
+        }
+
+        @case ('postal') {
+          @for (pc of form.controls.postalCodes.value; track pc) {
+            <div class="chip">{{ pc }}</div>
+          }
+        }
+
+        @default {
+          <div class="stat-sub">No territory selected yet.</div>
+        }
+      }
+    </div>
+
+    <div class="soft-divider"></div>
+
+    <div class="subscribe-row">
+      <div class="subscribe-copy">
+        <div class="stat-title">Booth Visit Notifications</div>
+        <div class="stat-sub">
+          This feature allows the rep to get notifications when an event attendee has visited their booth.
+        </div>
+      </div>
+
+      <button type="button" class="subscribe-btn">
+        Subscribe
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="summary-footer">
+    <button type="button" class="footer-btn ghost">
+      Back
+    </button>
+
+
+    <button type="button" class="footer-btn primary">
+      Submit
+    </button>
+  </div>
+
+</div>

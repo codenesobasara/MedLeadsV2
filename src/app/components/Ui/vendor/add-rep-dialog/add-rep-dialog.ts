@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { VendorFormControl } from '../../../../services/vendor/vendor-form-control';
 import { StepOne } from '../../../forms/vendor/addRep/step-one/step-one';
-import { RepTerritoryStep } from '../../../forms/vendor/addRep/rep-territory-step/rep-territory-step';
-import { FinalStep } from '../../../forms/vendor/addRep/final-step/final-step';
+import { StepTwo } from '../../../forms/vendor/addRep/step-two/step-two';
+import { StepThree } from '../../../forms/vendor/addRep/step-three/step-three';
+
 @Component({
   selector: 'app-add-rep-dialog',
   standalone:true,
-  imports: [MatProgressBarModule,StepOne,RepTerritoryStep,CommonModule,FinalStep],
+  imports: [MatProgressBarModule,StepOne,StepTwo,CommonModule,StepThree],
   templateUrl: './add-rep-dialog.html',
   styleUrl: './add-rep-dialog.css',
 })
