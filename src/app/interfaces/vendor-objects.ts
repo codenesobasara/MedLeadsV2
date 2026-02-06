@@ -1,4 +1,4 @@
-import { BoothAttendee, DBAttendee, DBRepProfile, DBScan, DBVendorQuestion } from "./models";
+import { BoothAttendee, DBAttendee, DBRepProfile, DBScan, DBVendorQuestion, RepShiftDB} from "./models";
 
 export interface VendorObjects {
 }
@@ -36,7 +36,10 @@ export interface VendorAnalyticsObject {
 
   reps: {
     id: number;
-    name: string;
+    firstName: string;
+    lastName:string;
+    email:string;
+    phone:string
 
     totalScans: number;
     totAvgScansPerHour: number;
@@ -61,7 +64,10 @@ export interface VendorAnalyticsObject {
     }[];
 
     isActive: boolean;
+    shifts: RepShiftDB[];
   }[];
+
+   
 }
 
 export interface RepShift {

@@ -5,6 +5,7 @@ const VendorQuestion =require("../Models/VendorQuestions")
 const VendorProduct = require("../Models/VendorProductsModel")
 const scan = require("../Models/ScanModel")
 const Attendee =require ("../Models/Attendee")
+const shifts = require("../Models/ShiftsModel")
 const func = require("../GeneralFunctions")
 
 
@@ -39,8 +40,9 @@ const questions = await VendorQuestion.findAll({ where: { vendorId } })
 });
  const scannedProducts = await VendorProduct.findAll({include: [{ model: scan,required: true,where: { vendorId, eventId },through: { attributes: [] },}],});
  const analyticsObject = VendorAnalyticsObject()
+ const repShifts = await shifts.findAll({where:{vendorId,eventId}})
  
-return {reps,eventScans,products,questions,event, analyticsObject,eventAttendees,scannedProducts}
+return {reps,eventScans,products,questions,event, analyticsObject,eventAttendees,scannedProducts,repShifts}
 }
 
 

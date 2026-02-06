@@ -93,12 +93,13 @@ finalize(){
 
 
 }
-
-
 class RepAnalytics{
     constructor() {
     this.id = 0;
-    this.name = ""
+    this.firstName = "",
+    this.lastName = "",
+    this.email = ""
+    this.phone = ""
     this.totalScans = 0;
     this.totAvgScansPerHour = 0;
     this.avgScansPerDay = 0;
@@ -108,17 +109,25 @@ class RepAnalytics{
     this.avgScansPerDayHour = [];  
     this.peakDayHour = [];       
     this.isActive = false;
+    this.territoryNotifications=false;
+    this.isRemote = false;
+    this.shifts=[]
   }
-  addScan(reps=[],scan,dayKey,hourKey,eventAttendees){
+  addScan(reps=[],scan,dayKey,hourKey,eventAttendees,){
    const rep = reps.find(r =>scan.salesRepId === r.id )
    this.id = rep.id
-   this.name = `${rep.firstName} ${rep.lastName}`;
+   this.territoryNotifications = rep.territoryNotifications?? false
+   this.isRemote = rep.isRemote?? false
+   this.firstName = rep.firstName
+   this.lastName = rep.lastName
+   this.email = rep.email
+   this.phone = rep.phone
    this.totalScans++
    this.isActive = true
    this.scans.push(scan)
-    const attendeeObj = eventAttendees.find(a => a.id === scan.attendeeId);
-  if (attendeeObj) {
-    if (!this.attendees.some(a => a.id === attendeeObj.id)) {
+   const attendeeObj = eventAttendees.find(a => a.id === scan.attendeeId);
+   if (attendeeObj) {
+   if (!this.attendees.some(a => a.id === attendeeObj.id)) {
       this.attendees.push(attendeeObj);
     }
   }
@@ -128,34 +137,37 @@ class RepAnalytics{
     this.scansPerDayHour.push(dayObj);}
     dayObj.hours[hourKey] = (dayObj.hours[hourKey] ?? 0) + 1;}
 
-    finalize(){
+    finalize(shifts){
       const hourlyTotals ={}
       this.scansPerDayHour.forEach(obj =>{
        Object.entries(obj.hours).forEach(([hourKey,scancount])=>{
         hourlyTotals[hourKey]||=[]
-        hourlyTotals[hourKey].push(scancount)
-       })
-      });
+        hourlyTotals[hourKey].push(scancount)})});
     this.avgScansPerDayHour = Object.entries(hourlyTotals).map(([hourKey, scans]) => {
     const sum = scans.reduce((a, b) => a + b, 0);
     const avg = sum / scans.length;
-    return { [hourKey]: Number(avg.toFixed(2)) };
-  });
-this.scansPerDayHour.forEach(obj => {
-  const hourEntries = Object.entries(obj.hours);
-  if (!hourEntries.length) return;
-
+    return { [hourKey]: Number(avg.toFixed(2)) }; });
+    this.scansPerDayHour.forEach(obj => {
+    const hourEntries = Object.entries(obj.hours);
+     if (!hourEntries.length) return;
   const busyTimes = hourEntries.reduce(
-    (max, current) => (current[1] > max[1] ? current : max)
-  );
-
-  const busiestHour = busyTimes[0];
-  const count = busyTimes[1];
-
-  this.peakDayHour.push({
+    (max, current) => (current[1] > max[1] ? current : max));
+    const busiestHour = busyTimes[0];
+    const count = busyTimes[1];
+     this.peakDayHour.push({
     [obj.dayKey]: { [busiestHour]: count }
   });
 });
+  this.shifts = shifts.filter(s => this.id=== s.salesRepId)
+  let activeHours = 0
+  let totalDays = 0
+  this.scansPerDayHour.forEach(day =>{
+   totalDays++
+   const keys = Object.keys(day.hours)
+   activeHours += keys.length
+  })
+  this.totAvgScansPerHour = this.totalScans/activeHours
+  this.avgScansPerDay = this.totalScans/totalDays
     }
   
   }
@@ -176,7 +188,8 @@ this.scansPerDayHour.forEach(obj => {
   vendorAnalyticsObj.booth.finalize()
    vendorAnalyticsObj.booth.addQuestions(data.questions);
   vendorAnalyticsObj.reps = Object.values(repMap)
-  vendorAnalyticsObj.reps.forEach(r => r.finalize())
+  vendorAnalyticsObj.reps.forEach(r => r.finalize(data.repShifts))
+  vendorAnalyticsObj.reps.sort((a,b)=>b.totalScans - a.totalScans)
   return vendorAnalyticsObj
 
   }  

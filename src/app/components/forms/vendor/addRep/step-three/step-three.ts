@@ -23,8 +23,6 @@ export class StepThree {
 
      selectedEvent = computed<DBEvent|null>(()=>{
      const eventId = this.vendorData.selectedEventId()
-     console.log(`this is the Event ID ${eventId}`);
-     
      return this.vendorData.vendorEvents().find(e => e.id === eventId)?? null
     })
     

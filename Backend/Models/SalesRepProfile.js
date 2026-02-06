@@ -46,33 +46,41 @@ const SalesRepsProfile = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+
+  
+    territoryNotifications: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
+
     passwordHash: {
-  type: DataTypes.STRING,
-  allowNull: true, 
-},
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 
-tempPassCode: {
-  type: DataTypes.STRING,
-  allowNull: true,
-},
+    tempPassCode: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 
-tempPassExpiresAt: {
-  type: DataTypes.DATE,
-  allowNull: true,
-},
+    tempPassExpiresAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
 
-isFirstLogin: {
-  type: DataTypes.BOOLEAN,
-  defaultValue: true,
-},
-
+    isFirstLogin: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+     isRemote: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     timestamps: true,
   }
-
-
-  
 );
 
 module.exports = SalesRepsProfile;

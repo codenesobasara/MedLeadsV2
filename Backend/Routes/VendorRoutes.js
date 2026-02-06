@@ -22,6 +22,7 @@ router.get("/events/:eventId/analytics", async (req, res) => {
     console.log("DATA SHAPE:", Object.keys(data));
     console.log("EVENT SCANS:", data.eventScans?.length);
     console.log("REPS:", data.reps?.length);
+    
 
     const vendorAnalyticsObj = VendorAnalytics.buildVendorAnalytics(data);
     return res.status(200).json(vendorAnalyticsObj);

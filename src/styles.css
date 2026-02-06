@@ -11,16 +11,18 @@
   --surface: #ffffff;
 
   --primary: #4f64ff;
+  --primary-hover: #3f54ff;
   --primary-soft: rgba(79, 100, 255, 0.10);
+  --row-bg: #f9fafb;
 }
+
 body{
   font-family: var(--font-sans);
   color: var(--text);
   font-weight: 400;
 }
 
-
- body { height: 100%; margin: 0; }
+body { height: 100%; margin: 0; }
 
 .layout{
   height: 100vh;
@@ -35,7 +37,6 @@ body{
   background: transparent;
 }
 
-
 .topbar{
   flex: 0 0 72px;
   display: flex;
@@ -47,14 +48,12 @@ body{
   border-bottom: 1px solid #e9edf5;
 }
 
-
 .content{
   flex: 1 1 auto;
   overflow: auto;
   padding: 18px;
   box-sizing: border-box;
 }
-
 
 .topbar .user-wrapper{
   display: flex;
@@ -75,26 +74,22 @@ body{
   color: #2b3442;
 }
 
-
 mat-sidenav.app-sidenav{
   width: 260px !important;
   background: #fff !important;
   border-right: 1px solid #e9edf5 !important;
 }
 
-
 mat-sidenav.app-sidenav .mat-drawer-inner-container{
   padding: 18px 14px !important;
   box-sizing: border-box;
 }
-
 
 mat-sidenav.app-sidenav aside.app-sidenav{
   display: flex;
   flex-direction: column;
   height: 100%;
 }
-
 
 mat-sidenav.app-sidenav aside.app-sidenav .logo{
   height: 56px;
@@ -112,12 +107,10 @@ mat-sidenav.app-sidenav aside.app-sidenav .logo-text{
   color: #4f64ff;
 }
 
-
 mat-sidenav.app-sidenav aside.app-sidenav .mat-divider{
   margin: 14px 10px !important;
   border-top-color: #eef2f8 !important;
 }
-
 
 mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-nav-list .mat-mdc-list-item{
   margin: 4px 6px !important;
@@ -127,7 +120,6 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-nav-list .mat-mdc-list-item{
 mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover{
   background: #f5f7ff !important;
 }
-
 
 mat-sidenav.app-sidenav aside.app-sidenav
 .mat-mdc-list-item .mdc-list-item__primary-text{
@@ -139,7 +131,6 @@ mat-sidenav.app-sidenav aside.app-sidenav
   color: #3b4453 !important;
 }
 
-/* Icon */
 mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item mat-icon{
   color: #7b8798 !important;
   font-size: 20px !important;
@@ -153,9 +144,8 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
 
 .app-dashboard{
   width: 100%;
-  min-width: 0; 
+  min-width: 0;
 }
-
 
 .stats{
   display: grid;
@@ -207,9 +197,6 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
 .stat-card.red{ background: #f5365c; }
 .stat-card.purple{ background: #8965e0; }
 
-
- 
- 
 .stats-row2{
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
@@ -218,7 +205,6 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   min-width: 0;
 }
 
-
 .stat-card.large{
   background: #f5f7fb;
   border-radius: 12px;
@@ -226,9 +212,8 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   box-shadow: 0 6px 14px rgba(50, 50, 93, 0.12);
   display: flex;
   flex-direction: column;
-  color: inherit; 
+  color: inherit;
 }
-
 
 .header-large{
   display: flex;
@@ -251,7 +236,6 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   color: #6b7280;
   margin-top: 4px;
 }
-
 
 .panel-actions{
   display: flex;
@@ -278,7 +262,6 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   text-decoration: underline;
 }
 
-
 .panel-body{
   flex: 1;
   min-width: 0;
@@ -294,7 +277,6 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   color: #6b7280;
   font-size: 13px;
 }
-
 
 .panel-metrics{
   display: grid;
@@ -316,14 +298,12 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   color: #111827;
 }
 
-
 .panel-footer{
   margin-top: 16px;
   font-size: 13px;
   color: #4b5563;
   opacity: 0.85;
 }
-
 
 .header-large mat-form-field{
   width: 170px;
@@ -335,7 +315,6 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   padding-bottom: 8px !important;
 }
 
-
 @media (max-width: 1200px){
   .stats{ grid-template-columns: repeat(2, 1fr); }
   .stats-row2{ grid-template-columns: 1fr; }
@@ -345,16 +324,12 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   .stats{ grid-template-columns: 1fr; }
 }
 
-
-/*Action Cards*/
-
 .card-Wrapper{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 22px;
   align-items: stretch;
 }
-
 
 .event-card{
   cursor: pointer;
@@ -368,13 +343,11 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   position: relative;
 }
 
-
 .event-card:nth-child(odd) { background-color: #3b378a; }
 .event-card:nth-child(even){ background-color: #9a9650; }
 
 .event-card:nth-child(odd):hover { background-color: #28264d; }
 .event-card:nth-child(even):hover{ background-color: #4e4c29; }
-
 
 .event-date{
   padding: 18px 16px;
@@ -395,7 +368,6 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   line-height: 1;
   color: #ffffff;
 }
-
 
 .event-body{
   padding: 18px 18px 18px 0;
@@ -445,7 +417,6 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   text-overflow: ellipsis;
 }
 
-
 .event-groups{
   display: flex;
   flex-wrap: wrap;
@@ -462,7 +433,6 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   padding: 6px 10px;
 }
 
-
 .event-arrow{
   position: absolute;
   right: 16px;
@@ -478,8 +448,6 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   background: rgba(255, 255, 255, 0.06);
 }
 
-
-
 .add-event-tile{
   width: 320px;
   min-height: 170px;
@@ -489,10 +457,8 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   gap: 10px;
   text-align: center;
   cursor: pointer;
-
   background: linear-gradient(135deg, #f5f7ff, #eef2ff);
   box-shadow: 0 18px 30px rgba(16, 24, 40, 0.12);
-
   transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
 }
 
@@ -530,7 +496,6 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   margin-top: 2px;
   width:100%;
   gap: 5px;
-
 }
 
 .list-item{
@@ -548,7 +513,6 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   pointer-events: auto !important;
 }
 
-
 .list-item:hover{
   transform: translateY(-2px) !important;
   box-shadow: 0 24px 38px rgba(16, 24, 40, 0.18) !important;
@@ -561,7 +525,7 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   color: var(--text);
   border-radius: 12px;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 600;
   padding: 10px 14px;
   cursor: pointer;
   display: inline-flex;
@@ -597,7 +561,6 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   background: rgba(79, 100, 255, 0.06);
 }
 
-/* Icon-only button */
 .ui-icon-btn{
   width: 36px;
   height: 36px;
@@ -618,7 +581,7 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
 }
 
 .ui-icon-btn mat-icon{
-  color: var(--muted);
+  color: var(--text-muted);
 }
 
 .ui-icon-btn.danger:hover{
@@ -665,6 +628,9 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   border: 1px solid #eef2f8;
   background: #ffffff;
   box-shadow: 0 6px 14px rgba(50, 50, 93, 0.08);
+  width: 100%;
+  box-sizing: border-box;
+
 }
 
 .list-pill:hover{

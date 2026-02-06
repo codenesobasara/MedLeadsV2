@@ -201,3 +201,15 @@ export interface DBVendorQuestion {
   createdAt: string;
    updatedAt: string;
 }
+
+export interface RepShiftDB {
+  id: number;
+  salesRepId: number;
+  vendorId: number;
+  eventId: number;
+  date: string;        
+  startTime: string;   
+  endTime: string;     
+  createdAt: string;
+  updatedAt: string
+}
