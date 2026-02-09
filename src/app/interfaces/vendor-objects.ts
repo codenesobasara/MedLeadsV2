@@ -63,6 +63,8 @@ export interface VendorAnalyticsObject {
       };
     }[];
 
+    isRemote:boolean;
+
     isActive: boolean;
     shifts: RepShiftDB[];
   }[];

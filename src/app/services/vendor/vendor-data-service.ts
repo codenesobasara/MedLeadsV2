@@ -13,19 +13,23 @@ export class VendorDataService {
     private http = inject(HttpClient);
     private state = inject(State)
     private readonly baseUrl = 'http://localhost:3000/api/vendor';
+    private refreshTrigger = signal(0);
 
     selectedEventId = signal<number | null>(null);
 
       eventsResource = rxResource({
       stream: () => this.http.get<DBEvent[]>(`${this.baseUrl}/events`)});
 
-      analyticsResource = rxResource({
+       analyticsResource = rxResource({
        params: () => ({ id: this.state.vendorDashState().EventId }),
        stream: ({ params }) => {
         if (!params.id) return of(null); 
         return this.http.get<VendorAnalyticsObject>(`${this.baseUrl}/events/${params.id}/analytics`);
         }
       });
+
+
+
 
 
       public readonly vendorAnalytics=computed(()=>this.analyticsResource.value())

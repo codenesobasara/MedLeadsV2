@@ -79,7 +79,7 @@
 
           <div class="metric-row">
             <span>Top Rep</span>
-            <strong>{{ analytics.reps[0]?.name }}</strong>
+            <strong>{{ analytics.reps[0]?.firstName }}</strong>
           </div>
 
           <div class="metric-row">
@@ -110,7 +110,7 @@
 
           <div class="metric-row">
             <span>Top Rep</span>
-            <strong>{{ analytics.reps[0]?.name }}</strong>
+            <strong>{{ analytics.reps[0]?.firstName }}</strong>
           </div>
 
           <div class="metric-row">
@@ -142,7 +142,7 @@
             @for (rep of analytics.reps; track rep.id; let i = $index) {
               @if (i < 5) {
                 <div class="list-item">
-                  <div class="metric-row-strong">{{ rep.name }}</div>
+                  <div class="metric-row-strong">{{ rep.firstName }} {{rep.lastName}}</div>
                   <div class="metric-row">{{ rep.totalScans }} scans</div>
                 </div>
               }

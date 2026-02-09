@@ -11,10 +11,16 @@ import { VendorAnalyticsObject } from '../../interfaces/vendor-objects';
 })
 export class VendorCharts {
    selectedDay = signal<string | null>(null);
+   chartView = signal<string>("total")
    vendorData = inject(VendorDataService)
    func =inject(GeneralFunctions)
    reps = computed(() => this.vendorData.vendorAnalytics()?.reps);
    booth = computed(() => this.vendorData.vendorAnalytics()?.booth);
+
+    setChartView(value:string){
+      this.chartView.set(value)
+    }
+
 
       selectedEvent = computed<DBEvent|null>(()=>{
      const eventId = this.vendorData.selectedEventId()
@@ -63,6 +69,7 @@ dailyChart(reps: VendorAnalyticsObject['reps'], booth: VendorAnalyticsObject['bo
           const totalForThisHour = boothDay?.hours[hour] || 1; 
           const percentage = (value / totalForThisHour) * 100;
           
+          
           return { 
             x: this.func.formatAmPm(hour).trim(), 
             y: Math.round(percentage), 
@@ -99,8 +106,7 @@ totalsChart(reps: VendorAnalyticsObject['reps'], booth: VendorAnalyticsObject['b
         .sort((a, b) => parseInt(a[0]) - parseInt(b[0]))
         .map(([hour, value]) => {
           const totalForThisHour = boothHourlyTotals[hour] || 1;
-          const percentage = (value / totalForThisHour) * 100;
-          
+          const percentage = (value / totalForThisHour) * 100; 
           return {
             x: this.func.formatAmPm(hour).trim(),
             y: Math.round(percentage), 
@@ -112,6 +118,9 @@ totalsChart(reps: VendorAnalyticsObject['reps'], booth: VendorAnalyticsObject['b
 
   return series;
 }
+
+
+
 
 analyticsHubchartOptions: ApexOptions = {
   chart: {
@@ -218,10 +227,17 @@ setDay(day: string | null) {
  })
 
 setShiftDay(day:string){
-  console.log("Set Shift FIRED");
-  
 this.selectedShiftDate.set(day)
 }
+
+uniqueScanPercentage = computed(()=>{
+  const reps = this.reps()
+  const booth = this.booth()
+  if(!reps||!booth){return}
+  const uniqueAteendeeCount = new Set(reps.flatMap(r => r.scans.map(s=>s.attendeeId))).size
+  return Math.round((uniqueAteendeeCount/booth.totalScans)*100)
+
+})
 
 
 

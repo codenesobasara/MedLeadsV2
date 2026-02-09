@@ -15,29 +15,35 @@
   <div class="stats">
     <div class="stat-card blue">
       <div class="stat-title">Top Rep</div>
-      @if(chartData?.reps()?.[0]; as rep){
-      <div class="stat-number">{{rep.firstName}} {{rep.lastName}}</div>
-      <div class="stat-link">Total Scans {{rep.totalScans}}</div>}
+
+      @if (chartData?.reps()?.[0]; as rep) {
+        <div class="stat-number">{{ rep.firstName }} {{ rep.lastName }}</div>
+        <div class="stat-link">Total Scans {{ rep.totalScans }}</div>
+      }
     </div>
 
     <div class="stat-card teal">
-      @if (chartData.repLeaders().effecientRep; as rep){
       <div class="stat-title">Effeciency Leader</div>
-      <div class="stat-number">{{rep.firstName}} {{rep.lastName}}</div>
-      <div class="stat-link">Scans Per Active Hour  {{rep.totAvgScansPerHour}}</div>}
+
+      @if (chartData.repLeaders().effecientRep; as rep) {
+        <div class="stat-number">{{ rep.firstName }} {{ rep.lastName }}</div>
+        <div class="stat-link">Scans Per Active Hour {{ rep.totAvgScansPerHour }}</div>
+      }
     </div>
 
     <div class="stat-card purple">
-      @if (chartData.repLeaders().consistentRep; as rep){
       <div class="stat-title">Most Consistent Rep</div>
-      <div class="stat-number">{{rep.firstName}} {{rep.lastName}}</div>
-      <div class="stat-link">Avrage Scans Per Day  {{rep.avgScansPerDay}}</div>}
-    </div>
 
+      @if (chartData.repLeaders().consistentRep; as rep) {
+        <div class="stat-number">{{ rep.firstName }} {{ rep.lastName }}</div>
+        <div class="stat-link">Avrage Scans Per Day {{ rep.avgScansPerDay }}</div>
+      }
+    </div>
+      
     <div class="stat-card red">
-      <div class="stat-title">AVG SCANS / DAY</div>
-      <div class="stat-number">830</div>
-      <div class="stat-link">Across event days</div>
+      <div class="stat-title">New Engagement Rate</div>
+      <div class="stat-number"> {{ chartData.uniqueScanPercentage() }}%</div>
+      <div class="stat-link">Unique Visits</div>
     </div>
   </div>
 
@@ -51,21 +57,21 @@
         </div>
 
         <div class="pill-tabs">
-          @for(date of dates(); track date){
-        <button type="button" class="pill" (click)="chartData.setShiftDay(date)">{{date}}</button>
-
-        }
+          @for (date of dates(); track date) {
+            <button type="button" class="pill" (click)="chartData.setShiftDay(date)">{{ date }}</button>
+          }
         </div>
       </div>
 
       <div class="staffing-hours">
-        @if(chartData.getShifts()?.length){
-          @for(shift of chartData.getShifts(); track $index){
-        <div class="list-pill">
-          <div class="list-pill-title">{{shift.start}} - {{shift.end}}</div>
-          <div class="list-pill-title">{{shift.firstName}} {{shift.lastName}}</div>
-        </div>}}
-
+        @if (chartData.getShifts()?.length) {
+          @for (shift of chartData.getShifts(); track $index) {
+            <div class="list-pill">
+              <div class="list-pill-title">{{ shift.start }} - {{ shift.end }}</div>
+              <div class="list-pill-title">{{ shift.firstName }} {{ shift.lastName }}</div>
+            </div>
+          }
+        }
       </div>
     </div>
 
@@ -77,22 +83,25 @@
         </div>
 
         <div class="panel-actions">
-          <button type="button" class="pill active">Daily</button>
-          <button type="button" class="pill">Full Show</button>
+          <button type="button" class="pill active" (click)="chartData.setChartView('daily')"[class.active]="chartData.chartView() === 'daily'">Daily</button>
+          <button type="button" class="pill"(click)="chartData.setChartView('total')" [class.active]="chartData.chartView() === 'total'">Full Show</button>
         </div>
+        @if(chartData.chartView() === 'daily'){
         <div class="day-actions">
-        @for(date of dates(); track date){
-          
-        <button type="button" class="pill" (click)="chartData.setDay(date)"[class.active]="chartData.selectedDay() === date" >{{date}}</button>
-
-        }
-        </div>
-        
+          @for (date of dates(); track date) {
+            <button
+              type="button"
+              class="pill"
+              (click)="chartData.setDay(date)"
+              [class.active]="chartData.selectedDay() === date"
+            >
+              {{ date }}
+            </button>
+          }
+        </div>}
       </div>
 
-      
-        <app-engagement-hub></app-engagement-hub>
-      
+      <app-engagement-hub></app-engagement-hub>
     </div>
 
   </div>
@@ -122,46 +131,54 @@
         <div>REPRESENTATIVE</div>
         <div>STATUS</div>
         <div>TOTAL SCANS</div>
-        <div>% OF SCANS</div>
+        <div>% OF TOTAL SCANS</div>
         <div>ACTIONS</div>
       </div>
-      @for(rep of chartData.reps(); track rep.id){
-      <div class="rep-table-row">
-        <div class="rep-cell rep-identity">
-          <div class="rep-badge">SC</div>
-          <div class="rep-text">
-            <div class="rep-name">{{rep.firstName}} {{rep.lastName}}</div>
-            <div class="rep-sub">{{rep.email}}</div>
+
+      @for (rep of chartData.reps(); track rep.id) {
+        <div class="rep-table-row">
+          <div class="rep-cell rep-identity">
+            <div class="rep-badge">SC</div>
+            <div class="rep-text">
+              <div class="rep-name">{{ rep.firstName }} {{ rep.lastName }}</div>
+              <div class="rep-sub">{{ rep.email }}</div>
+            </div>
+          </div>
+
+          @if (rep.isRemote === false) {
+            <div class="rep-cell">
+              <span class="status-pill onsite">Onsite</span>
+            </div>
+          } @else {
+            <div class="rep-cell">
+              <span class="status-pill remote">Remote</span>
+            </div>
+          }
+
+          <div class="rep-cell">
+            <div class="scan-stack">
+              <div class="scan-num">{{ rep.totalScans }}</div>
+              <div class="scan-sub">Total</div>
+            </div>
+          </div>
+
+          <div class="rep-cell">
+            <div class="percent-wrap">
+              <div class="percent-bar"></div>
+              <div class="percent-label">18%</div>
+            </div>
+          </div>
+
+          <div class="rep-cell rep-actions">
+            <button type="button" class="ui-icon-btn">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button type="button" class="ui-icon-btn danger">
+              <mat-icon>delete</mat-icon>
+            </button>
           </div>
         </div>
-
-        <div class="rep-cell">
-          <span class="status-pill onsite">Onsite</span>
-        </div>
-
-        <div class="rep-cell">
-          <div class="scan-stack">
-            <div class="scan-num">{{rep.totalScans}}</div>
-            <div class="scan-sub">Total</div>
-          </div>
-        </div>
-
-        <div class="rep-cell">
-          <div class="percent-wrap">
-            <div class="percent-bar"></div>
-            <div class="percent-label">18%</div>
-          </div>
-        </div>
-
-        <div class="rep-cell rep-actions">
-          <button type="button" class="ui-icon-btn">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button type="button" class="ui-icon-btn danger">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
-      </div>}
+      }
     </div>
 
     <div class="rep-table-footer">

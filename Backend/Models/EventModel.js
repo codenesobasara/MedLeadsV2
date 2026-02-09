@@ -74,6 +74,16 @@ const Event = sequelize.define('Event', {
     defaultValue: 'America/Toronto',
   },
 
+  dailyStartTime: {
+  type: DataTypes.STRING,
+  allowNull: false,
+},
+
+dailyEndTime: {
+  type: DataTypes.STRING, 
+  allowNull: false,
+},
+
 
 }, {
   tableName: 'events',

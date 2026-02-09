@@ -4,6 +4,25 @@ const vendorFunc = require("../VendorServices/VendorFunctions")
 const {VendorAnalyticsObject} = require("../VendorServices/VendorFunctions")
 
 
+ function boothBaseAnalytics(data){
+    const avgScansPerRep = Math.round(data.repCount/data.totalScanCount)
+   const BoothObject = {
+    attendingReps:data.repCount,
+    totalScans:data.totalScanCount,
+    activeReps:data.activeRepCount,
+    topfiveReps:data.topFiveReps,
+    topFiveAttendees:data.topFiveAttendees,
+    uniqueAttendeesCount:data.attendeesScanned,
+    questions:data.questions,
+    peakScanDay:data.peakScanDay,
+    avgScansPerRep:avgScansPerRep
+  }
+  return BoothObject
+}
+
+
+function scansOverTime(){}
+
 
 
 class BoothAnalytics{
@@ -101,6 +120,7 @@ class RepAnalytics{
     this.email = ""
     this.phone = ""
     this.totalScans = 0;
+    this.percentOfTotal = 0
     this.totAvgScansPerHour = 0;
     this.avgScansPerDay = 0;
     this.scans = [];
@@ -137,7 +157,7 @@ class RepAnalytics{
     this.scansPerDayHour.push(dayObj);}
     dayObj.hours[hourKey] = (dayObj.hours[hourKey] ?? 0) + 1;}
 
-    finalize(shifts){
+    finalize(shifts,boothTotal){
       const hourlyTotals ={}
       this.scansPerDayHour.forEach(obj =>{
        Object.entries(obj.hours).forEach(([hourKey,scancount])=>{
@@ -168,6 +188,7 @@ class RepAnalytics{
   })
   this.totAvgScansPerHour = this.totalScans/activeHours
   this.avgScansPerDay = this.totalScans/totalDays
+  this.percentOfTotal = Math.round((this.totalScans/boothTotal) *100)
     }
   
   }
@@ -188,7 +209,7 @@ class RepAnalytics{
   vendorAnalyticsObj.booth.finalize()
    vendorAnalyticsObj.booth.addQuestions(data.questions);
   vendorAnalyticsObj.reps = Object.values(repMap)
-  vendorAnalyticsObj.reps.forEach(r => r.finalize(data.repShifts))
+  vendorAnalyticsObj.reps.forEach(r => r.finalize(data.repShifts,vendorAnalyticsObj.booth.totalScans))
   vendorAnalyticsObj.reps.sort((a,b)=>b.totalScans - a.totalScans)
   return vendorAnalyticsObj
 
