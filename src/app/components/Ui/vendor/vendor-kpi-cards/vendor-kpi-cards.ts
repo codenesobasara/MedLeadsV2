@@ -10,7 +10,7 @@ import { State } from '../../../../services/state';
 import { VendorDash } from '../../../../interfaces/userstate';
 import { VendorDataService } from '../../../../services/vendor/vendor-data-service';
 import { AddRepDialog } from '../add-rep-dialog/add-rep-dialog';
-
+import { BoothBaseAnalytics, RepAnalyticsObject } from '../../../../interfaces/vendor-analytics';
 
 @Component({
   selector: 'app-vendor-kpi-cards',
@@ -31,27 +31,31 @@ import { AddRepDialog } from '../add-rep-dialog/add-rep-dialog';
 export class VendorKpiCards {
   state = inject(State);
   vendorService = inject(VendorDataService);
-  analytics = computed(() => this.vendorService.vendorAnalytics());
   dialog = inject(MatDialog);
-
+ 
+  boothBase = computed<BoothBaseAnalytics | null>(() => this.vendorService.boothAnalytics());
+  repAnalytics = computed<RepAnalyticsObject | null>(() => this.vendorService.reps());
 
   constructor() {
     effect(() => {
       const user = this.state.user();
       const vendorDashState: VendorDash = this.state.vendorDashState();
-      console.log(this.analytics());
+
+      // helpful logs while wiring
+      console.log('BOOTH BASE:', this.boothBase());
+      console.log('REP ANALYTICS:', this.repAnalytics());
     });
   }
 
   addRep(): void {
     this.dialog.open(AddRepDialog, {
       width: '1050px',
-      height:"900px"
+      height: '900px'
     });
   }
 
-   onClick(name:string){
-    console.log("click fired");
-    this.state.changVendorDashState({cardSelected:name,})
+  onClick(name: string) {
+    console.log('click fired');
+    this.state.changVendorDashState({ cardSelected: name });
   }
 }

@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { State } from '../../../../../services/state';
 import { VendorDataService } from '../../../../../services/vendor/vendor-data-service';
-import { DBEvent } from '../../../../../interfaces/models';
+import { DBEvent } from '../../../../../interfaces/dbReuturnModels';
 
 @Component({
   selector: 'app-step-three',

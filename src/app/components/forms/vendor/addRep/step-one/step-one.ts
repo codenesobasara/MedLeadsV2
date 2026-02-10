@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { RepShift } from '../../../../../interfaces/vendor-analytics';
 
 
 @Component({
@@ -56,15 +57,24 @@ activeStaff(isActive:boolean){
   '09:30 AM',];
 
   
-
 addShift(date: Date | null, start: string | null, end: string | null) {
   if (!date || !start || !end) return;
 
   const current = this.form.controls.shifts.value ?? [];
 
+  const shift: RepShift = {
+    id: 0,           
+    salesRepId: 0,
+    vendorId: 0,
+    eventId: 0,
+    date: date.toISOString().slice(0, 10), 
+    startTime: start,                      
+    endTime: end                          
+  };
+
   this.form.controls.shifts.setValue([
     ...current,
-    { date, start, end }
+    shift
   ]);
 }
 

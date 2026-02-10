@@ -2,7 +2,7 @@ import { Component,inject,effect } from '@angular/core';
 import { State } from '../../../../services/state';
 import { VendorDash } from '../../../../interfaces/userstate';
 import { VendorDataService } from '../../../../services/vendor/vendor-data-service';
-import { DBEvent } from '../../../../interfaces/models';
+import { DBEvent } from '../../../../interfaces/dbReuturnModels';
 import { DatePipe } from '@angular/common';
 import { AsyncPipe,UpperCasePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -38,6 +38,7 @@ public vendorDashState = this.state.vendorDashState
   selectEvent(event:DBEvent){
   this.state.changVendorDashState({ eventSelected: true, EventId: event.id })
   this.vendorData.selectedEventId.set(event.id)
+  this.state.setEvent(event); 
 }
 
 

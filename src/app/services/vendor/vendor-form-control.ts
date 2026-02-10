@@ -4,7 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { GeoApi } from '../geo-api';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { RepShift } from '../../interfaces/vendor-objects';
+import { RepShift } from '../../interfaces/vendor-analytics';
 
 @Injectable({
   providedIn: 'root',

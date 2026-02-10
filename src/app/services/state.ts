@@ -1,6 +1,7 @@
 import { Injectable,signal,computed } from '@angular/core';
 import { HostDash, User,VendorDash } from '../interfaces/userstate';
 import { AccessToken } from '../interfaces/auth';
+import { DBEvent } from '../interfaces/dbReuturnModels';
 
  enum UserRole {
   Host = 'host',
@@ -21,11 +22,16 @@ constructor(){}
  private _user = signal<User>({ id: 0, email: "", role: UserRole.Default });
  private _hostDashState = signal<HostDash>({ hasevents: null, eventSelected: false, EventId: 0 , cardSelected:""});
  private  _vendorDashState = signal<VendorDash>({ hasevents: null, eventSelected: false, EventId: 0 , cardSelected:""});
+  public event = signal<DBEvent | null>(null);
 
   public readonly vendorDashState =this._vendorDashState.asReadonly()
   public readonly user = this._user.asReadonly();
   public readonly hostDashState = this._hostDashState.asReadonly();
   public readonly isHost = computed(() => this.user().role === UserRole.Host);
+
+  setEvent(event: DBEvent | null) {
+  this.event.set(event);
+}
 
   setUser(token: AccessToken) {
   this._user.set({

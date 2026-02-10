@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { rxResource } from '@angular/core/rxjs-interop'; 
 import { of } from 'rxjs';
 import { State } from '../state';
-import { DBEvent } from '../../interfaces/models';
-import { VendorAnalyticsObject } from '../../interfaces/vendor-objects';
+import { DBEvent } from '../../interfaces/dbReuturnModels';
+import { BoothBaseAnalytics, RepAnalyticsObject } from '../../interfaces/vendor-analytics';
 
 @Injectable({
   providedIn: 'root',
@@ -16,24 +16,43 @@ export class VendorDataService {
     private refreshTrigger = signal(0);
 
     selectedEventId = signal<number | null>(null);
+    eventsResource = rxResource({
+    stream: () => this.http.get<DBEvent[]>(`${this.baseUrl}/events`)});
 
-      eventsResource = rxResource({
-      stream: () => this.http.get<DBEvent[]>(`${this.baseUrl}/events`)});
-
-       analyticsResource = rxResource({
-       params: () => ({ id: this.state.vendorDashState().EventId }),
-       stream: ({ params }) => {
-        if (!params.id) return of(null); 
-        return this.http.get<VendorAnalyticsObject>(`${this.baseUrl}/events/${params.id}/analytics`);
-        }
-      });
+  
 
 
 
 
+  baseBoothAnalytics = rxResource({
+  params: () => ({ id: this.state.vendorDashState().EventId }),
+  stream: ({ params }) => {
+    if (!params.id) return of(null);
+    return this.http.get<BoothBaseAnalytics>(
+      `${this.baseUrl}/events/${params.id}/analytics`
+    );
+  }
+});
 
-      public readonly vendorAnalytics=computed(()=>this.analyticsResource.value())
+
+repAnalytics = rxResource({
+  params: () => ({
+    id: this.state.vendorDashState().EventId,
+    day: this.state.event()?.startDate ?? null
+  }),
+  stream: ({ params }) => {
+    if (!params.id || !params.day) return of(null);
+    return this.http.get<RepAnalyticsObject>(
+      `${this.baseUrl}/events/${params.id}/analytics/reps?day=${encodeURIComponent(params.day)}`
+    );
+  }
+});
+
+
+
+      public readonly boothAnalytics=computed<BoothBaseAnalytics | null>(()=>this.baseBoothAnalytics.value()?? null)
       public readonly vendorEvents = computed<DBEvent[]>(() => this.eventsResource.value() ?? []);
+      public readonly reps = computed<RepAnalyticsObject|null>(()=> this.repAnalytics.value()?? null)
       
      
   

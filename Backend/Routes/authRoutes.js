@@ -3,6 +3,8 @@ const router = express.Router();
 const auth = require("../AuthService/AutheService");
 const userService = require("../UserService/UserFunctions")
 const authController = require("../AuthService/AuthController")
+const func = require("../VendorServices/VendorFunctions")
+const EventModel = require("../Models/EventModel")
 const connection = require("../mainConfig");
 
 router.post("/login", async (req,res)=>{
@@ -32,5 +34,15 @@ router.post("/register", async (req,res)=>{
 })
 
 router.post("/auth/refresh",authController.refreshToken)
+
+router.get('/test', async(req,res)=>{
+  try{
+   const eventId = Number(req.query.eventId )
+   const vendorId = Number(req.query.vendorId)
+  result = await func.boothBase(vendorId,eventId)
+  res.status(200).json(result)
+  }catch(err){console.error(err); return res.status(500).json({message:err.message})}
+
+})
 
 module.exports = router;

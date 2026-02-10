@@ -14,22 +14,29 @@ router.get("/events", async (req,res)=>{
     
 router.get("/events/:eventId/analytics", async (req, res) => {
   try {
-    const data = await vendorFunc.VendorAnalyticsFrameWork(
-      req.user.id,
-      req.params.eventId
-    );
-
-    console.log("DATA SHAPE:", Object.keys(data));
-    console.log("EVENT SCANS:", data.eventScans?.length);
-    console.log("REPS:", data.reps?.length);
-    
-
-    const vendorAnalyticsObj = VendorAnalytics.buildVendorAnalytics(data);
-    return res.status(200).json(vendorAnalyticsObj);
-
+        const eventId = req.params.eventId
+        const vendorId = req.user.id
+        const data = await VendorAnalytics.getBoothBaseData(vendorId,eventId)
+        const result = VendorAnalytics.buildBoothBaseObject(data)
+        res.status(200).json(result)
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: err.message, stack: err.stack });
+  }
+});
+
+router.get("/events/:eventId/analytics/reps", async (req, res) => {
+  try {
+    const vendorId = req.user.id;
+    const eventId = req.params.eventId;
+    const day = req.query.day || null;
+    const data = await VendorAnalytics.getRepAnalyticsData(vendorId, eventId, day);
+    const result = VendorAnalytics.buildRepAnalyticsObject(data);
+
+    return res.status(200).json(result);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: err.message, stack: err.stack });
   }
 });
 module.exports = router

@@ -1,6 +1,6 @@
 import { Component,effect,inject } from '@angular/core';
 import { State } from '../../../../services/state';
-import { DBEvent } from '../../../../interfaces/models';
+import { DBEvent } from '../../../../interfaces/dbReuturnModels';
 import { AsyncPipe,DatePipe,UpperCasePipe } from '@angular/common';
 import { HostDash } from '../../../../interfaces/userstate';
 import { MatButtonModule } from '@angular/material/button';

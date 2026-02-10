@@ -2,7 +2,7 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { rxResource } from '@angular/core/rxjs-interop'; 
 import { of } from 'rxjs';
-import { DBEvent } from '../interfaces/models';
+import { DBEvent } from '../interfaces/dbReuturnModels';
 import { HostEventAnalytics } from '../interfaces/host-objects';
 import { State } from './state';
 

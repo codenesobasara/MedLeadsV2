@@ -148,14 +148,15 @@
 @for (shift of form.controls.shifts.value ?? []; track $index) {
   <div class="added-shift-row">
     <div class="added-shift-text">
-      {{ shift.date | date:'MMM d, y' }} •
-      {{ shift.start }} to {{ shift.end }}
+      {{ shift.date }} •
+      {{ shift.startTime }} to {{ shift.endTime }}
     </div>
 
     <button
       type="button"
       class="trash-btn"
       aria-label="Remove shift"
+    
     >
       <mat-icon>delete</mat-icon>
     </button>

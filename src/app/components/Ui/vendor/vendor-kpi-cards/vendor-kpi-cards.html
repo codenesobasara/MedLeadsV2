@@ -1,36 +1,34 @@
-@if (analytics(); as analytics) {
+@if (boothBase(); as booth) {
 
   <section class="app-dashboard">
 
     <div class="stats">
       <div class="stat-card blue">
         <div class="stat-title">Sales Reps At Event</div>
-        <div class="stat-number">{{ analytics.reps.length }}</div>
+        <div class="stat-number">{{ booth.repCount }}</div>
         <div class="stat-link">View Reps</div>
       </div>
 
       <div class="stat-card teal">
         <div class="stat-title">Total scans</div>
-        <div class="stat-number">{{ analytics.booth.totalScans }}</div>
+        <div class="stat-number">{{ booth.totalScanCount }}</div>
         <div class="stat-link">See scan activity</div>
       </div>
 
       <div class="stat-card red">
         <div class="stat-title">Active Reps</div>
-        <div class="stat-number">
-          {{ analytics.booth.activeRepCount }}
-        </div>
+        <div class="stat-number">{{ booth.activeRepCount }}</div>
         <div class="stat-link">Rep Performance</div>
       </div>
 
       <div class="stat-card purple">
         <div class="stat-title">Avg scans per Rep</div>
         <div class="stat-number">
-          {{ analytics.booth.avgScansPerRep | number:'1.0-2' }}
+          {{ (booth.repCount ? (booth.totalScanCount / booth.repCount) : 0) | number:'1.0-2' }}
         </div>
         <div class="stat-link">
           Peak Scan Day:
-          {{ analytics.booth.peakDay?.day }}
+          {{ booth.peakScanDay?.day ?? '—' }}
         </div>
       </div>
     </div>
@@ -51,7 +49,7 @@
               <mat-select value="today">
                 <mat-option value="today">Today</mat-option>
                 <mat-option value="7">Last 7 days</mat-option>
-                <mat-select value="30">Last 30 days</mat-select>
+                <mat-option value="30">Last 30 days</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -74,19 +72,23 @@
         <div class="panel-metrics">
           <div class="metric-row">
             <span>Active Reps</span>
-            <strong>{{ analytics.booth.activeRepCount }}</strong>
+            <strong>{{ booth.activeRepCount }}</strong>
           </div>
 
           <div class="metric-row">
             <span>Top Rep</span>
-            <strong>{{ analytics.reps[0]?.firstName }}</strong>
+            <strong>
+              @if (repAnalytics()?.reps?.length) {
+                {{ repAnalytics()!.reps[0]?.firstName ?? '—' }}
+              } @else {
+                —
+              }
+            </strong>
           </div>
 
           <div class="metric-row">
             <span>Inactive Reps</span>
-            <strong>
-              {{ analytics.reps.length - analytics.booth.activeRepCount }}
-            </strong>
+            <strong>{{ booth.repCount - booth.activeRepCount }}</strong>
           </div>
         </div>
 
@@ -105,18 +107,24 @@
         <div class="panel-metrics">
           <div class="metric-row">
             <span>Attendees Scanned</span>
-            <strong>{{ analytics.booth.totalScans }}</strong>
+            <strong>{{ booth.attendeesScanned }}</strong>
           </div>
 
           <div class="metric-row">
-            <span>Top Rep</span>
-            <strong>{{ analytics.reps[0]?.firstName }}</strong>
+            <span>Top Attendee</span>
+            <strong>
+              @if (booth.topFiveAttendees?.length) {
+                {{ booth.topFiveAttendees[0]?.["Attendee.firstName"] }} {{ booth.topFiveAttendees[0]?.["Attendee.lastName"] }}
+              } @else {
+                —
+              }
+            </strong>
           </div>
 
           <div class="metric-row">
             <span>Avg scans / Rep</span>
             <strong>
-              {{ analytics.booth.avgScansPerRep | number:'1.0-2' }}
+              {{ (booth.repCount ? (booth.totalScanCount / booth.repCount) : 0) | number:'1.0-2' }}
             </strong>
           </div>
         </div>
@@ -129,7 +137,7 @@
           <div>
             <div class="stat-title large">Sales Reps</div>
           </div>
-          <div class="panel-link">{{ analytics.booth.activeRepCount }}</div>
+          <div class="panel-link">{{ booth.activeRepCount }}</div>
         </div>
 
         <div class="panel-metrics">
@@ -139,11 +147,15 @@
           </div>
 
           <div class="list-container">
-            @for (rep of analytics.reps; track rep.id; let i = $index) {
+            @for (repRow of booth.topFiveReps; track $index; let i = $index) {
               @if (i < 5) {
                 <div class="list-item">
-                  <div class="metric-row-strong">{{ rep.firstName }} {{rep.lastName}}</div>
-                  <div class="metric-row">{{ rep.totalScans }} scans</div>
+                  <div class="metric-row-strong">
+                    {{ repRow["SalesRep.firstName"] }} {{ repRow["SalesRep.lastName"] }}
+                  </div>
+                  <div class="metric-row">
+                    {{ repRow.ScanCount }} scans
+                  </div>
                 </div>
               }
             }
@@ -166,14 +178,12 @@
         <div class="panel-footer">Tap to view vendor breakdown</div>
       </div>
 
-      <div class="stat-card large" name="VendorEngagement">
+      <div class="stat-card large" name="Attendees">
         <div class="header-large">
           <div>
             <div class="stat-title large">Attendees</div>
           </div>
-          <div class="panel-link">
-            {{ analytics.booth.BoothAttendees.length }}
-          </div>
+          <div class="panel-link">{{ booth.attendeesScanned }}</div>
         </div>
 
         <div class="panel-metrics">
@@ -183,14 +193,14 @@
           </div>
 
           <div class="list-container">
-            @for (attendee of analytics.booth.BoothAttendees; track $index; let i = $index) {
+            @for (att of booth.topFiveAttendees; track $index; let i = $index) {
               @if (i < 5) {
                 <div class="list-item">
                   <div class="metric-row-strong">
-                    {{ attendee.FirstName }}
+                    {{ att["Attendee.firstName"] }} {{ att["Attendee.lastName"] }}
                   </div>
                   <div class="metric-row">
-                    {{ attendee.visits }} scans
+                    {{ att.ScanCount }} scans
                   </div>
                 </div>
               }
@@ -213,15 +223,12 @@
         <div class="panel-footer">Tap to view Attendee breakdown</div>
       </div>
 
-      
       <div class="stat-card large" name="Questions">
         <div class="header-large">
           <div>
             <div class="stat-title large">Questions</div>
           </div>
-          <div class="panel-link">
-            {{ analytics.booth.questions.length }}
-          </div>
+          <div class="panel-link">{{ booth.questions.length }}</div>
         </div>
 
         <div class="panel-metrics">
@@ -231,15 +238,13 @@
           </div>
 
           <div class="list-container">
-            @for (question of analytics.booth.questions; track $index; let i = $index) {
+            @for (q of booth.questions; track q.id; let i = $index) {
               @if (i < 5) {
                 <div class="list-item">
                   <div class="metric-row-strong">
-                    {{question}}
+                    {{ q.question }}
                   </div>
-                  <div class="metric-row">
-                   
-                  </div>
+                  <div class="metric-row"></div>
                 </div>
               }
             }
