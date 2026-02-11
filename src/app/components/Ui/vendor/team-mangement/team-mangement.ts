@@ -47,7 +47,6 @@ export class TeamMangement {
   constructor() {
     effect(() => {
       const days = this.dates();
-
       if (!this.chartData.selectedShiftDate() && days.length) {
         this.chartData.setShiftDay(days[0]);
       }

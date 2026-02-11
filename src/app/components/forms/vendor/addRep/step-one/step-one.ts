@@ -11,6 +11,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { RepShift } from '../../../../../interfaces/vendor-analytics';
+import { State } from '../../../../../services/state';
 
 
 @Component({
@@ -23,9 +24,10 @@ import { RepShift } from '../../../../../interfaces/vendor-analytics';
 export class StepOne {
 
    vendorForm = inject(VendorFormControl)
+   state = inject(State)
     @Output() next = new EventEmitter<void>();
     @Output() cancel = new EventEmitter<void>();
-    form = this.vendorForm.repBasicInfo;
+     form = this.vendorForm.repBasicInfo;
 
      onNext() {
       const {firstName,lastName,email,phone} = this.form.controls
@@ -56,6 +58,10 @@ activeStaff(isActive:boolean){
   '09:00 AM',
   '09:30 AM',];
 
+  isActive(value:boolean){
+    this.form.controls.activeStaff.setValue(value)
+  }
+
   
 addShift(date: Date | null, start: string | null, end: string | null) {
   if (!date || !start || !end) return;
@@ -65,8 +71,8 @@ addShift(date: Date | null, start: string | null, end: string | null) {
   const shift: RepShift = {
     id: 0,           
     salesRepId: 0,
-    vendorId: 0,
-    eventId: 0,
+    vendorId: this.state.user().id,
+    eventId: this.state.vendorDashState().EventId ?? 0,
     date: date.toISOString().slice(0, 10), 
     startTime: start,                      
     endTime: end                          

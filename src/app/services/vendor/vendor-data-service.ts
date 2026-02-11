@@ -3,8 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { rxResource } from '@angular/core/rxjs-interop'; 
 import { of } from 'rxjs';
 import { State } from '../state';
-import { DBEvent } from '../../interfaces/dbReuturnModels';
+import { DBEvent, Rep } from '../../interfaces/dbReuturnModels';
 import { BoothBaseAnalytics, RepAnalyticsObject } from '../../interfaces/vendor-analytics';
+import { VendorCharts } from './vendor-charts';
+import { VendorFormControl } from './vendor-form-control';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +16,7 @@ export class VendorDataService {
     private state = inject(State)
     private readonly baseUrl = 'http://localhost:3000/api/vendor';
     private refreshTrigger = signal(0);
+    private form = inject(VendorFormControl)
 
     selectedEventId = signal<number | null>(null);
     eventsResource = rxResource({
@@ -48,11 +51,22 @@ repAnalytics = rxResource({
   }
 });
 
+createRepResource = rxResource({
+  params:() =>({
+    repObject:this.form.repObject(),
+  }),
+  stream:({params}) =>{
+    if(params.repObject === null) return of (null);
+    return this.http.post<Rep>(`${this.baseUrl}/events/${this.state.vendorDashState().EventId}/rep`, params.repObject)
+  }
+})
+
 
 
       public readonly boothAnalytics=computed<BoothBaseAnalytics | null>(()=>this.baseBoothAnalytics.value()?? null)
       public readonly vendorEvents = computed<DBEvent[]>(() => this.eventsResource.value() ?? []);
       public readonly reps = computed<RepAnalyticsObject|null>(()=> this.repAnalytics.value()?? null)
+      public readonly createdRep = computed<Rep|null>(()=> this.createRepResource.value()?? null)
       
      
   

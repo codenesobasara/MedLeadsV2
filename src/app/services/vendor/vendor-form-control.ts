@@ -1,4 +1,4 @@
-import { Injectable,computed,inject} from '@angular/core';
+import { Injectable,computed,inject, signal} from '@angular/core';
 import { catchError, of,map } from 'rxjs';
 import { FormBuilder, Validators } from '@angular/forms';
 import { GeoApi } from '../geo-api';
@@ -12,7 +12,7 @@ import { RepShift } from '../../interfaces/vendor-analytics';
 export class VendorFormControl {
   fb = inject(FormBuilder)
   geo = inject(GeoApi)
-
+  repObject = signal<any|null>(null)
 
 
 
@@ -53,7 +53,7 @@ repBasicInfo = this.fb.group({
    shiftDate: this.fb.control<Date | null>(null, [Validators.required]),
    shiftStartTime: this.fb.control<string | null>(null, [Validators.required]),
    shiftEndTime: this.fb.control<string | null>(null, [Validators.required]),
-  shifts: this.fb.control<RepShift[]>([])
+   shifts: this.fb.control<RepShift[]>([])
   })
 
 
@@ -166,6 +166,64 @@ newShift(){
   })
 
 }
+
+createRepObject() {
+  const repForm = this.repBasicInfo.value;
+  const territory = this.territory.value;
+  const Obj: any = {
+    rep: {
+      firstName: repForm.firstName,
+      lastName: repForm.lastName,
+      email: repForm.email,
+      phone: repForm.phone,
+      isRemote: !!repForm.activeStaff,
+    },
+  };
+  if (repForm.shifts && repForm.shifts.length) {
+    Obj.shifts = repForm.shifts.map((s: any) => ({
+      date: s.date,              
+      startTime: s.startTime,
+      endTime: s.endTime,
+    }));
+  }
+  if (territory.territoryLevel) {
+    Obj.territories = [];
+    const country = (territory.countryLevel ?? '').toUpperCase(); 
+    if (territory.territoryLevel === 'province' && territory.provinceStateSelections?.length) {
+      Obj.territories.push(
+        ...territory.provinceStateSelections.map((code: string) => ({
+          level: 'PROVINCE',
+          country,
+          provinceCode: code,
+        }))
+      );
+    }
+    if (territory.territoryLevel === 'city' && territory.citySelections?.length) {
+      Obj.territories.push(
+        ...territory.citySelections.map((c: any) => ({
+          level: 'CITY',
+          country,
+          cityName: c.name,
+          cityPlaceId: c.placeId,
+        }))
+      );
+    }
+    if (territory.territoryLevel === 'postal' && territory.postalCodes?.length) {
+      Obj.territories.push(
+        ...territory.postalCodes.map((p: string) => ({
+          level: 'POSTAL',
+          country,
+          postalCode: p,
+        }))
+      );
+    }
+    if (!Obj.territories.length) delete Obj.territories;
+  }
+
+  return Obj;
+}
+
+
 
 
 

@@ -1,4 +1,4 @@
-@if (boothBase(); as booth) {
+@if (vendorData.baseBoothAnalytics.value(); as booth) {
 
   <section class="app-dashboard">
 
@@ -75,16 +75,16 @@
             <strong>{{ booth.activeRepCount }}</strong>
           </div>
 
-          <div class="metric-row">
-            <span>Top Rep</span>
-            <strong>
-              @if (repAnalytics()?.reps?.length) {
-                {{ repAnalytics()!.reps[0]?.firstName ?? '—' }}
-              } @else {
-                —
-              }
-            </strong>
-          </div>
+        <div class="metric-row">
+  <span>Top Rep</span>
+  <strong>
+    @if (booth.topFiveReps?.length) {
+      {{ booth.topFiveReps[0]?.["SalesRep.firstName"] }} {{ booth.topFiveReps[0]?.["SalesRep.lastName"] }}
+    } @else {
+      No scans yet
+    }
+  </strong>
+</div>
 
           <div class="metric-row">
             <span>Inactive Reps</span>
@@ -237,18 +237,24 @@
             <strong></strong>
           </div>
 
-          <div class="list-container">
-            @for (q of booth.questions; track q.id; let i = $index) {
-              @if (i < 5) {
-                <div class="list-item">
-                  <div class="metric-row-strong">
-                    {{ q.question }}
-                  </div>
-                  <div class="metric-row"></div>
-                </div>
-              }
-            }
+         <div class="list-container">
+  @if (booth.questions; as questions) {
+    
+    @for (q of questions; track q.id; let i = $index) {
+      @if (i < 5) {
+        <div class="list-item">
+          <div class="metric-row-strong">     
+            {{ q.question }}
           </div>
+          <div class="metric-row"></div>
+        </div>
+      }
+    }
+
+  } @else {
+    <div class="list-item">No questions found.</div>
+  }
+</div>
 
           <div class="rep-btn-container">
             <button

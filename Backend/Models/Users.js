@@ -18,7 +18,7 @@ const User = sequelize.define('User', {
 
   passwordHash: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
 
   firstName: {
@@ -62,12 +62,12 @@ const User = sequelize.define('User', {
   },
 
   role: {
-    type: DataTypes.ENUM('host', 'vendor', 'rep', 'admin'),
+    type: DataTypes.ENUM('host', 'vendor', 'rep', 'admin',"invited", "attendee"),
     allowNull: false,
   },
 
   status: {
-    type: DataTypes.ENUM('ACTIVE', 'DISABLED'),
+    type: DataTypes.ENUM('ACTIVE', 'DISABLED', "invited"),
     allowNull: false,
     defaultValue: 'ACTIVE',
   },

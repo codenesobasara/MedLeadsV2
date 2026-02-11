@@ -1,4 +1,4 @@
-import { inject, Injectable, signal, computed } from '@angular/core';
+import { inject, Injectable, signal, computed,effect } from '@angular/core';
 import { VendorDataService } from './vendor-data-service';
 import { DBEvent, Rep, Booth } from '../../interfaces/dbReuturnModels';
 import { GeneralFunctions } from '../functions/general-functions';
@@ -9,14 +9,31 @@ import { BoothBaseAnalytics } from '../../interfaces/vendor-analytics';
   providedIn: 'root',
 })
 export class VendorCharts {
+  constructor(){
+  effect(() => {
+  const newRep = this.vendorData.createdRep();
+  if (newRep && this.vendorData.repAnalytics.value()) {
+    this.vendorData.repAnalytics.update(currentData => {
+      if (!currentData) return currentData;
+      return {
+        ...currentData,
+        reps: [...(currentData.reps ?? []), newRep]
+      };
+    });
+  }
+});
+
+
+  }
   selectedDay = signal<string | null>(null);
   chartView = signal<string>('total');
-
   vendorData = inject(VendorDataService);
   func = inject(GeneralFunctions);
 
   reps = computed<Rep[]>(() => this.vendorData.reps()?.reps ?? []);
   booth = computed<Booth | null>(() => this.vendorData.reps()?.booth ?? null);
+
+
 
   setChartView(value: string) {
     this.chartView.set(value);
@@ -36,7 +53,7 @@ export class VendorCharts {
   repAnalyticsCharSelection = signal<string | null>(null);
   repAnalyticsChartDay = signal<string | null>('day1');
 
-  repLeaders = computed(() => {
+   repLeaders = computed(() => {
     const data = this.reps();
     if (!data.length) return {};
 

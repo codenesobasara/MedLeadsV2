@@ -22,7 +22,7 @@ constructor(){}
  private _user = signal<User>({ id: 0, email: "", role: UserRole.Default });
  private _hostDashState = signal<HostDash>({ hasevents: null, eventSelected: false, EventId: 0 , cardSelected:""});
  private  _vendorDashState = signal<VendorDash>({ hasevents: null, eventSelected: false, EventId: 0 , cardSelected:""});
-  public event = signal<DBEvent | null>(null);
+ public event = signal<DBEvent | null>(null);
 
   public readonly vendorDashState =this._vendorDashState.asReadonly()
   public readonly user = this._user.asReadonly();

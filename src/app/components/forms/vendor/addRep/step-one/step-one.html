@@ -48,7 +48,7 @@
               <div class="stat-sub">Choose how this rep will support your booth.</div>
 
               <div class="presence-grid">
-                <div class="presence-card" (click)="activeStaff(true)">
+                <div class="presence-card" (click)="isActive(true)">
                   <div class="presence-icon">
                     <mat-icon>event_available</mat-icon>
                   </div>
@@ -63,7 +63,7 @@
                   </div>
                 </div>
 
-                <div class="presence-card" (click)="activeStaff(false)">
+                <div class="presence-card" (click)="isActive(false)">
                   <div class="presence-icon">
                     <mat-icon>public</mat-icon>
                   </div>
@@ -93,7 +93,7 @@
                 <div class="schedule-row schedule-row-material">
                 
             <mat-form-field appearance="outline" class="date-field">
-  <mat-label>Date</mat-label>
+                  <mat-label>Date</mat-label>
 
   <input
     matInput
@@ -142,7 +142,7 @@
                 </div>
 
              
-                <div class="schedule-added" *ngIf="form.controls.shifts.value?.length">
+ <div class="schedule-added" *ngIf="form.controls.shifts.value?.length">
   <div class="stat-title">Added Shifts</div>
   <div class="divider"></div>
 @for (shift of form.controls.shifts.value ?? []; track $index) {

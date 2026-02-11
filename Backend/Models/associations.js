@@ -11,6 +11,13 @@ const ScanAnswer = require("./ScanAnswers");
 const VendorProduct = require("./VendorProductsModel");
 const VendorQuestion = require("./VendorQuestions");
 const ScanProduct = require("./ScanProducts");
+const Invite = require("./Invite")
+
+User.hasMany(Invite, { foreignKey: "userId"});
+Invite.belongsTo(User, { foreignKey: "userId" });
+
+Event.hasMany(Invite, { foreignKey: "eventId" });
+Invite.belongsTo(Event, { foreignKey: "eventId" });
 
 Scan.belongsToMany(VendorProduct, { through: ScanProduct, foreignKey: 'scanId' });
 VendorProduct.belongsToMany(Scan, { through: ScanProduct, foreignKey: 'productId' });
@@ -87,4 +94,5 @@ module.exports = {
   ScanAnswer,
   VendorProduct,
   VendorQuestion,
+  Invite
 };

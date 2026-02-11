@@ -3,6 +3,8 @@ const EventModel = require("../Models/EventModel")
 const SalesRep = require("../Models/SalesRepProfile")
 const VendorQuestion = require("../Models/VendorQuestions")
 const VendorProduct = require("../Models/VendorProductsModel")
+const InviteModel = require("../Models/Invite.js")
+const User = require("../Models/Users")
 const Scan = require("../Models/ScanModel")
 const Attendee = require("../Models/Attendee")
 const Shift = require("../Models/ShiftsModel")
@@ -10,6 +12,10 @@ const func = require("../GeneralFunctions")
 const { where, col, literal, fn } = require("sequelize")
 const { DateTime } = require("luxon")
 const { Op } = require("sequelize")
+const inviteHash = require("../Util/InviteToken.js")
+const emailService = require("../Services/MailService.js")
+const SalesRepTerritory = require("../Models/salesRepTerretories.js")
+const { endWith } = require("rxjs")
 
 function normalizeEventDates(event) {
   const timezone = event.timezone
@@ -26,6 +32,77 @@ function normalizeEventDates(event) {
   }
 }
 
+
+async function createRep(rep, vendorId, eventId,  territories, shifts) {
+  territories = Array.isArray(territories) ? territories : [];
+  shifts = Array.isArray(shifts)? shifts : [];
+const user = await User.create({
+  email: rep.email,
+  firstName: rep.firstName,
+  lastName: rep.lastName,
+  role: "rep",
+  status: "invited",
+   passwordHash: "INVITED_NO_PASSWORD",
+});
+const newRep = await SalesRep.create({
+  userId: user.id,
+  vendorId: vendorId,
+  eventId: eventId,
+  firstName: rep.firstName,
+  lastName: rep.lastName,
+  email: rep.email,         
+  phone: rep.phone || null,  
+  isRemote: !!rep.isRemote,  
+});
+if(territories.length> 0){
+ for(const t of territories){
+  await SalesRepTerritory.create(
+    {
+      salesRepId:newRep.id,
+      level:t.level,
+      country: t.country,
+      provinceCode: t.provinceCode || null,
+      cityName:t.cityName || null,
+      cityPlaceId:t.cityPlaceId||null,
+      postalCode:t.postalCode|| null
+    }
+  )
+ }
+}
+if(shifts.length>0){
+  for(const s of shifts){
+    await Shift.create({
+      salesRepId:newRep.id,
+      vendorId:vendorId,
+      eventId:eventId,
+      date:s.date,
+      startTime:s.startTime,
+      endTime:s.endTime
+    })
+  }
+}
+
+  const token = inviteHash.generateInviteToken();
+  const hashedToken = inviteHash.hashInviteToken(token);
+  const expiryDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
+  const invite = await InviteModel.create({
+    userId: user.id,
+    eventId: eventId,
+    tokenHash: hashedToken,
+    expiresAt: expiryDate,
+    usedAt: null,                  
+  });
+  const event = await EventModel.findOne({ where: { id: eventId } }); 
+  const eventName = event?.name || "your event";
+  const inviteUrl = `${process.env.APP_URL}/accept-invite?token=${token}`;
+  await emailService.sendInviteEmail({              
+    to: rep.email,
+    inviteUrl,
+    eventName,
+    name: rep.firstName, 
+  });
+  return newRep;
+}
 
 async function getCurrentStaffing(vendorId, eventId, dayKey) {
   return Shift.findAll({
@@ -324,5 +401,6 @@ module.exports = {
   getBoothTopFiveReps,
   getBoothTopFiveAttendees,
   getBoothPeakScanDay,
+  createRep
 }
 

@@ -3,7 +3,10 @@ const router = express.Router();
 const broadcast = require("../RealTime/broadcast")
 const vendorFunc = require("../VendorServices/VendorFunctions.js");
 const VendorAnalytics = require("../VendorServices/VendorAnalytics.js")
+const Rep = require("../Models/SalesRepProfile.js")
+const User = require("../Models/Users.js")
 const func = require("../GeneralFunctions.js")
+
 
 router.get("/events", async (req,res)=>{
      try{const id = req.user.id
@@ -34,6 +37,33 @@ router.get("/events/:eventId/analytics/reps", async (req, res) => {
     const result = VendorAnalytics.buildRepAnalyticsObject(data);
 
     return res.status(200).json(result);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: err.message, stack: err.stack });
+  }
+});
+
+router.post("/events/:eventId/rep", async (req, res) => {
+  try {
+    const vendorId = Number(req.user.id);
+    const eventId = req.params.eventId;
+
+    const rep = req.body.rep;
+    const shifts = req.body.shifts ?? [];
+    const territories = req.body.territories ?? [];
+    const exists = await User.findOne({ where: { email: rep.email } }); 
+    if (exists) {
+      return res.status(409).json({ message: "this user already exists" });
+    }
+    const newRep = await vendorFunc.createRep( 
+      rep,
+      vendorId,
+      eventId,
+      territories,
+      shifts
+    );
+    const enrichedRep = VendorAnalytics.enrichRep(newRep,eventId)
+    return res.status(200).json({ enrichedRep });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: err.message, stack: err.stack });

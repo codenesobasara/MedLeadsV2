@@ -292,13 +292,16 @@ function buildBoothBaseObject(data) {
 }
 
 async function enrichRep(rep,eventId) {
-  const event = EventModel.findByPk(eventId, {attributes:["id","startDate","endDate","timezone"], raw:true})
+  const event = await EventModel.findByPk(eventId, {attributes:["id","startDate","endDate","timezone"], raw:true})
+  if (!event) throw new Error(`Event ${eventId} not found`);
+  if (!event.timezone) throw new Error(`Event ${eventId} missing timezone`);
   const eventDates = func.normalizeEventDates(event)
   const scanEndForEvent =
   eventDates.now < eventDates.eventEndDay
     ? eventDates.now
     : eventDates.eventEndDay;
     const offset = eventDates.eventStartDay.toFormat("ZZ")
+    console.log("OFFSET:", offset);
     const dayKey = eventDates.eventStartDay.toISODate();
     const repId = [rep.id]
      const currentStaffingAll = await vendorFunc.getCurrentStaffing(rep.vendorId, eventId, dayKey);

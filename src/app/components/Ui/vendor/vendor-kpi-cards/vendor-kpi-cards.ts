@@ -30,18 +30,16 @@ import { BoothBaseAnalytics, RepAnalyticsObject } from '../../../../interfaces/v
 })
 export class VendorKpiCards {
   state = inject(State);
-  vendorService = inject(VendorDataService);
+  vendorData = inject(VendorDataService);
   dialog = inject(MatDialog);
  
-  boothBase = computed<BoothBaseAnalytics | null>(() => this.vendorService.boothAnalytics());
-  repAnalytics = computed<RepAnalyticsObject | null>(() => this.vendorService.reps());
+  boothBase = computed<BoothBaseAnalytics | null>(() => this.vendorData.boothAnalytics());
+  repAnalytics = computed<RepAnalyticsObject | null>(() => this.vendorData.reps());
 
   constructor() {
     effect(() => {
       const user = this.state.user();
       const vendorDashState: VendorDash = this.state.vendorDashState();
-
-      // helpful logs while wiring
       console.log('BOOTH BASE:', this.boothBase());
       console.log('REP ANALYTICS:', this.repAnalytics());
     });

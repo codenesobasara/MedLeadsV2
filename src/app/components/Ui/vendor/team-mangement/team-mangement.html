@@ -169,9 +169,8 @@
         <div>% OF TOTAL SCANS</div>
         <div>ACTIONS</div>
       </div>
-
-      @if ((chartData.reps() ?? []).length) {
-        @for (rep of (chartData.reps() ?? []); track rep.id) {
+ @if (vendorData.repAnalytics.value()?.reps?.length) {
+  @for (rep of vendorData.repAnalytics.value()?.reps; track rep.id) {
           <div class="rep-table-row">
             <div class="rep-cell rep-identity">
               <div class="rep-badge">SC</div>
@@ -222,7 +221,7 @@
 
     <div class="rep-table-footer">
       <div class="footer-left">
-        Showing {{ (chartData.reps() ?? []).length ? 1 : 0 }} to {{ (chartData.reps() ?? []).length }} of {{ (chartData.reps() ?? []).length }} team members
+      Showing {{ (chartData.reps() ?? []).length ? 1 : 0 }} to {{ (chartData.reps() ?? []).length }} of {{ (chartData.reps() ?? []).length }} team members
       </div>
 
       <div class="footer-right">
