@@ -10,7 +10,8 @@ import { VendorDataService } from '../../../../services/vendor/vendor-data-servi
 import { VendorCharts } from '../../../../services/vendor/vendor-charts';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { EngagementHub } from '../../../vendor/charts/engagement-hub/engagement-hub';
-import { DBEvent } from '../../../../interfaces/dbReuturnModels';
+import { Rep } from '../../../../interfaces/dbReuturnModels';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-team-mangement',
@@ -32,24 +33,21 @@ export class TeamMangement {
   func = inject(GeneralFunctions);
   vendorData = inject(VendorDataService);
   chartData = inject(VendorCharts);
+  Router =inject(Router)
 
-  selectedEvent = computed<DBEvent | null>(() => {
-    const eventId = this.vendorData.selectedEventId();
-    return this.vendorData.vendorEvents().find(e => e.id === eventId) ?? null;
-  });
-
-  dates = computed(() => {
-    const event = this.selectedEvent();
-    if (!event?.startDate || !event?.endDate) return [];
-    return this.func.getDateRange(event.startDate, event.endDate);
-  });
-
+teamCount = computed(() => this.vendorData.repAnalytics.value()?.reps.length ?? 0);
   constructor() {
-    effect(() => {
-      const days = this.dates();
+     effect(() => {
+      const days = this.chartData.dates();
       if (!this.chartData.selectedShiftDate() && days.length) {
         this.chartData.setShiftDay(days[0]);
       }
     });
+  }
+ 
+  repSelect(rep:Rep){
+    const repId = rep.id
+   this.Router.navigate([`/dashboard/vendor/reps/${repId}/insights`]);
+
   }
 }

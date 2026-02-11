@@ -66,7 +66,7 @@
         </div>
 
         <div class="pill-tabs">
-          @for (date of dates(); track date) {
+          @for (date of chartData.dates(); track date) {
             <button
               type="button"
               class="pill"
@@ -122,7 +122,7 @@
 
         @if (chartData.chartView() === 'daily') {
           <div class="day-actions">
-            @for (date of dates(); track date) {
+            @for (date of chartData.dates(); track date) {
               <button
                 type="button"
                 class="pill"
@@ -172,7 +172,7 @@
  @if (vendorData.repAnalytics.value()?.reps?.length) {
   @for (rep of vendorData.repAnalytics.value()?.reps; track rep.id) {
           <div class="rep-table-row">
-            <div class="rep-cell rep-identity">
+            <div class="rep-cell rep-identity" (click)="repSelect(rep)">
               <div class="rep-badge">SC</div>
               <div class="rep-text">
                 <div class="rep-name">{{ rep.firstName }} {{ rep.lastName }}</div>
@@ -221,7 +221,7 @@
 
     <div class="rep-table-footer">
       <div class="footer-left">
-      Showing {{ (chartData.reps() ?? []).length ? 1 : 0 }} to {{ (chartData.reps() ?? []).length }} of {{ (chartData.reps() ?? []).length }} team members
+   Showing {{ teamCount() > 0 ? 1 : 0 }} to {{ teamCount() }} of {{ teamCount() }} team members
       </div>
 
       <div class="footer-right">

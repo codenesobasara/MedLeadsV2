@@ -1,23 +1,26 @@
-<div>
-  @switch (vendorDashState().hasevents) {
 
-    @case (false) {
-      <div class="empty-state">
-        <div class="empty-card">
-          <div class="empty-title">No events yet</div>
-          <div class="empty-sub">
-            Register for an event to access your dashboard and start scanning attendees.
-          </div>
-          <button class="empty-cta" type="button">
-            Register for an event
-          </button>
-        </div>
+  @switch (vendorData.eventsResource.value()?.length ?? 0) {
+@case (0) {
+  <div class="card-Wrapper">
+    <div class="add-event-tile">
+      <div class="add-event-title">
+        No events yet
       </div>
-    }
 
-    @case (true) {
+      <div class="add-event-sub">
+        Register for an event to access your dashboard and start scanning attendees.
+      </div>
+
+      <button class="add-event-btn" type="button">
+        Register for an event
+      </button>
+    </div>
+  </div>
+}
+
+    @default {
       <div class="card-Wrapper">
-        @for (event of events(); track event.id) {
+        @for (event of vendorData.eventsResource.value()?? []; track event.id) {
           <div class="event-card" (click)="selectEvent(event)">
             <div class="event-date">
               <div class="event-month">
@@ -77,4 +80,4 @@
     }
 
   }
-</div>
+

@@ -9,6 +9,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { Router } from '@angular/router';
+import { VendorCharts } from '../../../../services/vendor/vendor-charts';
+
 
 @Component({
   selector: 'app-vendor-action-card',
@@ -22,23 +25,18 @@ import { MatInputModule } from '@angular/material/input';
 export class VendorActionCard {
 state = inject(State)
 vendorData = inject(VendorDataService)
-
-constructor(){
-  effect(() => {
-  const user = this.state.user();
-  const vendorDashState: VendorDash = this.state.vendorDashState();
+private Router = inject(Router)
 
 
-});}
 
 
-events = this.vendorData.vendorEvents
 public vendorDashState = this.state.vendorDashState
 
   selectEvent(event:DBEvent){
   this.state.changVendorDashState({ eventSelected: true, EventId: event.id })
   this.vendorData.selectedEventId.set(event.id)
   this.state.setEvent(event); 
+  this.Router.navigate([`/dashboard/vendor/events/${event.id}/dashboard`])
 }
 
 

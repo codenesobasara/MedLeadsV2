@@ -1,9 +1,9 @@
 import { inject, Injectable, signal, computed,effect } from '@angular/core';
 import { VendorDataService } from './vendor-data-service';
-import { DBEvent, Rep, Booth } from '../../interfaces/dbReuturnModels';
+import { DBEvent,} from '../../interfaces/dbReuturnModels';
 import { GeneralFunctions } from '../functions/general-functions';
 import { ApexAxisChartSeries, ApexOptions } from 'ng-apexcharts';
-import { BoothBaseAnalytics } from '../../interfaces/vendor-analytics';
+
 
 @Injectable({
   providedIn: 'root',
@@ -30,10 +30,6 @@ export class VendorCharts {
   vendorData = inject(VendorDataService);
   func = inject(GeneralFunctions);
 
-  reps = computed<Rep[]>(() => this.vendorData.reps()?.reps ?? []);
-  booth = computed<Booth | null>(() => this.vendorData.reps()?.booth ?? null);
-
-
 
   setChartView(value: string) {
     this.chartView.set(value);
@@ -41,7 +37,7 @@ export class VendorCharts {
 
   selectedEvent = computed<DBEvent | null>(() => {
     const eventId = this.vendorData.selectedEventId();
-    return this.vendorData.vendorEvents().find(e => e.id === eventId) ?? null;
+    return this.vendorData.eventsResource.value()?.find(e => e.id === eventId) ?? null;
   });
 
   dates = computed(() => {
@@ -50,15 +46,14 @@ export class VendorCharts {
     return this.func.getDateRange(event.startDate, event.endDate);
   });
 
-  repAnalyticsCharSelection = signal<string | null>(null);
-  repAnalyticsChartDay = signal<string | null>('day1');
+   repAnalyticsCharSelection = signal<string | null>(null);
+   repAnalyticsChartDay = signal<string | null>('day1');
 
    repLeaders = computed(() => {
-    const data = this.reps();
-    if (!data.length) return {};
-
-    const efficiency = [...data].sort((a, b) => b.totAvgScansPerHour - a.totAvgScansPerHour);
-    const consistency = [...data].sort((a, b) => b.avgScansPerDay - a.avgScansPerDay);
+    const data = this.vendorData.repAnalytics.value();
+    if (!data?.reps || !data.reps.length) return { effecientRep: null, consistentRep: null };;
+    const efficiency = [...data.reps].sort((a, b) => b.totAvgScansPerHour - a.totAvgScansPerHour);
+    const consistency = [...data.reps].sort((a, b) => b.avgScansPerDay - a.avgScansPerDay);
 
     return {
       effecientRep: efficiency[0],
@@ -66,12 +61,14 @@ export class VendorCharts {
     };
   });
 
-  dailyChart(reps: Rep[], booth: Booth, selectedDay: string) {
+  dailyChart(selectedDay: string) {
+    const data = this.vendorData.repAnalytics.value();
+    if(!data)return
     const series: ApexAxisChartSeries = [];
     const formattedKey = selectedDay;
-    const boothDay = booth.dayHourScans.find(d => d.dayKey === formattedKey);
+    const boothDay = data.booth.dayHourScans.find(d => d.dayKey === formattedKey);
 
-    reps.forEach(r => {
+    data.reps.forEach(r => {
       const repDay = r.scansPerDayHour.find(d => d.dayKey === formattedKey);
       if (!repDay) return;
 
@@ -95,18 +92,19 @@ export class VendorCharts {
     return series;
   }
 
-  totalsChart(reps: Rep[], booth: Booth) {
+  totalsChart() {
+    const data = this.vendorData.repAnalytics.value();
+    if(!data)return
     const series: ApexAxisChartSeries = [];
-
     const boothHourlyTotals: Record<string, number> = {};
-    booth.dayHourScans.forEach(day => {
+    data.booth.dayHourScans.forEach(day => {
       Object.entries(day.hours).forEach(([hour, value]) => {
         const numericHour = parseInt(hour).toString();
         boothHourlyTotals[numericHour] = (boothHourlyTotals[numericHour] ?? 0) + value;
       });
     });
 
-    reps.forEach(r => {
+    data.reps.forEach(r => {
       const repHourlyTotals: Record<string, number> = {};
       r.scansPerDayHour.forEach(day => {
         Object.entries(day.hours).forEach(([hour, value]) => {
@@ -197,15 +195,12 @@ export class VendorCharts {
 
   series = computed(() => {
     const day = this.selectedDay();
-    const reps = this.reps();
-    const booth = this.booth();
-
-    if (!reps.length || !booth) return [];
-
+   const data = this.vendorData.repAnalytics.value();
+    if(!data)return []
     if (!day || day === 'Full Show') {
-      return this.totalsChart(reps, booth);
+      return this.totalsChart();
     }
-    return this.dailyChart(reps, booth, day);
+    return this.dailyChart(day);
   });
 
   setDay(day: string | null) {
@@ -216,18 +211,13 @@ export class VendorCharts {
 
   getShifts = computed(() => {
     console.log('getShiftsFired');
-
+    const data = this.vendorData.repAnalytics.value();
+    if(!data)return
     const day = this.selectedShiftDate();
     if (!day) return;
-
     const formattedDay = new Date(day).toISOString().split('T')[0];
-
-    const shifts: { firstName: string; lastName: string; start: string; end: string }[] = [];
-    const reps = this.reps();
-
-    console.log(`AMOUNT OF REPS ${reps.length}`);
-
-    reps.forEach(r => {
+    const shifts: { firstName: string; lastName: string; start: string; end: string }[] = []
+    data.reps.forEach(r => {
       if (!r.shifts?.length) return;
 
       const repsShifts = r.shifts.filter(s => s.date === formattedDay);
@@ -249,13 +239,11 @@ export class VendorCharts {
   }
 
   uniqueScanPercentage = computed(() => {
-    const boothBase: BoothBaseAnalytics | null = this.vendorData.boothAnalytics();
+    const boothBase = this.vendorData.baseBoothAnalytics.value();
     if (!boothBase) return 0;
-
     const uniqueAttendeeCount = Number(boothBase.attendeesScanned ?? 0);
     const totalScans = Number(boothBase.totalScanCount ?? 0);
     if (!totalScans) return 0;
-
     return Math.round((uniqueAttendeeCount / totalScans) * 100);
   });
 }

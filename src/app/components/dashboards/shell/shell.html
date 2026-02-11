@@ -7,8 +7,9 @@
     <div class="topbar">
       <ng-container *ngComponentOutlet="topbar"></ng-container>
     </div>
-<div class="content">
-  <ng-container *ngComponentOutlet="content"></ng-container>
+
+    <div class="content">
+  <router-outlet></router-outlet>
 </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

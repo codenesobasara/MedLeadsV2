@@ -1,4 +1,4 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+import { Injectable, inject, signal, computed, } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { rxResource } from '@angular/core/rxjs-interop'; 
 import { of } from 'rxjs';
@@ -19,13 +19,19 @@ export class VendorDataService {
     private form = inject(VendorFormControl)
 
     selectedEventId = signal<number | null>(null);
+    createdRep = signal<Rep|null>(null)
+
+    selectedEvent = computed<DBEvent|null>(()=>{
+      const id = this.selectedEventId();
+      if(id === null){return null}
+      return this.eventsResource.value()?.find(e=> id === e.id)?? null
+    })
+
     eventsResource = rxResource({
+    params:() =>{return this.state.user().role === 'vendor'? true : undefined
+      
+    },
     stream: () => this.http.get<DBEvent[]>(`${this.baseUrl}/events`)});
-
-  
-
-
-
 
   baseBoothAnalytics = rxResource({
   params: () => ({ id: this.state.vendorDashState().EventId }),
@@ -63,10 +69,7 @@ createRepResource = rxResource({
 
 
 
-      public readonly boothAnalytics=computed<BoothBaseAnalytics | null>(()=>this.baseBoothAnalytics.value()?? null)
-      public readonly vendorEvents = computed<DBEvent[]>(() => this.eventsResource.value() ?? []);
-      public readonly reps = computed<RepAnalyticsObject|null>(()=> this.repAnalytics.value()?? null)
-      public readonly createdRep = computed<Rep|null>(()=> this.createRepResource.value()?? null)
+
       
      
   

@@ -17,7 +17,7 @@ public state = inject(State)
 
 constructor(){
   effect(()=>{
-   const events = this.vendorData.vendorEvents()
+   const events = this.vendorData. eventsResource.value()?? []
    if( events.length > 0 && !this.state.vendorDashState().hasevents){this.state.changVendorDashState({hasevents:true})}
     
   })

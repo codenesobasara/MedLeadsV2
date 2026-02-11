@@ -11,6 +11,9 @@ import { Host } from '../host/host';
 import { VendorTopBar } from '../../Ui/vendor/vendor-top-bar/vendor-top-bar';
 import { VendorSideBar } from '../../Ui/vendor/vendor-side-bar/vendor-side-bar';
 import { Vendor } from '../vendor/vendor';
+import { RouterOutlet } from '@angular/router';
+import { Router } from '@angular/router';
+
 
 
 @Component({
@@ -21,32 +24,38 @@ import { Vendor } from '../vendor/vendor';
     MatListModule,
     MatIconModule,
     MatDividerModule,
+    RouterOutlet
   ],
   templateUrl: './shell.html',
   styleUrl: './shell.css',
 })
 export class Shell {
   private state = inject(State);
+  private Router = inject(Router)
 
   sidebar: any;
   topbar: any;
   content: any;
 
-  constructor() {
-    effect(() => {
-      const user = this.state.user();
-      if (!user || user.role === 'none') return;
-      console.log(`THE USER ROLE IS ${user.role}`);
-      if (user.role === 'host') {
-        this.sidebar = HostSideBar;
-        this.topbar = HostTopBar;
-        this.content = Host;
-      }
-      if(user.role === 'vendor'){
-        this.sidebar =VendorSideBar;
-        this.topbar = VendorTopBar;
-        this.content = Vendor;
-      }
-    });
-  }
+constructor() {
+  effect(() => {
+    const user = this.state.user();
+    if (!user || user.role === 'none') return;
+
+    console.log(`THE USER ROLE IS ${user.role}`);
+
+    if (user.role === 'host') {
+      this.sidebar = HostSideBar;
+      this.topbar = HostTopBar;
+      this.Router.navigate(['/dashboard/host']);
+    }
+
+    if (user.role === 'vendor') {
+      this.sidebar = VendorSideBar;
+      this.topbar = VendorTopBar;
+
+      this.Router.navigate(['/dashboard/vendor']);
+    }
+  });
+}
 }

@@ -23,11 +23,7 @@ export class StepThree {
     basicInfo = this.vendorForm.repBasicInfo;
     state = inject(State)
 
-     selectedEvent = computed<DBEvent|null>(()=>{
-     const eventId = this.vendorData.selectedEventId()
-     return this.vendorData.vendorEvents().find(e => e.id === eventId)?? null
-    })
-
+    
     submit(){
      const repObject = this.vendorForm.createRepObject()
      console.log(repObject);

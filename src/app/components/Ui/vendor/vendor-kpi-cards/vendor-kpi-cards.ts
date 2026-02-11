@@ -11,6 +11,7 @@ import { VendorDash } from '../../../../interfaces/userstate';
 import { VendorDataService } from '../../../../services/vendor/vendor-data-service';
 import { AddRepDialog } from '../add-rep-dialog/add-rep-dialog';
 import { BoothBaseAnalytics, RepAnalyticsObject } from '../../../../interfaces/vendor-analytics';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-vendor-kpi-cards',
@@ -32,16 +33,13 @@ export class VendorKpiCards {
   state = inject(State);
   vendorData = inject(VendorDataService);
   dialog = inject(MatDialog);
- 
-  boothBase = computed<BoothBaseAnalytics | null>(() => this.vendorData.boothAnalytics());
-  repAnalytics = computed<RepAnalyticsObject | null>(() => this.vendorData.reps());
+  Router = inject(Router);
+
 
   constructor() {
     effect(() => {
       const user = this.state.user();
       const vendorDashState: VendorDash = this.state.vendorDashState();
-      console.log('BOOTH BASE:', this.boothBase());
-      console.log('REP ANALYTICS:', this.repAnalytics());
     });
   }
 
@@ -55,5 +53,6 @@ export class VendorKpiCards {
   onClick(name: string) {
     console.log('click fired');
     this.state.changVendorDashState({ cardSelected: name });
+    this.Router.navigate([`/dashboard/vendor/events/${this.state.vendorDashState().EventId}/team/dashboard`])
   }
 }

@@ -101,11 +101,11 @@
             <mat-icon>event</mat-icon>
           </div>
           <div class="info-text">
-            <div class="info-main">{{ selectedEvent()?.name }}</div>
+            <div class="info-main">{{ vendorData.selectedEvent()?.name }}</div>
 
            
             <div class="info-sub">
-              {{ selectedEvent()?.startDate }} - {{ selectedEvent()?.endDate }}
+              {{ vendorData.selectedEvent()?.startDate }} - {{ vendorData.selectedEvent()?.endDate }}
             </div>
           </div>
         </div>
@@ -115,7 +115,7 @@
             <mat-icon>place</mat-icon>
           </div>
           <div class="info-text">
-            <div class="info-main">{{ selectedEvent()?.description }}</div>
+            <div class="info-main">{{ vendorData.selectedEvent()?.description }}</div>
             <div class="info-sub">Kitchener, ON</div>
           </div>
         </div>
