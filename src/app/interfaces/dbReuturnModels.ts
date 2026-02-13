@@ -84,35 +84,34 @@ export interface Booth {
 
 export interface DBEvent {
   id: number;
-
   hostId: number;
-
   name: string;
-
   eventType: 'expo' | 'conference' | 'workshop';
-
   description: string | null;
-
-
   startDate: string;
   endDate: string;
-
-
   venue: string | null;
   city: string | null;
   region: string | null;
-
   estimatedAttendees: number | null;
-
   attendeeGroups: string | null; 
-
   format: 'in-person' | 'hybrid' | 'virtual';
-
   timezone: string; 
-
   dailyStartTime: string;
   dailyEndTime: string;
-
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface Attendee {
+  id: number;
+  npi?: string | null;
+  firstName: string;
+  lastName: string;
+  specialty?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  physician: boolean;
+  checkedIn: boolean;
+  eventId: number;
 }

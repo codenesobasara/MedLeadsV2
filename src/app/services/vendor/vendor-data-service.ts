@@ -1,10 +1,10 @@
 import { Injectable, inject, signal, computed, } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { rxResource } from '@angular/core/rxjs-interop'; 
 import { of } from 'rxjs';
 import { State } from '../state';
 import { DBEvent, Rep } from '../../interfaces/dbReuturnModels';
-import { BoothBaseAnalytics, RepAnalyticsObject } from '../../interfaces/vendor-analytics';
+import { BoothBaseAnalytics, RepAnalyticsObject, RepAttendees } from '../../interfaces/vendor-analytics';
 import { VendorCharts } from './vendor-charts';
 import { VendorFormControl } from './vendor-form-control';
 
@@ -20,6 +20,10 @@ export class VendorDataService {
 
     selectedEventId = signal<number | null>(null);
     createdRep = signal<Rep|null>(null)
+    selectedRep= signal<Rep | null>(null)
+    currentCursor = signal<{ cursorDate: string; cursorId: number } | null>(null);
+    selectedDay =signal<string|null>(null)
+    
 
     selectedEvent = computed<DBEvent|null>(()=>{
       const id = this.selectedEventId();
@@ -67,7 +71,38 @@ createRepResource = rxResource({
   }
 })
 
+//singlerepAnalytics = rxResource({
+  //params:() => ({
+    //repId:this.selectedRep()?.id,
+  //}),
+  //stream:({params})=>{
+   // if(params.repId === null)return of (null);
+    //return this.http.get(`${this.baseUrl}/events/${this.state.vendorDashState().EventId}/${this.selectedRep()?.id}/analytics`)
+  //}
+//})
 
+attendeesResource =rxResource({
+  params: () =>({
+   repId:this.selectedRep()?.id,
+   day: this.selectedDay(),        
+    cursorDate: this.currentCursor()?.cursorDate,
+    cursorId: this.currentCursor()?.cursorId,
+  }),
+  stream:({params})=>{
+   const eventId = this.state.vendorDashState()?.EventId;
+  if (!eventId) {
+    console.warn('EventId not found in state yet.');
+    return of(null);
+  }
+      let httpParams = new HttpParams();
+    if (params.day) httpParams = httpParams.set('day', params.day);
+    if (params.cursorDate) httpParams = httpParams.set('cursorDate', params.cursorDate);
+    if (params.cursorId) httpParams = httpParams.set('cursorId', params.cursorId.toString());
+    return this.http.get<RepAttendees>(`${this.baseUrl}/events/${this.state.vendorDashState().EventId}/reps/${params.repId}/attendees`,{params:httpParams})
+
+    
+  }
+})
 
 
       

@@ -7,6 +7,7 @@ const func = require("../VendorServices/VendorFunctions")
 const EventModel = require("../Models/EventModel")
 const connection = require("../mainConfig");
 const vendorFunc = require("../VendorServices/VendorFunctions")
+const VendorAnalytics = require("../VendorServices/VendorAnalytics")
 
 router.post("/login", async (req,res)=>{
 try{const {email,password} = req.body
@@ -36,15 +37,12 @@ router.post("/register", async (req,res)=>{
 
 router.post("/auth/refresh",authController.refreshToken)
 
-router.post('/test/:eventId/:vendorId', async (req, res) => {
+router.get('/test/:eventId/:repId/:vendorId', async (req, res) => {
   try {
-    const eventId = req.params.eventId;
-    const rep = req.body.rep;
-    const vendorId = req.params.vendorId;
-
-    const create = await vendorFunc.createRep(rep, vendorId, eventId);
-    if (create) return res.status(200).json({ create });
-
+    
+    const data = await VendorAnalytics.getSingleRepAnalyticData(req.params.repId, req.params.eventId,req.params.vendorId)
+    const result = await VendorAnalytics.buildSingleRepAnalytics(data)
+    return res.status(200).json(result)
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: err.message });

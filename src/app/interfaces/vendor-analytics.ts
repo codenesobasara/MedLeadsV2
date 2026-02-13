@@ -4,7 +4,7 @@ import {   VendorQuestion,
   PeakScanDayRow,
   Rep,
   CurrentStaffing,
-  Booth,
+ Attendee,
   BoothDayHourScans} from "./dbReuturnModels";
 
 export interface vendorAnalytics {
@@ -47,4 +47,34 @@ export interface RepShift {
   startTime: string;  
   endTime: string;   
 }
+export interface RepPerformance {
+  total: {
+    uniqueScans: number;
+    lastHourCount: number;
+    peakHour: string;
+    busiestTime: string;
+    lastActive: string;
+  };
+  byDay: {
+    [date: string]: {
+      uniqueScans: number;
+      totalScans: number;
+      lastActive: string;
+      peakHour: string;
+      busiestTime: string;
+    };
+  };
+}
 
+ export interface RepAttendees {
+  attendees:Attendee [];
+
+  pagination: {
+    limit: number;
+    hasMore: boolean;
+    cursor?: {
+      cursorDate: string; 
+      cursorId: number;   
+    };
+  };
+}

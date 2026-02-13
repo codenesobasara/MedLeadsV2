@@ -1,5 +1,5 @@
-import { Component,inject,input } from '@angular/core';
-import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
+import { Component,inject } from '@angular/core';
+import { NgApexchartsModule, } from 'ng-apexcharts';
 import { VendorCharts } from '../../../../services/vendor/vendor-charts';
 
 @Component({

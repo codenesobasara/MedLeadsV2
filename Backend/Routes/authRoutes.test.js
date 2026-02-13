@@ -3,7 +3,7 @@ const express = require('express');
 const authRoutes = require('./authRoutes');
 const auth = require('../AuthService/AutheService');
 
-// Mock the auth service and user service
+
 jest.mock('../AuthService/AutheService');
 jest.mock('../UserService/UserFunctions');
 

@@ -1,3 +1,5 @@
+/* rep-insights.component.css */
+
 .rep-page{
   width: 100%;
   min-width: 0;
@@ -85,7 +87,6 @@
   color: var(--text-muted);
 }
 
-/* KPI mini cards on the right */
 .rep-hero-right{
   display: grid;
   grid-auto-flow: column;
@@ -111,12 +112,11 @@
 
 .kpi-value{
   margin-top: 6px;
-  font-size: 24px;
+  font-size: 24px; /* ✅ fixed */
   font-weight: 800;
   color: var(--text-strong);
   line-height: 1.1;
 }
-
 
 .rep-mid{
   display: grid;
@@ -131,7 +131,6 @@
   background: #ffffff;
   border: 1px solid #eef2f8;
 }
-
 
 .insights-stack{
   display: grid;
@@ -154,17 +153,17 @@
 }
 
 .insight-body{
-  height: 54px; 
+  height: 54px;
 }
 
-
+/* ✅ stop export-card from stretching with the table */
 .rep-bottom{
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 18px;
   min-width: 0;
+  align-items: start; /* ✅ added */
 }
-
 
 .simple-table{
   margin-top: 10px;
@@ -235,6 +234,42 @@
   white-space: nowrap;
 }
 
+.table-footer{
+  border-top: 1px solid #eef2f8;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pagination-info{
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* ✅ new: bottom-right arrow buttons */
+.table-nav{
+  border-top: 1px solid #eef2f8;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.table-nav .pill{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+}
+
+.table-nav mat-icon{
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
 
 .export-card{
   border-radius: 16px;
@@ -245,6 +280,7 @@
   display: grid;
   gap: 12px;
   align-content: start;
+  align-self: start; /* ✅ added */
 }
 
 .export-title{
@@ -262,7 +298,6 @@
   width: 100%;
   justify-content: center;
 }
-
 
 @media (max-width: 900px){
   .rep-mid{ grid-template-columns: 1fr; }

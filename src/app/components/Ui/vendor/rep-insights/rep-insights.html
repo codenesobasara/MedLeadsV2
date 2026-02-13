@@ -1,47 +1,47 @@
+
 <div class="rep-page">
 
-
   <div class="rep-hero stat-card large">
+
     <div class="rep-hero-left">
       <div class="avatar-wrap">
-        <img class="avatar"  alt="Rep photo" />
+        <img class="avatar" alt="Rep photo" />
         <span class="status-dot"></span>
       </div>
 
-      <div class="rep-meta">
-        <div class="rep-name-row">
-          <div class="rep-name">Neso  Basara</div>
-          <span class="rep-status-pill">ACTIVE</span>
+      @if (vendorData.selectedRep(); as rep) {
+        <div class="rep-meta">
+          <div class="rep-name-row">
+            <div class="rep-name">{{ rep.firstName }} {{ rep.lastName }}</div>
+            <span class="rep-status-pill">ACTIVE</span>
+          </div>
+          <div class="rep-subline">
+            {{ rep.email }} • {{ rep.phone }}
+          </div>
         </div>
-
-        <div class="rep-subline">
-         Testing • Test
-        </div>
-      </div>
+      }
     </div>
 
- 
-    <div class="rep-hero-right">
-      <div class="kpi-mini">
-        <div class="kpi-label">TOTAL SCANS</div>
-        <div class="kpi-value">--</div>
+    @if (vendorData.selectedRep(); as rep) {
+      <div class="rep-hero-right">
+        <div class="kpi-mini">
+          <div class="kpi-label">TOTAL SCANS</div>
+          <div class="kpi-value">{{ rep.totalScans }}</div>
+        </div>
+        <div class="kpi-mini">
+          <div class="kpi-label">AVG SCANS / HR</div>
+          <div class="kpi-value">{{ rep.totAvgScansPerHour }}</div>
+        </div>
+        <div class="kpi-mini">
+          <div class="kpi-label">AVG SCANS / DAY</div>
+          <div class="kpi-value">{{ rep.avgScansPerDay }}</div>
+        </div>
       </div>
+    }
 
-      <div class="kpi-mini">
-        <div class="kpi-label">AVG SCANS / HR</div>
-        <div class="kpi-value">--</div>
-      </div>
-
-      <div class="kpi-mini">
-        <div class="kpi-label">AVG SCANS / DAY</div>
-        <div class="kpi-value">--</div>
-      </div>
-    </div>
   </div>
 
-
   <div class="rep-mid">
-
 
     <div class="stat-card large">
       <div class="header-large">
@@ -56,11 +56,9 @@
         </div>
       </div>
 
-   
-      <div class="rep-chart-placeholder"></div>
+      <rep-line-chart></rep-line-chart>
     </div>
 
-  
     <div class="stat-card large">
       <div class="header-large">
         <div>
@@ -84,17 +82,25 @@
 
   </div>
 
-
   <div class="rep-bottom">
-
     <div class="stat-card large">
       <div class="header-large">
         <div>
           <div class="stat-title large">Recent Scans</div>
           <div class="stat-sub">Latest booth interactions</div>
         </div>
-
-        <button type="button" class="ui-btn secondary">View All</button>
+        <div class="panel-actions">
+          @for (date of chartData.dates(); track date) {
+            <button
+              type="button"
+              class="pill"
+              [class.active]="chartData.selectedDay() === date"
+              (click)="onDaySelect(date)"
+            >
+              {{ date }}
+            </button>
+          }
+        </div>
       </div>
 
       <div class="simple-table">
@@ -105,38 +111,63 @@
           <div class="t-right">ACTION</div>
         </div>
 
-       
-        <div class="simple-row">
-          <div class="attendee-cell">
-            <div class="mini-badge">JD</div>
-            <div class="attendee-name">Jane Doe</div>
-          </div>
-          <div>—</div>
-          <div>—</div>
-          <div class="t-right">
-            <button type="button" class="ui-icon-btn">
-              <mat-icon>chevron_right</mat-icon>
-            </button>
-          </div>
-        </div>
+        @if (vendorData.attendeesResource.value(); as data) {
+          @for (attendee of data.attendees; track attendee.id) {
+            <div class="simple-row">
+              <div class="attendee-cell">
+                <div class="mini-badge">
+                  {{ attendee.firstName[0] }}{{ attendee.lastName[0] }}
+                </div>
+                <div class="attendee-name">
+                  {{ attendee.firstName }} {{ attendee.lastName }}
+                </div>
+              </div>
 
-        <div class="simple-row">
-          <div class="attendee-cell">
-            <div class="mini-badge">MS</div>
-            <div class="attendee-name">Michael Smith</div>
-          </div>
-          <div>—</div>
-          <div>—</div>
-          <div class="t-right">
-            <button type="button" class="ui-icon-btn">
-              <mat-icon>chevron_right</mat-icon>
-            </button>
-          </div>
-        </div>
+              <div></div>
+              <div>—</div>
+
+              <div class="t-right"></div>
+            </div>
+          }
+        }
+
+   @if (vendorData.attendeesResource.value(); as data) {
+  <div class="table-footer">
+    <div class="pagination-info">
+      Showing {{ data.attendees.length }} attendees
+    </div>
+
+    <div class="table-nav">
+      @if (vendorData.currentCursor()) {
+        <button
+          type="button"
+          class="pill"
+          aria-label="Previous"
+          (click)="vendorData.currentCursor.set(null)"
+        >
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+      }
+
+      @if (data.pagination.hasMore) {
+        <button
+          type="button"
+          class="pill active"
+          aria-label="Next"
+          (click)="vendorData.currentCursor.set(data.pagination.cursor!)"
+        >
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      }
+    </div>
+  </div>
+}
+    
+
       </div>
     </div>
 
-    
+
     <div class="export-card">
       <div class="export-title">Export Analytics</div>
       <div class="export-sub">

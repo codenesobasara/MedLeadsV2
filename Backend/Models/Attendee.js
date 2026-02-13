@@ -52,7 +52,6 @@ const Attendee = sequelize.define('Attendee', {
     defaultValue: false,
   },
 
-  
   eventId: {
     type: DataTypes.INTEGER,
     allowNull: false,

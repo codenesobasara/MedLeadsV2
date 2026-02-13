@@ -3,6 +3,7 @@ import { VendorDataService } from './vendor-data-service';
 import { DBEvent,} from '../../interfaces/dbReuturnModels';
 import { GeneralFunctions } from '../functions/general-functions';
 import { ApexAxisChartSeries, ApexOptions } from 'ng-apexcharts';
+import { count } from 'rxjs';
 
 
 @Injectable({
@@ -192,6 +193,42 @@ export class VendorCharts {
     },
     grid: { show: false },
   };
+
+
+  salesRepChartAllTime() {
+  const rep = this.vendorData.selectedRep();
+  if (!rep) return [];
+  const series:ApexAxisChartSeries = []
+  const repHourlyTotals: Record<string, number> = {};
+  rep.scansPerDayHour.forEach(day => {
+    Object.entries(day.hours).forEach(([hour, value]) => {
+      const numericHour = parseInt(hour).toString(); 
+      repHourlyTotals[numericHour] = (repHourlyTotals[numericHour] ?? 0) + value;
+    });
+  });
+
+   series.push(
+    
+     {
+      name: rep.firstName,
+      data: Object.entries(repHourlyTotals)
+        .sort((a, b) => parseInt(a[0]) - parseInt(b[0]))
+        .map(([hour, value]) => ({
+          x: this.func.formatAmPm(hour).trim(),
+          y: value
+        }))
+    }
+  )
+   return series
+
+}
+
+   repLinChart = computed(()=>{
+  const day = this.selectedDay();
+  const rep = this.vendorData.selectedRep();
+  if(!rep)return []
+   return this. salesRepChartAllTime()
+})
 
   series = computed(() => {
     const day = this.selectedDay();

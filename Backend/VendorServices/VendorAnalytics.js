@@ -253,18 +253,13 @@ async function getBoothBaseData(vendorId, eventId) {
     attributes: ["id", "startDate", "endDate", "timezone"],
     raw: true,
   });
-
   const eventDates = func.normalizeEventDates(event);
-
   const scanEndForEvent =
     eventDates.now < eventDates.eventEndDay
       ? eventDates.now
       : eventDates.eventEndDay;
-
   const offset = eventDates.eventStartDay.toFormat("ZZ");
-
   const data = {};
-
   data.repCount = await vendorFunc.getBoothRepCount(vendorId, eventId);
   data.totalScanCount = await vendorFunc.getBoothTotalScanCount(vendorId, eventId, eventDates, scanEndForEvent);
   data.activeRepCount = await vendorFunc.getBoothActiveRepCount(vendorId, eventId, eventDates, scanEndForEvent);
@@ -273,7 +268,6 @@ async function getBoothBaseData(vendorId, eventId) {
   data.topFiveReps = await vendorFunc.getBoothTopFiveReps(vendorId, eventId, eventDates, scanEndForEvent);
   data.topFiveAttendees = await vendorFunc.getBoothTopFiveAttendees(vendorId, eventId, eventDates, scanEndForEvent);
   data.peakScanDay = await vendorFunc.getBoothPeakScanDay(vendorId, eventId, eventDates, scanEndForEvent, offset);
-
   return data;
 }
 
@@ -346,6 +340,106 @@ async function enrichRep(rep,eventId) {
   return repObj;
   
 }
+async function getSingleRepAnalyticData(repId,eventId,vendorId){
+  const event = await EventModel.findByPk(eventId, {attributes:["id","startDate","endDate","timezone"], raw:true})
+  const offset = vendorFunc.getUtcOffset(event.timezone)
+  const eventDates = vendorFunc.normalizeEventDates(event)
+  const scanEndForEvent = eventDates.now < eventDates.eventEndDay ? eventDates.now : eventDates.eventEndDay;
+  const dayHours = await vendorFunc.getRepDayHourRows(vendorId,eventId,[repId],eventDates,scanEndForEvent,offset)
+  const dayKeyLiteral = literal(`DATE(CONVERT_TZ(scannedAt, '+00:00', '${offset}'))`);
+  const dailyStats = await Scan.findAll({
+  where:{
+  vendorId:vendorId,
+  eventId:eventId,
+  salesRepId:repId,
+   type:"scan",
+   scannedAt: { [Op.between]: [eventDates.eventStartDay.toJSDate(), scanEndForEvent.toJSDate()] }},
+   attributes:[[dayKeyLiteral,'dayKey'], [fn('COUNT',col('id')), 'totalScans'],
+  [fn("COUNT",fn("DISTINCT",col('attendeeId'))),'uniqueAttendees'],
+  [fn('MAX',col('scannedAt')),'lastActive']],
+  group:[dayKeyLiteral],
+  raw:true
+  })
+ 
+const lastHourCount = await Scan.count({
+    where: {
+      salesRepId: repId,
+      type: 'scan',
+      scannedAt: { 
+        [Op.gte]: DateTime.now().minus({ hours: 1 }).toJSDate() 
+      }
+    }
+  });
+
+
+return data ={dayHours,dailyStats, lastHourCount,event}
+}
+
+
+async function buildSingleRepAnalytics(data){
+ data.dailyStats.forEach(stat=>{
+    if(stat.lastActive){ stat.lastActive = DateTime.fromJSDate(new Date(stat.lastActive))
+      .setZone(data.event.timezone)
+      .toFormat('h:mm a')
+    }
+  })
+  data.dayHours.forEach(row=>{
+    const period = row.hour>=12?'PM':"AM"
+    const hour12 = row.hour % 12 || 12;
+    row.peakHour = `${hour12}:00 ${period}`
+    if (row.hour >= 5 && row.hour < 12) row.busiestTime = 'Morning';
+    else if (row.hour >= 12 && row.hour < 17) row.busiestTime = 'Afternoon';
+    else if (row.hour >= 17 && row.hour < 21) row.busiestTime = 'Evening';
+    else row.busiestTime = 'Night';
+  })
+  const byDay ={}
+  data.dailyStats.forEach(stat =>{
+    const peakDay = data.dayHours
+    .filter(h => h.dayKey === stat.dayKey)
+    .sort((a,b)=> b.count - a.count)[0]
+    byDay[stat.dayKey] ={
+      uniqueScans:parseInt(stat.uniqueAttendees),
+      totalScans:parseInt(stat.totalScans),
+      lastActive:stat.lastActive,
+      peakHour: peakDay? peakDay.peakHour:"",
+      busiestTime:peakDay? peakDay.busiestTime:""
+    }
+  })
+  const totalPeak = data.dayHours
+    .reduce((prev, curr) => (prev.count > curr.count) ? prev : curr, { count: 0 });
+const finalObject = {
+    total: {
+      uniqueScans: data.dailyStats.reduce((sum, s) => sum + parseInt(s.uniqueAttendees), 0),
+      lastHourCount: data.lastHourCount,
+      peakHour: totalPeak.peakHour || 'N/A',
+      busiestTime: totalPeak.busiestTime || 'N/A',
+      lastActive: data.dailyStats[data.dailyStats.length - 1]?.lastActive || 'N/A'
+    },
+    byDay: byDay 
+  };
+
+  return finalObject;
+
+}
+
+function buildRepAttendees(data, limit) {
+  const response = {
+    attendees: data.attendees,
+    pagination: {
+      limit,
+      hasMore: data.hasMore
+    }
+  };
+
+  if (data.nextCursor) {
+    response.pagination.cursor = {
+      cursorDate: new Date(data.nextCursor.cursorDate).toISOString(),
+      cursorId: data.nextCursor.cursorId
+    };
+  }
+
+  return response;
+}
 
 
 
@@ -358,5 +452,8 @@ module.exports = {
   buildBoothDayHourScans,
   getBoothBaseData,
   buildBoothBaseObject,
-  enrichRep
+  enrichRep,
+  getSingleRepAnalyticData,
+  buildSingleRepAnalytics,
+  buildRepAttendees
 };

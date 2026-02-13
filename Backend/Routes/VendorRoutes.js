@@ -69,4 +69,45 @@ router.post("/events/:eventId/rep", async (req, res) => {
     return res.status(500).json({ message: err.message, stack: err.stack });
   }
 });
+
+router.get('/vendor/events/:eventId/:repId/analytics', async (req,res)=>{
+
+})
+
+router.get("/events/:eventId/reps/:salesRepId/attendees", async (req, res) => {
+  try {
+    const vendorId = req.user.id; 
+    const eventId = req.params.eventId;
+    const salesRepId = req.params.salesRepId; 
+    const day = req.query.day; 
+    const cursorDate = req.query.cursorDate || null;
+    const cursorId = req.query.cursorId ? Number(req.query.cursorId) : null;
+
+    let data;
+    if (day) {
+      data = await vendorFunc.getDailyRepAttendees(
+        salesRepId,
+        vendorId,
+        eventId,
+        cursorDate,
+        cursorId,
+        day
+      );
+    } else {
+      data = await vendorFunc.getTotalRepAttendees(
+        salesRepId,
+        vendorId,
+        eventId,
+        cursorDate,
+        cursorId
+      );
+    }
+
+    const response = VendorAnalytics.buildRepAttendees(data, 10);
+    return res.status(200).json(response);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: err.message });
+  }
+});
 module.exports = router

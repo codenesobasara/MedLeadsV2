@@ -19,7 +19,6 @@ const { endWith } = require("rxjs")
 
 function normalizeEventDates(event) {
   const timezone = event.timezone
-
   const eventStartDay = DateTime.fromJSDate(event.startDate).setZone(timezone).startOf("day")
   const eventEndDay = DateTime.fromJSDate(event.endDate).setZone(timezone).endOf("day")
   const now = DateTime.now().setZone(timezone)
@@ -30,6 +29,10 @@ function normalizeEventDates(event) {
     eventEndDay,
     now,
   }
+}
+
+function getUtcOffset(timezone) {
+  return DateTime.now().setZone(timezone).toFormat("ZZ"); 
 }
 
 
@@ -126,6 +129,108 @@ async function getShiftRepRows(vendorId, eventId) {
     raw: true,
   })
 }
+
+//pagination for single rep metrics page//
+
+async function getTotalRepAttendees(salesRepId, vendorId, eventId, cursorDate, cursorId) {
+  const event = await EventModel.findByPk(eventId, {
+    attributes: ["id", "startDate", "endDate", "timezone"],
+    raw: true
+  });
+  const eventDates = normalizeEventDates(event);
+  const scanEndForEvent =
+    eventDates.now < eventDates.eventEndDay ? eventDates.now : eventDates.eventEndDay;
+    const cursorDateObj = cursorDate ? new Date(cursorDate) : null;
+const filter =
+  cursorDateObj && cursorId
+    ? {
+        [Op.or]: [
+          { scannedAt: { [Op.lt]: cursorDateObj } },
+          { scannedAt: cursorDateObj, id: { [Op.lt]: cursorId } }
+        ]
+      }
+    : {};
+  const attendeeIds = await Scan.findAll({
+    where: {
+      vendorId,
+      salesRepId,
+      type: "scan",
+      scannedAt: {
+        [Op.between]: [eventDates.eventStartDay.toJSDate(), scanEndForEvent.toJSDate()]
+      },
+      ...filter
+    },
+    attributes: ["id", "attendeeId", "scannedAt"],
+    order: [["scannedAt", "DESC"], ["id", "DESC"]],
+    limit: 11,
+    raw: true
+  });
+  const hasMore = attendeeIds.length > 10;
+  const pageScans = attendeeIds.slice(0, 10);
+  const ids = [...new Set(pageScans.map(id => id.attendeeId))];
+  const attendees = await Attendee.findAll({ where: { id: { [Op.in]: ids } } });
+  const lastScan = pageScans[pageScans.length - 1];
+  const nextCursor =
+    hasMore && lastScan ? { cursorDate: lastScan.scannedAt, cursorId: lastScan.id } : null;
+  return { attendees, nextCursor, hasMore };
+}
+ 
+
+
+ async function getDailyRepAttendees(salesRepId, vendorId, eventId, cursorDate, cursorId, day){
+  const event = await EventModel.findByPk(eventId, {
+    attributes: ["id", "startDate", "endDate", "timezone"],
+    raw: true
+  });
+  const startLocal = DateTime.fromISO(day, { zone: event.timezone }).startOf("day");
+  const endLocal = startLocal.endOf("day")
+  const startUtc = startLocal.toUTC().toJSDate()
+  const endUtc = endLocal.toUTC().toJSDate()
+  const eventDates = normalizeEventDates(event);
+  const utcQueryWindow =
+  startLocal.hasSame(eventDates.now, "day")
+    ? eventDates.now.toUTC().toJSDate()
+    : endUtc;
+const cursorDateObj = cursorDate ? new Date(cursorDate) : null;
+const filter =
+  cursorDateObj && cursorId
+    ? {
+        [Op.or]: [
+          { scannedAt: { [Op.lt]: cursorDateObj } },
+          { scannedAt: cursorDateObj, id: { [Op.lt]: cursorId } }
+        ]
+      }
+    : {};
+
+   const attendeeIds = await Scan.findAll({
+    where: {
+      vendorId,
+      salesRepId,
+      type: "scan",
+      scannedAt: {
+        [Op.between]: [startUtc, utcQueryWindow]
+      },
+      ...filter
+    },
+    attributes: ["id", "attendeeId", "scannedAt"],
+    order: [["scannedAt", "DESC"], ["id", "DESC"]],
+    limit: 11,
+    raw: true
+  });
+  const hasMore = attendeeIds.length > 10;
+  const pageScans = attendeeIds.slice(0, 10);
+  const ids = [...new Set(pageScans.map(id => id.attendeeId))];
+  const attendees = await Attendee.findAll({ where: { id: { [Op.in]: ids } } });
+  const lastScan = pageScans[pageScans.length - 1];
+  const nextCursor =
+    hasMore && lastScan ? { cursorDate: lastScan.scannedAt, cursorId: lastScan.id } : null;
+  return { attendees, nextCursor, hasMore };
+
+
+ }
+
+
+
 
 async function getScanRepRows(vendorId, eventId) {
   return Scan.findAll({
@@ -401,6 +506,10 @@ module.exports = {
   getBoothTopFiveReps,
   getBoothTopFiveAttendees,
   getBoothPeakScanDay,
-  createRep
+  createRep,
+  getUtcOffset,
+  getTotalRepAttendees,
+  getDailyRepAttendees
+
 }
 
