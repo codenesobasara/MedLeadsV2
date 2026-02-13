@@ -40,5 +40,8 @@ __screenshots__/
 
 .DS_Store
 Thumbs.db
+# Secrets
 .env
+mainConfig.js
+scrub_list.txt
 
