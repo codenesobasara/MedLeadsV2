@@ -47,7 +47,6 @@ router.post("/events/:eventId/rep", async (req, res) => {
   try {
     const vendorId = Number(req.user.id);
     const eventId = req.params.eventId;
-
     const rep = req.body.rep;
     const shifts = req.body.shifts ?? [];
     const territories = req.body.territories ?? [];

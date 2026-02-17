@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { rxResource } from '@angular/core/rxjs-interop'; 
 import { of } from 'rxjs';
 import { State } from '../state';
-import { DBEvent, Rep } from '../../interfaces/dbReuturnModels';
+import { DBEvent, Rep, TopFiveRepRow } from '../../interfaces/dbReuturnModels';
 import { BoothBaseAnalytics, RepAnalyticsObject, RepAttendees } from '../../interfaces/vendor-analytics';
 import { VendorCharts } from './vendor-charts';
 import { VendorFormControl } from './vendor-form-control';
@@ -19,6 +19,7 @@ export class VendorDataService {
     private form = inject(VendorFormControl)
 
     selectedEventId = signal<number | null>(null);
+    selectedRepId = signal<number | null>(null)
     createdRep = signal<Rep|null>(null)
     selectedRep= signal<Rep | null>(null)
     currentCursor = signal<{ cursorDate: string; cursorId: number } | null>(null);
@@ -49,15 +50,26 @@ export class VendorDataService {
 
 
 repAnalytics = rxResource({
-  params: () => ({
-    id: this.state.vendorDashState().EventId,
-    day: this.state.event()?.startDate ?? null
-  }),
+  params: () => {
+    const params = {
+      id: this.state.vendorDashState().EventId,
+      day: this.state.event()?.startDate ?? null
+    };
+    console.log('[repAnalytics] params()', params);
+    return params;
+  },
   stream: ({ params }) => {
-    if (!params.id || !params.day) return of(null);
-    return this.http.get<RepAnalyticsObject>(
-      `${this.baseUrl}/events/${params.id}/analytics/reps?day=${encodeURIComponent(params.day)}`
-    );
+    console.log('[repAnalytics] stream() called with params:', params);
+    if (!params.id || !params.day) {
+      console.warn('[repAnalytics] missing id or day — skipping request');
+      return of(null);
+    }
+    const url =
+      `${this.baseUrl}/events/${params.id}/analytics/reps?day=${encodeURIComponent(params.day)}`;
+
+    console.log('[repAnalytics] HTTP GET →', url);
+
+    return this.http.get<RepAnalyticsObject>(url);
   }
 });
 
@@ -83,7 +95,7 @@ createRepResource = rxResource({
 
 attendeesResource =rxResource({
   params: () =>({
-   repId:this.selectedRep()?.id,
+   repId:this.selectedRepId(),
    day: this.selectedDay(),        
     cursorDate: this.currentCursor()?.cursorDate,
     cursorId: this.currentCursor()?.cursorId,

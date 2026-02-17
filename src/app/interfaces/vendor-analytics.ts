@@ -26,12 +26,8 @@ export interface BoothBaseAnalytics {
 
 export interface RepAnalyticsObject {
   dayKey: string;
-
   currentStaffing: CurrentStaffing[];
-
   reps: Rep[];
-
- 
   booth: {
     dayHourScans: BoothDayHourScans[];
   };

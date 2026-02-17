@@ -12,6 +12,7 @@ import { VendorDataService } from '../../../../services/vendor/vendor-data-servi
 import { AddRepDialog } from '../add-rep-dialog/add-rep-dialog';
 import { BoothBaseAnalytics, RepAnalyticsObject } from '../../../../interfaces/vendor-analytics';
 import { Router } from '@angular/router';
+import { Rep, TopFiveRepRow } from '../../../../interfaces/dbReuturnModels';
 
 @Component({
   selector: 'app-vendor-kpi-cards',
@@ -55,4 +56,10 @@ export class VendorKpiCards {
     this.state.changVendorDashState({ cardSelected: name });
     this.Router.navigate([`/dashboard/vendor/events/${this.state.vendorDashState().EventId}/team/dashboard`])
   }
+
+   repSelect(rep:TopFiveRepRow){
+    this.vendorData.selectedRepId.set(rep.salesRepId)
+     this.Router.navigate([`/dashboard/vendor/reps/${rep.salesRepId}/insights`]);
+  
+    }
 }

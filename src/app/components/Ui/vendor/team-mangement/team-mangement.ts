@@ -46,8 +46,9 @@ teamCount = computed(() => this.vendorData.repAnalytics.value()?.reps.length ?? 
   }
  
   repSelect(rep:Rep){
-  this.vendorData.selectedRep.set(rep)
-   this.Router.navigate([`/dashboard/vendor/reps/${rep.id}/insights`]);
+    this.vendorData.selectedRepId.set(rep.id)
+    this.vendorData.selectedRep.set(rep)
+    this.Router.navigate([`/dashboard/vendor/reps/${rep.id}/insights`]);
 
   }
 }

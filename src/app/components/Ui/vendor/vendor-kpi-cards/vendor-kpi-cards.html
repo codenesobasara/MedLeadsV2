@@ -132,7 +132,7 @@
         <div class="panel-footer">Tap to explore Rep activity</div>
       </div>
 
-      <div class="stat-card large" name="SalesReps" (click)="onClick('SalesReps')">
+      <div class="stat-card large" name="SalesReps">
         <div class="header-large">
           <div>
             <div class="stat-title large">Sales Reps</div>
@@ -147,18 +147,18 @@
           </div>
 
           <div class="list-container">
-            @for (repRow of booth.topFiveReps; track $index; let i = $index) {
-              @if (i < 5) {
-                <div class="list-item">
-                  <div class="metric-row-strong">
-                    {{ repRow["SalesRep.firstName"] }} {{ repRow["SalesRep.lastName"] }}
-                  </div>
-                  <div class="metric-row">
-                    {{ repRow.ScanCount }} scans
-                  </div>
-                </div>
-              }
-            }
+@for (rep of booth.topFiveReps; track $index; let i = $index) {
+  @if (i < 5) {
+    <div class="list-item" (click)="repSelect(rep)">
+      <div class="metric-row-strong">
+        {{ rep["SalesRep.firstName"] }} {{ rep["SalesRep.lastName"] }}
+      </div>
+      <div class="metric-row">
+        {{ rep.ScanCount }} scans
+      </div>
+    </div>
+  }
+}
           </div>
 
           <div class="rep-btn-container">
