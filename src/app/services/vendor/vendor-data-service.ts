@@ -1,10 +1,10 @@
 import { Injectable, inject, signal, computed, } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { rxResource } from '@angular/core/rxjs-interop'; 
-import { of } from 'rxjs';
+import { of, map } from 'rxjs';
 import { State } from '../state';
 import { DBEvent, Rep, TopFiveRepRow } from '../../interfaces/dbReuturnModels';
-import { BoothBaseAnalytics, RepAnalyticsObject, RepAttendees } from '../../interfaces/vendor-analytics';
+import { BoothBaseAnalytics, RepAnalyticsObject, RepAttendees, SingleRepAnalytics } from '../../interfaces/vendor-analytics';
 import { VendorCharts } from './vendor-charts';
 import { VendorFormControl } from './vendor-form-control';
 
@@ -83,15 +83,41 @@ createRepResource = rxResource({
   }
 })
 
-//singlerepAnalytics = rxResource({
-  //params:() => ({
-    //repId:this.selectedRep()?.id,
-  //}),
-  //stream:({params})=>{
-   // if(params.repId === null)return of (null);
-    //return this.http.get(`${this.baseUrl}/events/${this.state.vendorDashState().EventId}/${this.selectedRep()?.id}/analytics`)
-  //}
-//})
+singlerepAnalytics = rxResource({
+  params: () => {
+    const params = {
+      repId: this.selectedRepId()
+    };
+
+    console.log('[singleRepAnalytics] params()', params);
+    return params;
+  },
+
+  stream: ({ params }) => {
+    if (params.repId == null) {
+      console.warn('[singleRepAnalytics] repId null — skipping');
+      return of(null);
+    }
+
+    const url =
+      `${this.baseUrl}/events/${this.state.vendorDashState().EventId}/${params.repId}/analytics`;
+       
+
+    console.log('[singleRepAnalytics] GET', url);
+
+    return this.http.get<{result: SingleRepAnalytics}>(url).pipe(
+      map(response => {
+        console.log('[singleRepAnalytics] full response:', response);
+        if (!response || !response.result) {
+          console.error('[singleRepAnalytics] invalid response structure:', response);
+          return null;
+        }
+        return response.result;
+      })
+    );
+  }
+});
+
 
 attendeesResource =rxResource({
   params: () =>({

@@ -194,40 +194,78 @@ export class VendorCharts {
     grid: { show: false },
   };
 
+  repLineChartOptions: ApexOptions = {
+    chart: {
+      type: 'line',
+      height: 300,
+      toolbar: { show: true },
+      animations: { enabled: true },
+    },
+    stroke: {
+      curve: 'smooth',
+      width: 2,
+    },
+    xaxis: {
+      type: 'category',
+    },
+    yaxis: {
+      title: {
+        text: 'Scans',
+      },
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+    },
+  };
+
 
   salesRepChartAllTime() {
-  const rep = this.vendorData.selectedRep();
-  if (!rep) return [];
-  const series:ApexAxisChartSeries = []
-  const repHourlyTotals: Record<string, number> = {};
-  rep.scansPerDayHour.forEach(day => {
-    Object.entries(day.hours).forEach(([hour, value]) => {
-      const numericHour = parseInt(hour).toString(); 
-      repHourlyTotals[numericHour] = (repHourlyTotals[numericHour] ?? 0) + value;
-    });
-  });
-
-   series.push(
-    
-     {
-      name: rep.firstName,
-      data: Object.entries(repHourlyTotals)
-        .sort((a, b) => parseInt(a[0]) - parseInt(b[0]))
-        .map(([hour, value]) => ({
-          x: this.func.formatAmPm(hour).trim(),
-          y: value
-        }))
+  try {
+    const rep = this.vendorData.singlerepAnalytics.value();
+    console.log('[salesRepChartAllTime] rep:', rep);
+    if (!rep || !rep.scansPerDayHour) {
+      console.warn('[salesRepChartAllTime] no rep or scansPerDayHour');
+      return [];
     }
-  )
-   return series
+    const series:ApexAxisChartSeries = []
+    const repHourlyTotals: Record<string, number> = {};
+    rep.scansPerDayHour.forEach(day => {
+      if (!day.hours || typeof day.hours !== 'object') return;
+      Object.entries(day.hours).forEach(([hour, value]: [string, any]) => {
+        const numericValue = Number(value);
+        if (!isNaN(numericValue)) {
+          const numericHour = parseInt(hour).toString(); 
+          repHourlyTotals[numericHour] = (repHourlyTotals[numericHour] ?? 0) + numericValue;
+        }
+      });
+    });
+
+     series.push(
+      
+       {
+        name: rep.firstName,
+        data: Object.entries(repHourlyTotals)
+          .sort((a, b) => parseInt(a[0]) - parseInt(b[0]))
+          .map(([hour, value]) => ({
+            x: this.func.formatAmPm(hour).trim(),
+            y: value
+          }))
+      }
+    )
+     return series
+  } catch (error) {
+    console.error('[salesRepChartAllTime] error:', error);
+    return [];
+  }
 
 }
 
    repLinChart = computed(()=>{
   const day = this.selectedDay();
-  const rep = this.vendorData.selectedRep();
+  const rep = this.vendorData.singlerepAnalytics.value();
   if(!rep)return []
-   return this. salesRepChartAllTime()
+   return this.salesRepChartAllTime()
 })
 
   series = computed(() => {

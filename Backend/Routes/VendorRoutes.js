@@ -69,9 +69,20 @@ router.post("/events/:eventId/rep", async (req, res) => {
   }
 });
 
-router.get('/vendor/events/:eventId/:repId/analytics', async (req,res)=>{
+router.get('/events/:eventId/:repId/analytics', async (req,res)=>{
+  try{
+    const vendorId = Number(req.user.id);
+    const eventId = req.params.eventId;
+    const repid = req.params.repId;
+    const data =  await VendorAnalytics.getSingleRepAnalyticData(repid,eventId,vendorId)
+    const result = await VendorAnalytics.buildSingleRepAnalytics(data, repid, eventId)
+    return res.status(200).json({result})
+  }catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: err.message, stack: err.stack });
+  }
+});
 
-})
 
 router.get("/events/:eventId/reps/:salesRepId/attendees", async (req, res) => {
   try {

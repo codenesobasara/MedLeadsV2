@@ -376,50 +376,11 @@ return data ={dayHours,dailyStats, lastHourCount,event}
 }
 
 
-async function buildSingleRepAnalytics(data){
- data.dailyStats.forEach(stat=>{
-    if(stat.lastActive){ stat.lastActive = DateTime.fromJSDate(new Date(stat.lastActive))
-      .setZone(data.event.timezone)
-      .toFormat('h:mm a')
-    }
-  })
-  data.dayHours.forEach(row=>{
-    const period = row.hour>=12?'PM':"AM"
-    const hour12 = row.hour % 12 || 12;
-    row.peakHour = `${hour12}:00 ${period}`
-    if (row.hour >= 5 && row.hour < 12) row.busiestTime = 'Morning';
-    else if (row.hour >= 12 && row.hour < 17) row.busiestTime = 'Afternoon';
-    else if (row.hour >= 17 && row.hour < 21) row.busiestTime = 'Evening';
-    else row.busiestTime = 'Night';
-  })
-  const byDay ={}
-  data.dailyStats.forEach(stat =>{
-    const peakDay = data.dayHours
-    .filter(h => h.dayKey === stat.dayKey)
-    .sort((a,b)=> b.count - a.count)[0]
-    byDay[stat.dayKey] ={
-      uniqueScans:parseInt(stat.uniqueAttendees),
-      totalScans:parseInt(stat.totalScans),
-      lastActive:stat.lastActive,
-      peakHour: peakDay? peakDay.peakHour:"",
-      busiestTime:peakDay? peakDay.busiestTime:""
-    }
-  })
-  const totalPeak = data.dayHours
-    .reduce((prev, curr) => (prev.count > curr.count) ? prev : curr, { count: 0 });
-const finalObject = {
-    total: {
-      uniqueScans: data.dailyStats.reduce((sum, s) => sum + parseInt(s.uniqueAttendees), 0),
-      lastHourCount: data.lastHourCount,
-      peakHour: totalPeak.peakHour || 'N/A',
-      busiestTime: totalPeak.busiestTime || 'N/A',
-      lastActive: data.dailyStats[data.dailyStats.length - 1]?.lastActive || 'N/A'
-    },
-    byDay: byDay 
-  };
-
-  return finalObject;
-
+async function buildSingleRepAnalytics(data, repId, eventId){
+  const rep = await SalesRep.findByPk(repId, {raw: true});
+  if (!rep) throw new Error(`Rep ${repId} not found`);
+  if (!rep.vendorId) throw new Error(`Rep ${repId} missing vendorId`);
+  return await enrichRep(rep, eventId);
 }
 
 function buildRepAttendees(data, limit) {

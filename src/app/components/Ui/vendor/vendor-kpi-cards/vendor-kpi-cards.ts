@@ -57,9 +57,8 @@ export class VendorKpiCards {
     this.Router.navigate([`/dashboard/vendor/events/${this.state.vendorDashState().EventId}/team/dashboard`])
   }
 
-   repSelect(rep:TopFiveRepRow){
-    this.vendorData.selectedRepId.set(rep.salesRepId)
-     this.Router.navigate([`/dashboard/vendor/reps/${rep.salesRepId}/insights`]);
-  
-    }
+repSelect(rep: TopFiveRepRow) {
+  this.vendorData.selectedRepId.set(rep.salesRepId);
+  this.Router.navigate([`/dashboard/vendor/reps/${rep.salesRepId}/insights`]);
+}
 }

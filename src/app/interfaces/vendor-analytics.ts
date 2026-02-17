@@ -62,6 +62,31 @@ export interface RepPerformance {
   };
 }
 
+export interface ScanHourlyData {
+  dayKey: string;
+  hours: Record<string, number>;
+}
+
+export interface SingleRepAnalytics {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  isRemote: boolean;
+  totalScans: number;
+  totAvgScansPerHour: number;
+  avgScansPerDay: number;
+  scansPerDayHour: ScanHourlyData[];
+  shifts: {
+    id: number;
+    date: string;
+    startTime: string;
+    endTime: string;
+  }[];
+  isActive: boolean;
+}
+
  export interface RepAttendees {
   attendees:Attendee [];
 

@@ -9,7 +9,7 @@
         <span class="status-dot"></span>
       </div>
 
-      @if (vendorData.selectedRep(); as rep) {
+      @if (vendorData.singlerepAnalytics.value(); as rep) {
         <div class="rep-meta">
           <div class="rep-name-row">
             <div class="rep-name">{{ rep.firstName }} {{ rep.lastName }}</div>
@@ -22,7 +22,7 @@
       }
     </div>
 
-    @if (vendorData.selectedRep(); as rep) {
+    @if (vendorData.singlerepAnalytics.value(); as rep) {
       <div class="rep-hero-right">
         <div class="kpi-mini">
           <div class="kpi-label">TOTAL SCANS</div>

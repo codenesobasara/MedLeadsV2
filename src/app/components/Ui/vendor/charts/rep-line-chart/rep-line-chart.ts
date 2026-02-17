@@ -11,5 +11,6 @@ import { VendorCharts } from '../../../../../services/vendor/vendor-charts';
 export class RepLineChart {
   charts = inject(VendorCharts)
   series = this.charts.repLinChart
+  options = this.charts.repLineChartOptions
 
 }
