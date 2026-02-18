@@ -6,14 +6,13 @@
   --text-strong: #111827;
   --text: #374151;
   --text-muted: #6b7280;
-
   --border: #e9edf5;
   --surface: #ffffff;
-
   --primary: #4f64ff;
   --primary-hover: #3f54ff;
   --primary-soft: rgba(79, 100, 255, 0.10);
   --row-bg: #f9fafb;
+  --surface-hover: #f5f7ff; 
 }
 
 body{
@@ -604,17 +603,34 @@ mat-sidenav.app-sidenav aside.app-sidenav .mat-mdc-list-item:hover mat-icon{
   background: #ffffff;
   color: var(--text-muted);
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   padding: 7px 14px;
   border-radius: 999px;
   cursor: pointer;
   white-space: nowrap;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease, transform 120ms ease;
 }
 
 .pill.active{
   background: var(--primary-soft);
   color: var(--primary);
-  border-color: transparent;
+  border-color: rgba(79, 100, 255, 0.35);
+}
+
+.pill:hover{
+  background: var(--surface-hover);
+}
+
+.pill.active,
+.pill.active:hover{
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-color: rgba(79, 100, 255, 0.35);
+}
+
+.pill:focus-visible{
+  outline: 2px solid rgba(79, 100, 255, 0.35);
+  outline-offset: 2px;
 }
 
 .list-pill{

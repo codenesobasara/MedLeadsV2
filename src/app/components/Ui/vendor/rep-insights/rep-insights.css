@@ -176,7 +176,7 @@
 .simple-head,
 .simple-row{
   display: grid;
-  grid-template-columns: 1.4fr 1.2fr 1fr 0.6fr;
+  grid-template-columns: 1.4fr 1.6fr 1.2fr 1fr 1.2fr;
   gap: 12px;
   align-items: center;
   padding: 12px 14px;
@@ -312,4 +312,14 @@
     grid-auto-flow: row;
     grid-auto-columns: auto;
   }
+}
+
+.pill:hover {
+  background: var(--surface-hover);
+}
+
+.pill.active {
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--primary);
+  border-color: rgba(59, 130, 246, 0.4);
 }

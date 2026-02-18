@@ -7,7 +7,7 @@ import { DBEvent, Rep, TopFiveRepRow } from '../../interfaces/dbReuturnModels';
 import { BoothBaseAnalytics, RepAnalyticsObject, RepAttendees, SingleRepAnalytics } from '../../interfaces/vendor-analytics';
 import { VendorCharts } from './vendor-charts';
 import { VendorFormControl } from './vendor-form-control';
-
+type Cursor = { cursorDate: string; cursorId: number };
 @Injectable({
   providedIn: 'root',
 })
@@ -17,12 +17,13 @@ export class VendorDataService {
     private readonly baseUrl = 'http://localhost:3000/api/vendor';
     private refreshTrigger = signal(0);
     private form = inject(VendorFormControl)
-
+  
     selectedEventId = signal<number | null>(null);
     selectedRepId = signal<number | null>(null)
     createdRep = signal<Rep|null>(null)
     selectedRep= signal<Rep | null>(null)
     currentCursor = signal<{ cursorDate: string; cursorId: number } | null>(null);
+    cursorStack = signal<(Cursor | null)[]>([]); 
     selectedDay =signal<string|null>(null)
     
 
@@ -141,7 +142,23 @@ attendeesResource =rxResource({
     
   }
 })
+attendeePagingForward(next: Cursor) {
+  this.cursorStack.set([...this.cursorStack(), this.currentCursor()]);
+  this.currentCursor.set(next);
+}
 
+  attendeePagingBack() {
+  const stack = this.cursorStack();
+  const prev = stack.length ? stack[stack.length - 1] : null;
+
+  this.cursorStack.set(stack.slice(0, -1));
+  this.currentCursor.set(prev);
+}
+
+  attendeeResetPaging() {
+  this.cursorStack.set([]);
+  this.currentCursor.set(null);
+}
 
       
      

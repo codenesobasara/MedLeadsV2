@@ -19,6 +19,9 @@ export class RepInsights {
   this.vendorData.selectedDay.set(date);
   this.vendorData.currentCursor.set(null); 
 }
-
+onTotalSelect(){
+  this.vendorData.selectedDay.set("total")
+  this.vendorData.selectedDay.set(null)
+}
 
 }

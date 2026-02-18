@@ -100,34 +100,43 @@
               {{ date }}
             </button>
           }
+           <button
+              type="button"
+              class="pill"
+              [class.active]="chartData.selectedDay() === 'TOTAL'"
+              (click)="onTotalSelect()"
+            >
+            Total
+            </button>
         </div>
       </div>
 
       <div class="simple-table">
-        <div class="simple-head">
-          <div>ATTENDEE</div>
-          <div>COMPANY</div>
-          <div>TIMESTAMP</div>
-          <div class="t-right">ACTION</div>
-        </div>
+       <div class="simple-head">
+  <div>ATTENDEE</div>
+  <div>EMAIL</div>
+  <div>PHONE</div>
+  <div>NPI</div>
+  <div>SPECIALTY</div>
+</div>
 
         @if (vendorData.attendeesResource.value(); as data) {
           @for (attendee of data.attendees; track attendee.id) {
-            <div class="simple-row">
-              <div class="attendee-cell">
-                <div class="mini-badge">
-                  {{ attendee.firstName[0] }}{{ attendee.lastName[0] }}
-                </div>
-                <div class="attendee-name">
-                  {{ attendee.firstName }} {{ attendee.lastName }}
-                </div>
-              </div>
+      <div class="simple-row">
+  <div class="attendee-cell">
+    <div class="mini-badge">
+      {{ attendee.firstName[0] }}{{ attendee.lastName[0] }}
+    </div>
+    <div class="attendee-name">
+      {{ attendee.firstName }} {{ attendee.lastName }}
+    </div>
+  </div>
 
-              <div></div>
-              <div>—</div>
-
-              <div class="t-right"></div>
-            </div>
+  <div>{{ attendee.email || '—' }}</div>
+  <div>{{ attendee.phone || '—' }}</div>
+  <div>{{ attendee.npi || '—' }}</div>
+  <div>{{ attendee.specialty || '—' }}</div>
+</div>
           }
         }
 
@@ -143,7 +152,7 @@
           type="button"
           class="pill"
           aria-label="Previous"
-          (click)="vendorData.currentCursor.set(null)"
+            (click)="vendorData.attendeePagingBack()"
         >
           <mat-icon>chevron_left</mat-icon>
         </button>
@@ -154,7 +163,8 @@
           type="button"
           class="pill active"
           aria-label="Next"
-          (click)="vendorData.currentCursor.set(data.pagination.cursor!)"
+         (click)="vendorData.attendeePagingForward(data.pagination.cursor!)"
+
         >
           <mat-icon>chevron_right</mat-icon>
         </button>

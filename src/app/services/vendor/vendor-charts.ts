@@ -26,7 +26,7 @@ export class VendorCharts {
 
 
   }
-  selectedDay = signal<string | null>(null);
+  selectedDay = signal<string | "total">("total");
   chartView = signal<string>('total');
   vendorData = inject(VendorDataService);
   func = inject(GeneralFunctions);
@@ -278,7 +278,7 @@ export class VendorCharts {
     return this.dailyChart(day);
   });
 
-  setDay(day: string | null) {
+  setDay(day: string | "total") {
     this.selectedDay.set(day);
   }
 
